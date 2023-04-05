@@ -1,6 +1,43 @@
 #!/usr/bin/env python
 
 from xml.etree import ElementTree
+from dataclasses import dataclass
+
+
+@dataclass
+class StringRepresentationGraph:
+
+    element_mask: str = r'(?P<id>\D+)\..?(?P<grouped>\S+): (?P<body>.*)\n'
+    node_mask: str = r'(?P<id>\D+)\((?P<children_list>.*)\)'
+    part_mask: str = r'.*(?P<id>\S+\D+\).\n'
+    tmp: str = ''
+
+    def to_pythonic(self):
+        return [links for links in self._get_formated_links()]
+
+    def __str__(self):
+        return self.tmp
+
+    def _get_formated_links(self):
+        parts = iter(self._parts())
+        for link in self._links():
+            if int(link.group("id")) == 1:
+                part = next(parts)
+            yield {
+                f'{part.group("id")} - {link.group("id")} - {link.group("grouped")} ':
+                self._link_children(link.group('body'))}
+
+    def _parts(self):
+        for part in re.findall(self.part_mask, self.tmp):
+            yield part
+
+    def _links(self):
+         for link in re.findall(self.element_mask, self.tmp):
+             yield link
+
+    def _link_children(self, link: str):
+        for child in re.findall(self.node_mask, link):
+            return {child.group('id'): child.group('children_list')}
 
 
 class RepresetativeGraphElement(ElementTree.Element):
