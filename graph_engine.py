@@ -4,41 +4,87 @@ import re
 from xml.etree import ElementTree
 from dataclasses import dataclass
 
+@dataclass
+class RepresentativeGraphElement:
+    
+    id: str = ''
+    part: str = ''
+    grouped: str = ''
+    body: str = ''
+    
+    def __str__(self):
+        return f'{self.part} id: {self.id} = {self.grouped} - {self.body}'
+
 
 @dataclass
 class StringRepresentationGraph:
 
-    element_mask: str = r'(?P<id>\D+)\..?(?P<grouped>\S+): (?P<body>.*)\n'
+    element_mask: str = r'.+(?P<id>\D+)\..?(?P<grouped>.+): (?P<body>.*)\n'
     node_mask: str = r'(?P<id>\D+)\((?P<children_list>.*)\)'
     part_mask: str = r'.*(?P<id>\S+\D+\).\n'
     tmp: str = ''
+    separeter: str = '\n'
 
-    def to_pythonic(self):
-        return [links for links in self._get_formated_links()]
+    def __iter__(self):
+        return self._get_formated_links(as_string=True)
 
     def __str__(self):
-        return self.tmp
+        return self.separeter.join(iter(self))
 
-    def _get_formated_links(self):
-        parts = iter(self._parts())
-        for link in self._links():
-            if int(link.group("id")) == 1:
-                part = next(parts)
-            yield {
-                f'{part.group("id")} - {link.group("id")} - {link.group("grouped")} ':
-                self._link_children(link.group('body'))}
+    #def _get_formated_links(self):
+    #    print('STARTING FORMATING')
+    #    parts = iter(self._parts())
+    #    for index, link in enumerate(self._links()):
+    #        print('THIS LINK IS', index)
+    #        if int(link.get("id")) == 1:
+    #            print('NEW PART AT THEN', index, 'index')
+    #            part = next(parts)
+    #        yield {
+    #            f'{part.get("id")} - {link.get("id")} - {link.get("grouped")} ':
+    #            self._link_children(link.get('body'))}
 
-    def _parts(self):
-        for part in re.findall(self.part_mask, self.tmp):
-            yield part
+    #def _parts(self):
+    #    for part in re.findall(self.part_mask, self.tmp):
+    #        yield part
 
-    def _links(self):
-         for link in re.findall(self.element_mask, self.tmp):
-             yield link
+    def _get_formated_links(self, as_string=False):
+        print('STARTING FOR CYCLE FOR LINKS')
+        from pprint import pprint
+        #pprint(re.findall(self.element_mask, self.tmp))
+        #for link in re.findall(self.element_mask, self.tmp):
+        #    yield link
+        last_part = 'A1.'
+        for link in self.tmp.split('\n'):
+            tmp = link.strip()
+            if tmp.endswith('.'):
+                last_part = tmp
+                continue
+            tmp = tmp.split('.')
+            id = tmp[0]
+            tmp = tmp[1].split(':')
+            grouped = tmp[0]
+            body = tmp[1] if (len(tmp) - 1) else ''
+            data = RepresentativeGraphElement(
+                id=id, grouped=grouped, part=last_part,
+                body=self._link_children(body))
+            if as_string:
+                data = str(data)
+            yield data
 
-    def _link_children(self, link: str):
-        for child in re.findall(self.node_mask, link):
-            return {child.group('id'): child.group('children_list')}
+    def _link_children(self, body: str):
+        #for child in re.findall(self.node_mask, link):
+        #    return {child.group('id'): child.group('children_list')}
+        return body
+        result = []
+        for child in body.split(','):
+            try:
+                part = child.split('(')[0]
+                links = child.split('(')[1].strip(')')
+            except IndexError as ie:
+                result = body
+                break
+            result.append({'part': part, 'links': links})
+        return result
 
 
 class RepresetativeGraphElement(ElementTree.Element):
