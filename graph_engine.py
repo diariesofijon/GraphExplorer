@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import re
 from xml.etree import ElementTree
 from dataclasses import dataclass
 
