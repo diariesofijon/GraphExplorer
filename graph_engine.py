@@ -93,7 +93,7 @@ class RepresentativeGraphElement:
             raise Indexerror('Unexpected behavior')
 
 
-class RepresetativeGraphElement(ElementTree.Element):
+class XmlGraphElementMixin(ElementTree.Element):
 
     def getchildren(self, level=1):
         if self.attrib["color"] == 'red': d['red'] += level
