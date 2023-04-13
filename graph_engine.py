@@ -3,17 +3,11 @@
 import re
 from xml.etree import ElementTree
 from dataclasses import dataclass
+from typing import Optional
 
-@dataclass
-class RepresentativeGraphElement:
-    
-    id: str = ''
-    part: str = ''
-    grouped: str = ''
-    body: str = ''
-    
-    def __str__(self):
-        return f'{self.part} id: {self.id} = {self.grouped} - {self.body}'
+
+__all__ = ('RepresentativeGraphElement', 'StringRepresentationGraph')
+
 
 
 @dataclass
@@ -30,6 +24,19 @@ class StringRepresentationGraph:
 
     def __str__(self):
         return self.separeter.join(str(tmp) for tmp in iter(self))
+        
+    def get_elements(self, part=None, id=None):
+        if id and not part:
+            raise Indexerror('Part has not defined when id was passed')
+        elif id and part:
+            for element in filter(el.starswith(part) for el in iter(self)):
+                if element.id == id:
+                    yield element
+                continue
+        raise Indexerror('Unknown id or part')
+        
+    def get_element(self, part=None, id=None) -> RepresentativeGraphElement:
+        return self.get_elements(part, id)[0]
 
     def _get_formated_links(self):
         last_part = 'A1.'
@@ -38,7 +45,7 @@ class StringRepresentationGraph:
             if (tmp := link.strip()).endswith('.'):
                 last_part = tmp
                 continue
-            yield from self._convert_string(tmp, last_part)
+            yield from self._convert_element(tmp, last_part)
     
     @staticmethod
     def _get_ids(name):
@@ -47,13 +54,43 @@ class StringRepresentationGraph:
             return [int(name)]
 
     @staticmethod
-    def _convert_string(tmp, last_part):
+    def _convert_element(tmp, last_part):
         ids, tmp = tmp.split('.')
         for id in StringRepresentationGraph._get_ids(ids):
             grouped, body = tmp.split(':')
             data = RepresentativeGraphElement(
                 id=id, grouped=grouped, part=last_part, body=body)
             yield data
+
+
+@dataclass
+class RepresentativeGraphElement:
+    
+    id: str = ''
+    part: str = ''
+    grouped: str = ''
+    body: str = ''
+    graph: Optional[StringRepresentationGraph] = None
+    
+    def __str__(self):
+        return f'{self.part} id: {self.id} = {self.grouped} - {self.body}'
+    
+    def children(self):
+        if self.graph:
+            return list(*self.graph.get_elements(
+                part=self.part, id=self.id))
+        return []
+        
+    
+    @classmethod
+    def load(cls, file=None, string=None, part=None, id=None):
+        if file:
+            with open(file, 'r') as file:
+                return StringRepresentationGraph(tmp=file).get_element(part, id)
+        elif string:
+            return StringRepresentationGraph(tmp=string).get_element(part, id)
+        else:
+            raise Indexerror('Unexpected behavior')
 
 
 class RepresetativeGraphElement(ElementTree.Element):
