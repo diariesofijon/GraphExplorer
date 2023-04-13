@@ -26,54 +26,22 @@ class StringRepresentationGraph:
     separeter: str = '\n'
 
     def __iter__(self):
-        return self._get_formated_links(as_string=True)
+        return iter(self._get_formated_links())
 
     def __str__(self):
-        return self.separeter.join(iter(self))
+        return self.separeter.join(str(tmp) for tmp in iter(self))
 
-    #def _get_formated_links(self):
-    #    print('STARTING FORMATING')
-    #    parts = iter(self._parts())
-    #    for index, link in enumerate(self._links()):
-    #        print('THIS LINK IS', index)
-    #        if int(link.get("id")) == 1:
-    #            print('NEW PART AT THEN', index, 'index')
-    #            part = next(parts)
-    #        yield {
-    #            f'{part.get("id")} - {link.get("id")} - {link.get("grouped")} ':
-    #            self._link_children(link.get('body'))}
-
-    #def _parts(self):
-    #    for part in re.findall(self.part_mask, self.tmp):
-    #        yield part
-
-    def _get_formated_links(self, as_string=False):
-        print('STARTING FOR CYCLE FOR LINKS')
-        from pprint import pprint
-        #pprint(re.findall(self.element_mask, self.tmp))
-        #for link in re.findall(self.element_mask, self.tmp):
-        #    yield link
+    def _get_formated_links(self):
         last_part = 'A1.'
+        
         for link in self.tmp.split('\n'):
-            tmp = link.strip()
-            if tmp.endswith('.'):
+            if (tmp := link.strip()).endswith('.'):
                 last_part = tmp
                 continue
-            tmp = tmp.split('.')
-            id = tmp[0]
-            tmp = tmp[1].split(':')
-            grouped = tmp[0]
-            body = tmp[1] if (len(tmp) - 1) else ''
-            data = RepresentativeGraphElement(
-                id=id, grouped=grouped, part=last_part,
-                body=self._link_children(body))
-            if as_string:
-                data = str(data)
-            yield data
+            yield from self._convert_string(tmp, last_part)
 
-    def _link_children(self, body: str):
-        #for child in re.findall(self.node_mask, link):
-        #    return {child.group('id'): child.group('children_list')}
+    @staticmethod
+    def _link_children(body: str):
         return body
         result = []
         for child in body.split(','):
@@ -85,6 +53,22 @@ class StringRepresentationGraph:
                 break
             result.append({'part': part, 'links': links})
         return result
+    
+    @staticmethod
+    def _get_ids(name):
+            if len(tmp := name.split('-')) == 2:
+                return list(range(int(tmp[0]), int(tmp[1])+1))
+            return [int(name)]
+    
+    @staticmethod
+    def _convert_string(tmp, last_part):
+        ids, tmp = tmp.split('.')
+        for id in StringRepresentationGraph._get_ids(ids):
+            grouped, body = tmp.split(':')
+            data = RepresentativeGraphElement(
+                id=id, grouped=grouped, part=last_part,
+                body=StringRepresentationGraph._link_children(body))
+            yield data
 
 
 class RepresetativeGraphElement(ElementTree.Element):
