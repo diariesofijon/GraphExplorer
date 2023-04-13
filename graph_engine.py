@@ -39,35 +39,20 @@ class StringRepresentationGraph:
                 last_part = tmp
                 continue
             yield from self._convert_string(tmp, last_part)
-
-    @staticmethod
-    def _link_children(body: str):
-        return body
-        result = []
-        for child in body.split(','):
-            try:
-                part = child.split('(')[0]
-                links = child.split('(')[1].strip(')')
-            except IndexError as ie:
-                result = body
-                break
-            result.append({'part': part, 'links': links})
-        return result
     
     @staticmethod
     def _get_ids(name):
             if len(tmp := name.split('-')) == 2:
                 return list(range(int(tmp[0]), int(tmp[1])+1))
             return [int(name)]
-    
+
     @staticmethod
     def _convert_string(tmp, last_part):
         ids, tmp = tmp.split('.')
         for id in StringRepresentationGraph._get_ids(ids):
             grouped, body = tmp.split(':')
             data = RepresentativeGraphElement(
-                id=id, grouped=grouped, part=last_part,
-                body=StringRepresentationGraph._link_children(body))
+                id=id, grouped=grouped, part=last_part, body=body)
             yield data
 
 
