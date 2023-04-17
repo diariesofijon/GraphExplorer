@@ -8,13 +8,13 @@ import sys
 def main():
     ''' Converting list of links to a graph '''
     print('input the graph')
-    if sys.argv[0] == '-from_console':
-        tmp = input()
-    else:
-        with open('graph_links.txt') as file:
-            tmp = file.read()
     print('\n\n\n')
-    srg = graph_engine.StringRepresentationGraph(tmp=tmp)
+    if sys.argv[0] and sys.argv[0] == '-from_console':
+        srg = graph_engine.StringRepresentationGraph(tmp=(tmp := input()))
+    elif (file := sys.argv[1]) and sys.argv[1].endswith('.txt'):
+        srg = graph_engine.StringRepresentationGraph(file))
+    else:
+        srg = graph_engine.StringRepresentationGraph()
     print('\n\n\n')
     print(str(srg))
     with open('output.txt', 'w') as file:
