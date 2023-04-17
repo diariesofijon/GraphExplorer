@@ -8,13 +8,26 @@ from typing import Optional
 @dataclass
 class StringRegularExpressionMaskAbstract:
     
-    element_mask: Optional[str] = r'.+(?P<id>\D+)\..?(?P<grouped>.+): (?P<body>.*)\n'
-    node_mask: Optional[str] = r'(?P<id>\D+)\((?P<children_list>.*)\)'
-    part_mask: Optional[str] = r'.*(?P<id>\S+\D+\).\n'
-    tmp: Optional[str] = ''
-    separeter: Optional[str] = '\n'
-    file: str = 'graph_links.txt
-    last_part: str = 'A1.'
+    def element_mask(self) -> Optional[str]:
+        raise NotImplemented
+        
+    def node_mask(self) -> Optional[str]:
+        raise NotImplemented
+        
+    def part_mask(self) -> Optional[str]:
+        raise NotImplemented
+        
+    def tmp(self) -> Optional[str]:
+        raise NotImplemented
+        
+    def separeter: Optional[str]:
+            raise NotImplemented
+            
+    def file(self) -> str:
+        raise NotImplemented
+        
+    def last_part(self) -> str:
+        raise NotImplemented
     
     def __repr__(self):
         raise NotImplemented
@@ -49,15 +62,7 @@ class StringRegularExpressionMaskAbstract:
                 id=id, grouped=grouped, part=last_part, body=body)
             yield data
             
-            
-class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
-    
-    def _get_formated_links(self):        
-        for link in self.tmp.split('\n'):
-            if (tmp := link.strip()).endswith('.'):
-                self.last_part = tmp
-                continue
-            yield from self._convert_element(tmp, sel.flast_part)
+          
             
 @dataclass
 class RepresentativeGraphElementAbstract:
