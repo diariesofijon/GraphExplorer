@@ -21,7 +21,7 @@ class StringRegularExpressionMaskAbstract:
         raise NotImplemented
         
     def separeter(self) -> Optional[str]:
-            raise NotImplemented
+        raise NotImplemented
             
     def file(self) -> str:
         raise NotImplemented
