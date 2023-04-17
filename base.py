@@ -20,7 +20,7 @@ class StringRegularExpressionMaskAbstract:
     def tmp(self) -> Optional[str]:
         raise NotImplemented
         
-    def separeter: Optional[str]:
+    def separeter(self) -> Optional[str]:
             raise NotImplemented
             
     def file(self) -> str:
