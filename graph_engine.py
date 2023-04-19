@@ -2,23 +2,60 @@
 
 import re
 from xml.etree import ElementTree
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
-import config
+import base
 
 
 __all__ = ('RepresentativeGraphElement', 'StringRepresentationGraph')
 
 
+@dataclass
+class RepresentativeGraphElementMask(base.RepresentativeGraphElementAbstract):
+    
+    ''' Sensetive turn off '''
+    
+    id: str = ''
+    part: str = ''
+    grouped: str = ''
+    body: str = ''
+    graph: Optional[base.StringRegularExpressionMaskAbstract] = None
+    
+    def __str__(self):
+        return f'{self.part} id: {self.id} = {self.grouped} - {self.body}'
 
-class StringRepresentationGraph(config.StringByStringRegularExpressionMask):
 
+@dataclass
+class StringByStringRegularExpressionMask(base.StringRegularExpressionMaskAbstract):
+    
+    element_mask: Optional[str] = r'.+(?P<id>\D+)\..?(?P<grouped>.+): (?P<body>.*)\n'
+    node_mask: Optional[str] = r'(?P<id>\D+)\((?P<children_list>.*)\)'
+    part_mask: Optional[str] = r'.*(?P<id>\S+\D+\).\n'
+    tmp: Optional[str] = None
+    separeter: Optional[str] = '\n'
+    file: str = 'graph_links.txt'
+    last_part: str = 'A1.'
+    element_class = RepresentativeGraphElementMask
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.tmp and not kwargs.get('tmp', ''):
+            with open(self.file, 'r') as file:
+                self.tmp = file.read()
+    
     def __iter__(self):
         return iter(self._get_formated_links())
 
     def __str__(self):
         return self.separeter.join(str(tmp) for tmp in iter(self))
+    
+    def _get_formated_links(self):        
+        for link in self.tmp.split(self.separeter):
+            if (tmp := link.strip()).endswith('.'):
+                self.last_part = tmp
+                continue
+            yield from self._convert_element(tmp, self.last_part)
         
     def get_elements(self, part=None, id=None):
         if id and not part:
@@ -30,17 +67,8 @@ class StringRepresentationGraph(config.StringByStringRegularExpressionMask):
                 continue
         raise Indexerror('Unknown id or part')
         
-    def get_element(self, part=None, id=None) -> RepresentativeGraphElement:
+    def get_element(self, part=None, id=None) -> base.RepresentativeGraphElementAbstract:
         return self.get_elements(part, id)[0]
-
-
-@dataclass
-class RepresentativeGraphElement(config.RepresentativeGraphElementAbstract):
-    
-    graph: Optional[StringRepresentationGraph] = None
-    
-    def __str__(self):
-        return f'{self.part} id: {self.id} = {self.grouped} - {self.body}'
 
 
 class XmlGraphElementMixin(ElementTree.Element):
