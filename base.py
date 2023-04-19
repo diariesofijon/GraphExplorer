@@ -5,34 +5,45 @@ from dataclasses import dataclass
 from typing import Optional
 
 
+__all__ = (
+    'StringRegularExpressionMaskAbstract', 'RepresentativeGraphElementAbstract')
+
+
 @dataclass
 class StringRegularExpressionMaskAbstract:
-    
-    def element_mask(self) -> Optional[str]:
-        raise NotImplemented
-        
-    def node_mask(self) -> Optional[str]:
-        raise NotImplemented
-        
-    def part_mask(self) -> Optional[str]:
-        raise NotImplemented
-        
-    def tmp(self) -> Optional[str]:
-        raise NotImplemented
-        
-    def separeter(self) -> Optional[str]:
-        raise NotImplemented
-            
-    def file(self) -> str:
-        raise NotImplemented
-        
-    def last_part(self) -> str:
-        raise NotImplemented
     
     def __repr__(self):
         raise NotImplemented
     
     def __str__(self):
+        raise NotImplemented
+    
+    @property
+    def element_mask(self) -> Optional[str]:
+        raise NotImplemented
+        
+    @property
+    def node_mask(self) -> Optional[str]:
+        raise NotImplemented
+        
+    @property
+    def part_mask(self) -> Optional[str]:
+        raise NotImplemented
+        
+    @property
+    def tmp(self) -> Optional[str]:
+        raise NotImplemented
+        
+    @property
+    def separeter(self) -> Optional[str]:
+        raise NotImplemented
+        
+    @property
+    def file(self) -> str:
+        raise NotImplemented
+        
+    @property
+    def last_part(self) -> str:
         raise NotImplemented
     
     @property
@@ -42,7 +53,7 @@ class StringRegularExpressionMaskAbstract:
     def get_elements(self, part=None, id=None):
         raise NotImplemented
         
-    def get_element(self, part=None, id=None) -> RepresentativeGraphElement:
+    def get_element(self, part=None, id=None):
         raise NotImplemented
 
     def _get_formated_links(self):
@@ -55,22 +66,19 @@ class StringRegularExpressionMaskAbstract:
         return [int(name)]
 
     def _convert_element(self, tmp, last_part):
-        ids, tmp = tmp.split('.')
+        if  len((splited := tmp.split('.'))) == 1:
+            splited = splited, ''
+        ids, tmp = splited
         for id in self._get_ids(ids):
             grouped, body = tmp.split(':')
             data = self.element_class(
                 id=id, grouped=grouped, part=last_part, body=body)
             yield data
-            
-          
-            
+
+
+
 @dataclass
 class RepresentativeGraphElementAbstract:
-    
-    id: str = ''
-    part: str = ''
-    grouped: str = ''
-    body: str = ''
     
     def __repr__(self):
         raise NotImplemented
@@ -79,8 +87,24 @@ class RepresentativeGraphElementAbstract:
         raise NotImplemented
     
     @property
+    def id(self) -> str:
+        raise NotImplemented
+        
+    @property
+    def part(self) -> str:
+        raise NotImplemented
+        
+    @property
+    def grouped(self) -> str:
+        raise NotImplemented
+        
+    @property
+    def body(self) -> str:
+        raise NotImplemented
+    
+    @property
     def graph(self):
-        raise NotImpolemented
+        raise NotImplemented
     
     @property
     def children(self):
