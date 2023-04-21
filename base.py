@@ -19,11 +19,11 @@ class StringRegularExpressionMaskAbstract:
         raise NotImplemented
     
         
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if not self.tmp and not kwargs.get('tmp', ''):
-            with open(self.file, 'r') as file:
-                self.tmp = file.read()
+    def __new__(cls, *args, **kwargs):
+        if not cls.tmp and not kwargs.get('tmp', ''):
+            with open(cls.file, 'r') as file:
+                cls.tmp = file.read()
+        return super().__new__(cls, *args, **kwargs)
     
     @property
     def element_mask(self) -> Optional[str]:
@@ -81,7 +81,6 @@ class StringRegularExpressionMaskAbstract:
             data = self.element_class(
                 id=id, grouped=grouped, part=last_part, body=body)
             yield data
-
 
 
 @dataclass
