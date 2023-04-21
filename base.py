@@ -18,6 +18,13 @@ class StringRegularExpressionMaskAbstract:
     def __str__(self):
         raise NotImplemented
     
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.tmp and not kwargs.get('tmp', ''):
+            with open(self.file, 'r') as file:
+                self.tmp = file.read()
+    
     @property
     def element_mask(self) -> Optional[str]:
         raise NotImplemented
@@ -80,6 +87,8 @@ class StringRegularExpressionMaskAbstract:
 @dataclass
 class RepresentativeGraphElementAbstract:
     
+    _children: list = None
+    
     def __repr__(self):
         raise NotImplemented
     
@@ -108,8 +117,18 @@ class RepresentativeGraphElementAbstract:
     
     @property
     def children(self):
-        return list(*self.graph.get_elements(
-            part=self.part, id=self.id))
+        if self._children is None:
+            self._children = list(*self.graph.get_elements(
+                part=self.part, id=self.id))
+        return self._children
+    
+    @property
+    def parents(self):
+        for element in self.graph:
+            for child in element.children:
+                if int(child.id) == int(self.id):
+                    yield element
+                    break
         
     def load(self, string=None, part=None, id=None):
         if file:
@@ -119,4 +138,3 @@ class RepresentativeGraphElementAbstract:
             return self.graph.get_element(part, id)
         else:
             raise Indexerror('Unexpected behavior')
-     

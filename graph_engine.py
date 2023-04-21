@@ -24,6 +24,18 @@ class RepresentativeGraphElementMask(base.RepresentativeGraphElementAbstract):
     
     def __str__(self):
         return f'{self.part} id: {self.id} = {self.grouped} - {self.body}'
+    
+    def show_children(self, pretty=True):
+        return '\n'.join((child for child in self.children))
+    
+    def show_parents(self, pretty=True):
+        return '\n'.join((parent for parent in self.parents))
+
+    def walk(self, left=True):
+        first = element.children[0]
+        last = element.children[-1]
+        yield first if left
+        yield last
 
 
 @dataclass
@@ -37,12 +49,6 @@ class StringByStringRegularExpressionMask(base.StringRegularExpressionMaskAbstra
     file: str = 'graph_links.txt'
     last_part: str = 'A1.'
     element_class = RepresentativeGraphElementMask
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if not self.tmp and not kwargs.get('tmp', ''):
-            with open(self.file, 'r') as file:
-                self.tmp = file.read()
     
     def __iter__(self):
         return iter(self._get_formated_links())
@@ -102,6 +108,7 @@ def get_test_xml_data(file='./graph_example.xml'):
             return xml
     except Exception as e:
         return input()
+
 
 if __name__ == '__main__':
     xml_string = get_test_xml_data()
