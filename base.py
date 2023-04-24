@@ -8,6 +8,7 @@
 
 # hot fix: add finding elements of graph in text by pythonic regexp
 # import re
+import abc
 from dataclasses import dataclass
 from typing import Optional
 
@@ -17,14 +18,16 @@ __all__ = (
 
 
 @dataclass
-class StringRegularExpressionMaskAbstract:
+class StringRegularExpressionMaskAbstract(abc.ABC):
 
     ''' Base image of engine to convert text to a graph '''
 
+    @abc.abstractmethod
     def __repr__(self):
         ''' Unique pythonic representation '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
+    @abc.abstractmethod
     def __str__(self):
         ''' Unique string representation '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
@@ -38,53 +41,64 @@ class StringRegularExpressionMaskAbstract:
         return super().__new__(cls, *args, **kwargs)
 
     @property
+    @abc.abstractmethod
     def element_mask(self) -> Optional[str]:
         ''' RegExp for finding each element of the node '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @property
+    @abc.abstractmethod
     def node_mask(self) -> Optional[str]:
         ''' RegExp for finding eahc node of the graph'''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @property
+    @abc.abstractmethod
     def part_mask(self) -> Optional[str]:
         ''' RegExp for finding part of each node '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @property
+    @abc.abstractmethod
     def tmp(self) -> Optional[str]:
         ''' String of full texted graph '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @property
+    @abc.abstractmethod
     def separeter(self) -> Optional[str]:
         ''' The symbol that used to separaing each node of the text representation of the graph '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @property
+    @abc.abstractmethod
     def file(self) -> str:
         ''' Which file from engine have to load text of the graph '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @property
+    @abc.abstractmethod
     def last_part(self) -> str:
         ''' String iteration flag indecate what node have a part '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @property
+    @abc.abstractmethod
     def element_class(self):
         ''' Pythonic class to implement each node to valid form '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
+    @abc.abstractmethod
     def get_elements(self, part=None, id=None):
         ''' Method that return node by part or id '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
+    @abc.abstractmethod
     def get_element(self, part=None, id=None):
         ''' Method that return filterd nodes by part or id '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
+    @abc.abstractmethod
     def _get_formated_links(self):
         ''' Private method that list all nodes '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
@@ -116,35 +130,42 @@ class RepresentativeGraphElementAbstract:
     # private pythonic proxy method for RepresentativeGraphElementAbstract.children
     _children: list = None
 
+    @abc.abstractmethod
     def __repr__(self):
         ''' Unique pythonic representation '''
         raise NotImplementedErorr
 
+    @abc.abstractmethod
     def __str__(self):
         ''' Unique string representation '''
         raise NotImplementedErorr
 
     @property
+    @abc.abstractmethod
     def id(self) -> str:
         ''' Id key of the node '''
         raise NotImplementedErorr
 
     @property
+    @abc.abstractmethod
     def part(self) -> str:
         ''' Part indetity of the node '''
         raise NotImplementedErorr
 
     @property
+    @abc.abstractmethod
     def grouped(self) -> str:
         ''' Other info about the node '''
         raise NotImplementedErorr
 
     @property
+    @abc.abstractmethod
     def body(self) -> str:
         ''' Body of the node '''
         raise NotImplementedErorr
 
     @property
+    @abc.abstractmethod
     def graph(self):
         ''' Graph that contains the node '''
         raise NotImplementedErorr
