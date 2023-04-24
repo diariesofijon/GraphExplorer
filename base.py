@@ -22,11 +22,11 @@ class StringRegularExpressionMaskAbstract:
 
     def __repr__(self):
         ''' Unique pythonic representation '''
-        raise NotImplementedError('Have to definded in {}.'.format(self.__class__.__name__))
+        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     def __str__(self):
         ''' Unique string representation '''
-        raise NotImplementedError('Have to definded in {}.'.format(self.__class__.__name__))
+        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
 
     def __new__(cls, *args, **kwargs):
@@ -39,54 +39,54 @@ class StringRegularExpressionMaskAbstract:
     @property
     def element_mask(self) -> Optional[str]:
         ''' RegExp for finding each element of the node '''
-        raise NotImplementedError('Have to definded in {}.'.format(self.__class__.__name__))
+        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @property
     def node_mask(self) -> Optional[str]:
         ''' RegExp for finding eahc node of the graph'''
-        raise NotImplementedError('Have to definded in {}.'.format(self.__class__.__name__))
+        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @property
     def part_mask(self) -> Optional[str]:
         ''' RegExp for finding part of each node '''
-        raise NotImplementedError('Have to definded in {}.'.format(self.__class__.__name__))
+        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @property
     def tmp(self) -> Optional[str]:
         ''' String of full texted graph '''
-        raise NotImplementedError('Have to definded in {}.'.format(self.__class__.__name__))
+        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @property
     def separeter(self) -> Optional[str]:
         ''' The symbol that used to separaing each node of the text representation of the graph '''
-        raise NotImplementedError('Have to definded in {}.'.format(self.__class__.__name__))
+        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @property
     def file(self) -> str:
         ''' Which file from engine have to load text of the graph '''
-        raise NotImplementedError('Have to definded in {}.'.format(self.__class__.__name__))
+        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @property
     def last_part(self) -> str:
         ''' String iteration flag indecate what node have a part '''
-        raise NotImplementedError('Have to definded in {}.'.format(self.__class__.__name__))
+        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @property
     def element_class(self):
         ''' Pythonic class to implement each node to valid form '''
-        raise NotImplementedError('Have to definded in {}.'.format(self.__class__.__name__))
+        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     def get_elements(self, part=None, id=None):
         ''' Method that return node by part or id '''
-        raise NotImplementedError('Have to definded in {}.'.format(self.__class__.__name__))
+        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     def get_element(self, part=None, id=None):
         ''' Method that return filterd nodes by part or id '''
-        raise NotImplementedError('Have to definded in {}.'.format(self.__class__.__name__))
+        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     def _get_formated_links(self):
         ''' Private method that list all nodes '''
-        raise NotImplementedError('Have to definded in {}.'.format(self.__class__.__name__))
+        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @staticmethod
     def _get_ids(name):
