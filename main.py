@@ -15,7 +15,7 @@ def walk(graph: graph_engine.StringByStringRegularExpressionMask, index=None):
                 2 - to get previous right,\
                 3 - to get next right,    \
                 4 - to get previous right,\
-                5 - to get out of walking')
+                5 - to get out of walking')a
         index_type = int(input())
         if index_type == 5:
             print('Have a nice day!')
