@@ -36,7 +36,7 @@ def take_choice(element, index):
         next_element = element.parent[index]
         print(next_element)
     return next_element
-    
+
 def show_pretty_graph(graph, index=None):
     index = int(index)
     print('\n\n\n')
@@ -56,11 +56,11 @@ def main():
     else:
         index = 3
         srg = graph_engine.StringByStringRegularExpressionMask()
-        
+
     with open('output.txt', 'w') as file:
         print(srg.tmp)
         file.write(str(srg))
-    
+
     show_pretty_graph(srg)
 
 if __name__ == '__main__':
