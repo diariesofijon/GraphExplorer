@@ -5,7 +5,8 @@
     Abstract classes for graphj exploring
 '''
 
-import re
+# hot fix: add finding elements of graph in text by pythonic regexp
+# import re
 from dataclasses import dataclass
 from typing import Optional
 
