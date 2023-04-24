@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # pylint: disable=C0103
+# pyling: disable=W0622
 
 '''
     Abstract classes for graphj exploring
