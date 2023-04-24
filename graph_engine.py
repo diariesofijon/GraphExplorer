@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# pylint: disable=C0103
 
 import re
 from xml.etree import ElementTree
