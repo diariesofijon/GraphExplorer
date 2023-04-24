@@ -74,13 +74,13 @@ class StringByStringRegularExpressionMask(base.StringRegularExpressionMaskAbstra
 
     def get_elements(self, part=None, id=None):
         if id and not part:
-            raise Indexerror('Part has not defined when id was passed')
+            raise IndexError('Part has not defined when id was passed')
         elif id and part:
             for element in filter(el.starswith(part) for el in iter(self)):
                 if element.id == id:
                     yield element
                 continue
-        raise Indexerror('Unknown id or part')
+        raise IndexError('Unknown id or part')
 
     def get_element(self, part=None, id=None) -> base.RepresentativeGraphElementAbstract:
         return self.get_elements(part, id)[0]
