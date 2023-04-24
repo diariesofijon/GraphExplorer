@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # pylint: disable=C0116
 # pylint: disable=C0103
+# pylint: disable=W0621
+# pylint: disable=C0114
+# pylint: disable=C0321
 
 from xml.etree import ElementTree
 
