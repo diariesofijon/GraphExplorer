@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # pylint: disable=C0103
 
-import re
+# import re
+import config
 from xml.etree import ElementTree
 from dataclasses import dataclass, field
 from typing import Optional
@@ -27,14 +28,20 @@ class RepresentativeGraphElementMask(base.RepresentativeGraphElementAbstract):
         return f'{self.part} id: {self.id} = {self.grouped} - {self.body}'
 
     def show_children(self, pretty=True):
-        return '\n'.join((child for child in self.children))
+        separeter = config.SEPARATES.get('NODE', self.graph.separeter)
+        if not pretty:
+            separeter = self.graph.separeter
+        return separeter.join((child for child in self.children))
 
     def show_parents(self, pretty=True):
-        return '\n'.join((parent for parent in self.parents))
+        separeter = config.SEPARATES.get('NODE', self.graph.separeter)
+        if not pretty:
+            separeter = self.graph.separeter
+        return separeter.join((parent for parent in self.parents))
 
     def walk(self, left=True):
-        first = element.children[0]
-        last = element.children[-1]
+        first = self.children[0]
+        last = self.children[-1]
         if left:
             yield first
         yield last
