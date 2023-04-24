@@ -6,7 +6,7 @@ from pprint import pprint
 import graph_engine
 
 
-def walk(graph: graph_engine.StringByStringRegularExpressionMask, index=None)
+def walk(graph: graph_engine.StringByStringRegularExpressionMask, index=None):
     index = int(index)
     index_from = 0
     next_element = graph[index_from]
@@ -32,7 +32,7 @@ def take_choice(element, index):
         next_element = element.children[index]
         print(next_element)
     else:
-        index = 0 if if index == 2 else -1
+        index = 0 if index == 2 else -1
         next_element = element.parent[index]
         print(next_element)
     return next_element
@@ -58,6 +58,7 @@ def main():
         srg = graph_engine.StringByStringRegularExpressionMask()
         
     with open('output.txt', 'w') as file:
+        print(srg.tmp)
         file.write(str(srg))
     
     show_pretty_graph(srg)
