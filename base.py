@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # pylint: disable=C0103
 # pyling: disable=W0622
+# pyling: disable=E0602
 
 '''
     Abstract classes for graphj exploring
@@ -31,7 +32,6 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
     def __str__(self):
         ''' Unique string representation '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
-
 
     def __new__(cls, *args, **kwargs):
         ''' to fix: Defenition of the graph have attrib or similart to dataclass default values '''
