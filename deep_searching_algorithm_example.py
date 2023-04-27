@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# pylint: disable-all
+# pylint: skip-file
 
 from xml.etree import ElementTree
 
