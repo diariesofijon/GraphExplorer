@@ -133,42 +133,42 @@ class RepresentativeGraphElementAbstract:
     @abc.abstractmethod
     def __repr__(self):
         ''' Unique pythonic representation '''
-        raise NotImplementedErorr
+        raise NotImplementedError
 
     @abc.abstractmethod
     def __str__(self):
         ''' Unique string representation '''
-        raise NotImplementedErorr
+        raise NotImplementedError
 
     @property
     @abc.abstractmethod
     def id(self) -> str:
         ''' Id key of the node '''
-        raise NotImplementedErorr
+        raise NotImplementedError
 
     @property
     @abc.abstractmethod
     def part(self) -> str:
         ''' Part indetity of the node '''
-        raise NotImplementedErorr
+        raise NotImplementedError
 
     @property
     @abc.abstractmethod
     def grouped(self) -> str:
         ''' Other info about the node '''
-        raise NotImplementedErorr
+        raise NotImplementedError
 
     @property
     @abc.abstractmethod
     def body(self) -> str:
         ''' Body of the node '''
-        raise NotImplementedErorr
+        raise NotImplementedError
 
     @property
     @abc.abstractmethod
     def graph(self):
         ''' Graph that contains the node '''
-        raise NotImplementedErorr
+        raise NotImplementedError
 
     @property
     def children(self):
