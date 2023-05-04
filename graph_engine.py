@@ -35,8 +35,6 @@ class RepresentativeGraphElementMask(base.RepresentativeGraphElementAbstract):
 
     def show_parents(self, pretty=True):
         separeter = config.SEPARATES.get('NODE', self.graph.separeter)
-        if not pretty:
-            separeter = self.graph.separeter
         return separeter.join((parent for parent in self.parents))
 
     def walk(self, left=True):
@@ -72,18 +70,18 @@ class StringByStringRegularExpressionMask(base.StringRegularExpressionMaskAbstra
                 continue
             yield from self._convert_element(tmp, self.last_part)
 
-    def get_elements(self, part=None, id=None):
-        if id and not part:
+    def get_elements(self, part=None, nid=None):
+        if nid and not part:
             raise IndexError('Part has not defined when id was passed')
-        elif id and part:
+        elif nid and part:
             for element in filter(el.starswith(part) for el in iter(self)):
-                if element.id == id:
+                if element.nid == nid:
                     yield element
                 continue
         raise IndexError('Unknown id or part')
 
-    def get_element(self, part=None, id=None) -> base.RepresentativeGraphElementAbstract:
-        return self.get_elements(part, id)[0]
+    def get_element(self, part=None, nid=None) -> base.RepresentativeGraphElementAbstract:
+        return self.get_elements(part, nid)[0]
 
 
 class XmlGraphElementMixin(ElementTree.Element):
