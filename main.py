@@ -2,14 +2,16 @@
 # pylint: disable=C0103
 
 import sys
-
 from pprint import pprint
+from typing import Optional
+
 import graph_engine
 
 
-def walk(graph: graph_engine.StringByStringRegularExpressionMask, index=None):
-    index = int(index)
-    index_from = 0
+def walk(
+        graph: graph_engine.StringByStringRegularExpressionMask, 
+        index: Optional[int]=None):
+    index_from = int(index) if index else 1
     next_element = graph[index_from]
     for element in next_element.walk():
         print('type 1 - to get next left, \
@@ -24,22 +26,23 @@ def walk(graph: graph_engine.StringByStringRegularExpressionMask, index=None):
         print(element.show_children())
         next_element = take_choice(element, index_type)
 
-def take_choice(element, index):
+def take_choice(
+        element: graph_engine.RepresentativeGraphElementMask, index: int):
     if index not in (1,2,3,4):
         raise ValueError('Index ' + str(index) + ' is out of range')
     next_element = None
     if index == 1 or index == 3:
         index = 0 if index == 1 else -1
         next_element = element.children[index]
-        print(next_element)
     else:
         index = 0 if index == 2 else -1
         next_element = element.parent[index]
-        print(next_element)
     return next_element
 
-def show_pretty_graph(graph, index=None):
-    index = int(index)
+def show_pretty_graph(
+        graph: graph_engine.StringByStringRegularExpressionMask, 
+        index: Optional[int]=None):
+    index = int(index) if index else 1
     print('\n\n\n')
     print(index)
     # starting walking from the first element
