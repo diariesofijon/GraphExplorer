@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-# pylint: disable=C0103
-# pyling: disable=W0622
-# pyling: disable=E0602
+# pylint: disable=C0103,W0622,E0602
 
 '''
     Abstract classes for graphj exploring
@@ -36,7 +34,7 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
     def __new__(cls, *args, **kwargs):
         ''' to fix: Defenition of the graph have attrib or similart to dataclass default values '''
         if not cls.tmp and not kwargs.get('tmp', ''):
-            with open(cls.file, 'r') as file:
+            with open(cls.file, 'r', encoding='utf8') as file:
                 cls.tmp = file.read()
         return super().__new__(cls, *args, **kwargs)
 
