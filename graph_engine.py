@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # pylint: disable=C0103
 
+# fix: find another way to find points of graph due pythonic RegExp
 # import re
 import config
 from dataclasses import dataclass, field
@@ -69,15 +70,15 @@ class StringByStringRegularExpressionMask(base.StringRegularExpressionMaskAbstra
                 continue
             yield from self._convert_element(tmp, self.last_part)
 
-    def get_elements(self, part=None, nid=None):
-        if nid and not part:
+    def get_elements(self, part=None, id=None):
+        if id and not part:
             raise IndexError('Part has not defined when id was passed')
-        elif nid and part:
+        elif id and part:
             for element in filter(el.starswith(part) for el in iter(self)):
-                if element.nid == nid:
+                if element.id == id:
                     yield element
                 continue
         raise IndexError('Unknown id or part')
 
     def get_element(self, part=None, nid=None) -> base.RepresentativeGraphElementAbstract:
-        return self.get_elements(part, nid)[0]
+        return self.get_elements(part, id)[0]
