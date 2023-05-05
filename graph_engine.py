@@ -29,8 +29,6 @@ class RepresentativeGraphElementMask(base.RepresentativeGraphElementAbstract):
 
     def show_children(self, pretty=True):
         separeter = config.SEPARATES.get('NODE', self.graph.separeter)
-        if not pretty:
-            separeter = self.graph.separeter
         return separeter.join((child for child in self.children))
 
     def show_parents(self, pretty=True):
