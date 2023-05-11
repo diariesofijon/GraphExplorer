@@ -29,10 +29,10 @@ class RepresentativeGraphElementMask(base.RepresentativeGraphElementAbstract):
         return f'{self.part} id: {self.id} = {self.grouped} - {self.body}'
 
     def show_children(self):
-        return self._separeter.join((child for child in self.children))
+        return self._separeter.join(child for child in self.children)
 
     def show_parents(self):
-        return self._separeter.join((parent for parent in self.parents))
+        return self._separeter.join(parent for parent in self.parents)
 
     def walk(self, l: bool = True, c: list = list()):
         yield (next_el := self.children[i:=c.pop()] if l else self.children.end(i))
@@ -70,12 +70,10 @@ class StringByStringRegularExpressionMask(base.StringRegularExpressionMaskAbstra
 
     def get_elements(self, part=None, id=None):
         if id and not part:
+            # fix: it would be good idea if we can search only by id???
             raise IndexError('Part has not defined when id was passed')
         elif id and part:
-            for element in filter(el.starswith(part) for el in iter(self)):
-                if element.id == id:
-                    yield element
-                continue
+            yield from (el for el in self if el.starswith(part) and el.id == id)
         raise IndexError('Unknown id or part')
 
     def get_element(self, part=None, nid=None) -> base.RepresentativeGraphElementAbstract:
