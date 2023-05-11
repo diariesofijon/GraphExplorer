@@ -2,7 +2,7 @@
 # pylint: disable=C0103,W0622,E0602
 
 '''
-    Abstract classes for graphj exploring
+    Abstract classes for graph exploring
 '''
 
 # hot fix: add finding elements of graph in text by pythonic regexp
