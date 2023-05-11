@@ -23,26 +23,24 @@ class RepresentativeGraphElementMask(base.RepresentativeGraphElementAbstract):
     grouped: str = ''
     body: str = ''
     graph: Optional[base.StringRegularExpressionMaskAbstract] = None
+    separater_key: str = ''
 
     def __str__(self):
         return f'{self.part} id: {self.id} = {self.grouped} - {self.body}'
 
-    def show_children(self, pretty=True):
-        separeter = config.SEPARATES.get('NODE', self.graph.separeter)
-        if not pretty:
-            separeter = self.graph.separeter
-        return separeter.join((child for child in self.children))
+    def show_children(self):
+        return self._separeter.join((child for child in self.children))
 
-    def show_parents(self, pretty=True):
-        separeter = config.SEPARATES.get('NODE', self.graph.separeter)
-        return separeter.join((parent for parent in self.parents))
+    def show_parents(self):
+        return self._separeter.join((parent for parent in self.parents))
 
-    def walk(self, left=True):
-        first = self.children[0]
-        last = self.children[-1]
-        if left:
-            yield first
-        yield last
+    def walk(self, l: bool = True, c: list = list()):
+        yield (next_el := self.children[i:=c.pop()] if l else self.children.end(i))
+        yield from next_el.walk(l=l, c=c) # fix: make deep searching algorithm based on this property
+
+    @property
+    def _separeter(self):
+        return config.SEPARATES.get(self.separater_key, self.graph.separeter)
 
 
 @dataclass
@@ -52,7 +50,7 @@ class StringByStringRegularExpressionMask(base.StringRegularExpressionMaskAbstra
     node_mask: Optional[str] = r'(?P<id>\D+)\((?P<children_list>.*)\)'
     part_mask: Optional[str] = r'.*(?P<id>\S+\D+\).\n'
     tmp: Optional[str] = None
-    separeter: Optional[str] = '\n'
+    separeter: str = '\n'
     file: str = 'graph_links.txt'
     last_part: str = 'A1.'
     element_class = RepresentativeGraphElementMask
@@ -82,3 +80,16 @@ class StringByStringRegularExpressionMask(base.StringRegularExpressionMaskAbstra
 
     def get_element(self, part=None, nid=None) -> base.RepresentativeGraphElementAbstract:
         return self.get_elements(part, id)[0]
+    
+    @property
+    def _deepest_path(self) -> list:
+        return [ind for ind in range(self._depth)]# fix: make deep searching algorithm based on this property
+    
+    @property
+    def _depth(self) -> int:
+        return len(self) # fix: make deep searching algorithm based on this property
+    
+    @property
+    def deepest_chain(self, left=True) -> Iterable:
+        for _ in range(self._depth):
+            yield 0 if left else -1
