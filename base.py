@@ -14,6 +14,23 @@ from typing import Optional
 
 __all__ = (
     'StringRegularExpressionMaskAbstract', 'RepresentativeGraphElementAbstract')
+    
+
+class _Chain(list):
+    
+    '''
+        Listening of ids and other numerical order of indicators with widly 
+    usefull method for searching and slicing any indicator.
+    '''
+    
+    def from_start(self, index: int = 0):
+        return self[index]
+
+    def from_end(self, index: int = -1):
+        return self[len(self) - index]
+    
+    def by_flag(self, flag: bool):
+        pass
 
 
 @dataclass
@@ -85,6 +102,18 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
     def element_class(self):
         ''' Pythonic class to implement each node to valid form '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
+    
+    @property
+    @abc.abstractmethod
+    def longes_cain(self) -> Optional[_Chain, list, type, set]:
+        ''' The chain of the longes_road '''
+        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
+
+    @property
+    @abc.abstractmethod
+    def depth_range(self) -> int:
+        ''' The number that is the length of the longes road '''
+        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @abc.abstractmethod
     def get_elements(self, part=None, id=None):
@@ -109,7 +138,7 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
         return [int(name)]
 
     def _convert_element(self, tmp, last_part):
-        ''' Engien convertor '''
+        ''' Engine convertor '''
         if  len((splited := tmp.split('.'))) == 1:
             splited = splited, ''
         ids, tmp = splited
@@ -169,10 +198,10 @@ class RepresentativeGraphElementAbstract:
         raise NotImplementedError
 
     @property
-    def children(self):
+    def children(self) -> _Chain:
         ''' Nodes that linked on the node '''
         if self._children is None:
-            self._children = list(*self.graph.get_elements(
+            self._children = _Chain(*self.graph.get_elements(
                 part=self.part, id=self.id))
         return self._children
 
