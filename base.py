@@ -9,11 +9,16 @@
 # import re
 import abc
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, TypeVar, List, Iterable
 
 
 __all__ = (
-    'StringRegularExpressionMaskAbstract', 'RepresentativeGraphElementAbstract')
+    'StringRegularExpressionMaskAbstract', 'RepresentativeGraphElementAbstract', 'GraphElement')
+
+
+# types
+GraphElement = TypeVar(
+    'GraphElement', bound='RepresentativeGraphElementAbstract')
     
 
 class _Chain(list):
@@ -99,7 +104,7 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def element_class(self):
+    def element_class(self) -> GraphElement:
         ''' Pythonic class to implement each node to valid form '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
     
@@ -116,28 +121,28 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @abc.abstractmethod
-    def get_elements(self, part=None, id=None):
+    def get_elements(self, part=None, id=None) -> Iterable[GraphElement]:
         ''' Method that return node by part or id '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @abc.abstractmethod
-    def get_element(self, part=None, id=None):
+    def get_element(self, part=None, id=None) -> GraphElement:
         ''' Method that return filterd nodes by part or id '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @abc.abstractmethod
-    def _get_formated_links(self):
+    def _get_formated_links(self) -> Iterable[str]:
         ''' Private method that list all nodes '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @staticmethod
-    def _get_ids(name):
+    def _get_ids(name) -> List[int]:
         ''' Clear function that implement name to ids '''
         if len(tmp := name.split('-')) == 2:
             return list(range(int(tmp[0]), int(tmp[1])+1))
         return [int(name)]
 
-    def _convert_element(self, tmp, last_part):
+    def _convert_element(self, tmp, last_part) -> Iterable[GraphElement]:
         ''' Engine convertor '''
         if  len((splited := tmp.split('.'))) == 1:
             splited = splited, ''
@@ -206,7 +211,7 @@ class RepresentativeGraphElementAbstract:
         return self._children
 
     @property
-    def parents(self):
+    def parents(self) -> Iterable[GraphEngine]:
         ''' Nodes that have pointed by the node '''
         for element in self.graph:
             for child in element.children:
