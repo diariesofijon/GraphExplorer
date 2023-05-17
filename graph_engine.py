@@ -80,14 +80,10 @@ class StringByStringRegularExpressionMask(base.StringRegularExpressionMaskAbstra
         return self.get_elements(part, id)[0]
 
     @property
-    def _deepest_path(self) -> list:
-        return [ind for ind in range(self._depth)]# fix: make deep searching algorithm based on this property
-
-    @property
-    def _depth(self) -> int:
+    def depth_range(self) -> int:
         return len(self) # fix: make deep searching algorithm based on this property
 
     @property
-    def deepest_chain(self, left=True) -> Iterable:
+    def longes_cain(self, left=True) -> Iterable:
         for _ in range(self._depth):
             yield 0 if left else -1
