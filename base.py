@@ -19,22 +19,25 @@ __all__ = (
 # types
 GraphElement = TypeVar(
     'GraphElement', bound='RepresentativeGraphElementAbstract')
-    
+
 
 class _Chain(list):
-    
+
     '''
         Listening of ids and other numerical order of indicators with widly 
     usefull method for searching and slicing any indicator.
     '''
-    
+
     def from_start(self, index: int = 0):
+        ''' First element of the chain from index '''
         return self[index]
 
     def from_end(self, index: int = -1):
+        ''' Last element of the chain from index'''
         return self[len(self) - index]
-    
+
     def by_flag(self, flag: bool):
+        ''' Chose which elemnt start from '''
         pass
 
 
@@ -107,7 +110,7 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
     def element_class(self) -> GraphElement:
         ''' Pythonic class to implement each node to valid form '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
-    
+
     @property
     @abc.abstractmethod
     def longes_cain(self) -> Optional[_Chain, list, type, set]:
