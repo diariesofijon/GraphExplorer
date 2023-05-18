@@ -1,1 +1,3 @@
 graph_links.txt
+__pycache__
+*.pyc
