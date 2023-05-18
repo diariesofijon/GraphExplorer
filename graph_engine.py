@@ -35,7 +35,7 @@ class RepresentativeGraphElementMask(base.RepresentativeGraphElementAbstract):
         return self._separeter.join(parent for parent in self.parents)
 
     def walk(self, l: bool = True, c: list = list()):
-        yield (next_el := self.children[i:=c.pop()] if l else self.children.end(i))
+        yield (next_el := self.children[(i:=c.pop())] if l else self.children.end(i))
         yield from next_el.walk(l=l, c=c) # fix: make deep searching algorithm based on this property
 
     @property
