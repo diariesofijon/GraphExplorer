@@ -1,16 +1,16 @@
 #!/usr/bin/env python
-# pylint: disable=C0103
+# pylint: disable=C0103,C0114
 
 import sys
-from pprint import pprint
 from typing import Optional
 
 import graph_engine
 
 
 def walk(
-        graph: graph_engine.StringByStringRegularExpressionMask, 
+        graph: graph_engine.StringByStringRegularExpressionMask,
         index: Optional[int]=None):
+    ''' Walking down through the graph'''
     index_from = int(index) if index else 1
     next_element = graph[index_from]
     for element in next_element.walk():
@@ -28,7 +28,8 @@ def walk(
 
 def take_choice(
         element: graph_engine.RepresentativeGraphElementMask, index: int):
-    if index not in (1,2,3,4):
+    ''' Returns next element '''
+    if index not in set(1,2,3,4):
         raise ValueError('Index ' + str(index) + ' is out of range')
     next_element = None
     if index == 1 or index == 3:
@@ -40,8 +41,9 @@ def take_choice(
     return next_element
 
 def show_pretty_graph(
-        graph: graph_engine.StringByStringRegularExpressionMask, 
+        graph: graph_engine.StringByStringRegularExpressionMask,
         index: Optional[int]=None):
+    ''' Pretty printing of all graph '''
     index = int(index) if index else 1
     print('\n\n\n')
     print(index)
