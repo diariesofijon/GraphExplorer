@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# pylint: disable=C0103,W0622,E0602
+# pylint: disable=C0103,W0622
 
 '''
     Abstract classes for graph exploring
@@ -153,48 +153,42 @@ class RepresentativeGraphElementAbstract:
 
     ''' Base image of engine to realize each element of the graph '''
 
-    # private pythonic proxy method for RepresentativeGraphElementAbstract.children
+    # private pythonic proxy method for
+    # RepresentativeGraphElementAbstract.children
     _children: Optional[List] = None
 
     @abc.abstractmethod
     def __repr__(self) -> str:
         ''' Unique pythonic representation '''
-        raise NotImplementedError
 
     @abc.abstractmethod
     def __str__(self) -> str:
         ''' Unique string representation '''
-        raise NotImplementedError
 
     @property
     @abc.abstractmethod
     def id(self) -> str:
         ''' Id key of the node '''
-        raise NotImplementedError
 
     @property
     @abc.abstractmethod
     def part(self) -> str:
         ''' Part indetity of the node '''
-        raise NotImplementedError
 
     @property
     @abc.abstractmethod
     def grouped(self) -> str:
         ''' Other info about the node '''
-        raise NotImplementedError
 
     @property
     @abc.abstractmethod
     def body(self) -> str:
         ''' Body of the node '''
-        raise NotImplementedError
 
     @property
     @abc.abstractmethod
     def graph(self) -> StringRegularExpressionMaskAbstract:
         ''' Graph that contains the node '''
-        raise NotImplementedError
 
     @property
     def children(self) -> _Chain:
