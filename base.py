@@ -53,7 +53,6 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
     @abc.abstractmethod
     def __str__(self):
         ''' Unique string representation '''
-        pass
 
     def __new__(cls, *args, **kwargs):
         '''
