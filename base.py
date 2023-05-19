@@ -24,7 +24,7 @@ GraphElement = TypeVar(
 class _Chain(list):
 
     '''
-        Listening of ids and other numerical order of indicators with widly 
+        Listening of ids and other numerical order of indicators with widly
     usefull method for searching and slicing any indicator.
     '''
 
