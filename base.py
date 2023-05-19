@@ -39,7 +39,6 @@ class _Chain(list):
 
     def by_flag(self, flag: bool):
         ''' Chose which elemnt start from '''
-        pass
 
 
 @dataclass
@@ -50,7 +49,6 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
     @abc.abstractmethod
     def __repr__(self):
         ''' Unique pythonic representation '''
-        pass
 
     @abc.abstractmethod
     def __str__(self):
@@ -71,25 +69,21 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
     @abc.abstractmethod
     def element_mask(self) -> Optional[str]:
         ''' RegExp for finding each element of the node '''
-        pass
 
     @property
     @abc.abstractmethod
     def node_mask(self) -> Optional[str]:
         ''' RegExp for finding eahc node of the graph'''
-        pass
 
     @property
     @abc.abstractmethod
     def part_mask(self) -> Optional[str]:
         ''' RegExp for finding part of each node '''
-        pass
 
     @property
     @abc.abstractmethod
     def tmp(self) -> Optional[str]:
         ''' String of full texted graph '''
-        pass
 
     @property
     @abc.abstractmethod
@@ -98,52 +92,43 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
         The symbol that used to separaing each node of the text
         representation of the graph
         '''
-        pass
 
     @property
     @abc.abstractmethod
     def file(self) -> str:
         ''' Which file from engine have to load text of the graph '''
-        pass
 
     @property
     @abc.abstractmethod
     def last_part(self) -> str:
         ''' String iteration flag indecate what node have a part '''
-        pass
 
     @property
     @abc.abstractmethod
     def element_class(self) -> GE:
         ''' Pythonic class to implement each node to valid form '''
-        pass
 
     @property
     @abc.abstractmethod
     def longes_cain(self) -> Iterable[int]:
         ''' The chain of the longes_road '''
-        pass
 
     @property
     @abc.abstractmethod
     def depth_range(self) -> int:
         ''' The number that is the length of the longes road '''
-        pass
 
     @abc.abstractmethod
     def get_elements(self, part: str =None, id: Union[str, int] =None) -> GGE:
         ''' Method that return node by part or id '''
-        pass
 
     @abc.abstractmethod
     def get_element(self, part: str =None, id: Union[str, int] =None) -> GE:
         ''' Method that return filterd nodes by part or id '''
-        pass
 
     @abc.abstractmethod
     def _get_formated_links(self) -> Iterable[str]:
         ''' Private method that list all nodes '''
-        pass
 
     @staticmethod
     def _get_ids(name: str) -> List[int]:
@@ -154,7 +139,7 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
 
     def _convert_element(self, tmp: str, last_part: GE) -> GGE:
         ''' Engine convertor '''
-        if  len((splited := tmp.split('.'))) == 1:
+        if len((splited := tmp.split('.'))) == 1:
             splited = splited, ''
         ids, tmp = splited
         for id in self._get_ids(ids):
