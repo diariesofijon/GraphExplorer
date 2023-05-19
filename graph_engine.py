@@ -47,7 +47,9 @@ class RepresentativeGraphElementMask(RepresentativeGraphElementAbstract):
         return self._separeter().join(parent for parent in self.parents)
 
     def walk(self, left: bool = True, chain: Optional[List] = None):
-        ''' Walking down through the graph to the deep '''
+        '''
+        Walking down through the graph to the deep to see how grap was changed
+        '''
         index = chain.pop()
         next_el = self.children[index] if left else self.children.end(index)
         yield next_el
