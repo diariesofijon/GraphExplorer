@@ -2,7 +2,7 @@
 # pylint: disable=C0103,W0622
 
 '''
-    Loads graph from a file
+    Loads graph from a file as a text
 '''
 
 # fix: find another way to find points of graph due pythonic RegExp
