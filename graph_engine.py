@@ -77,6 +77,9 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
     def __str__(self):
         return self.separeter.join(str(tmp) for tmp in iter(self))
 
+    def __repr__(self):
+        return self.__str__()
+
     def _get_formated_links(self):
         for link in self.tmp.split(self.separeter):
             if (tmp := link.strip()).endswith('.'):
