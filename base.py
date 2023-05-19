@@ -9,17 +9,16 @@
 # import re
 import abc
 from dataclasses import dataclass
-from typing import Optional, TypeVar, List, Iterable
+from typing import Optional, TypeVar, List, Iterable, Union
 
 
 __all__ = (
-    'StringRegularExpressionMaskAbstract', 'GE',
+    'StringRegularExpressionMaskAbstract', 'GE', 'GGE',
     'RepresentativeGraphElementAbstract')
 
 
 # types
-GE = TypeVar(
-    'GraphElement', bound='RepresentativeGraphElementAbstract')
+GE = TypeVar('GE', bound='RepresentativeGraphElementAbstract')
 GGE = Iterable[GE]
 
 
@@ -43,7 +42,6 @@ class _Chain(list):
         pass
 
 
-# fix: remove all NotImplemented Error
 @dataclass
 class StringRegularExpressionMaskAbstract(abc.ABC):
 
@@ -52,17 +50,17 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
     @abc.abstractmethod
     def __repr__(self):
         ''' Unique pythonic representation '''
-        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
+        pass
 
     @abc.abstractmethod
     def __str__(self):
         ''' Unique string representation '''
-        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
+        pass
 
     def __new__(cls, *args, **kwargs):
         '''
-        to fix: Defenition of the graph have attrib or similart
-        to dataclass default values
+        to fix: Defenition of the graph have attrib or similart to
+        dataclass default values
         '''
         if not cls.tmp and not kwargs.get('tmp', ''):
             with open(cls.file, 'r', encoding='utf8') as file:
@@ -73,85 +71,88 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
     @abc.abstractmethod
     def element_mask(self) -> Optional[str]:
         ''' RegExp for finding each element of the node '''
-        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
+        pass
 
     @property
     @abc.abstractmethod
     def node_mask(self) -> Optional[str]:
         ''' RegExp for finding eahc node of the graph'''
-        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
+        pass
 
     @property
     @abc.abstractmethod
     def part_mask(self) -> Optional[str]:
         ''' RegExp for finding part of each node '''
-        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
+        pass
 
     @property
     @abc.abstractmethod
     def tmp(self) -> Optional[str]:
         ''' String of full texted graph '''
-        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
+        pass
 
     @property
     @abc.abstractmethod
     def separeter(self) -> Optional[str]:
-        ''' The symbol that used to separaing each node of the text representation of the graph '''
-        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
+        '''
+        The symbol that used to separaing each node of the text
+        representation of the graph
+        '''
+        pass
 
     @property
     @abc.abstractmethod
     def file(self) -> str:
         ''' Which file from engine have to load text of the graph '''
-        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
+        pass
 
     @property
     @abc.abstractmethod
     def last_part(self) -> str:
         ''' String iteration flag indecate what node have a part '''
-        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
+        pass
 
     @property
     @abc.abstractmethod
     def element_class(self) -> GE:
         ''' Pythonic class to implement each node to valid form '''
-        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
+        pass
 
     @property
     @abc.abstractmethod
-    def longes_cain(self) -> Optional[_Chain, list, type, set]:
+    def longes_cain(self) -> Iterable[int]:
         ''' The chain of the longes_road '''
-        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
+        pass
 
     @property
     @abc.abstractmethod
     def depth_range(self) -> int:
         ''' The number that is the length of the longes road '''
-        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
+        pass
 
     @abc.abstractmethod
-    def get_elements(self, part=None, id=None) -> GGE:
+    def get_elements(self, part: str =None, id: Union[str, int] =None) -> GGE:
         ''' Method that return node by part or id '''
-        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
+        pass
 
     @abc.abstractmethod
-    def get_element(self, part=None, id=None) -> GE:
+    def get_element(self, part: str =None, id: Union[str, int] =None) -> GE:
         ''' Method that return filterd nodes by part or id '''
-        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
+        pass
 
     @abc.abstractmethod
     def _get_formated_links(self) -> Iterable[str]:
         ''' Private method that list all nodes '''
-        raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
+        pass
 
     @staticmethod
-    def _get_ids(name) -> List[int]:
+    def _get_ids(name: str) -> List[int]:
         ''' Clear function that implement name to ids '''
         if len(tmp := name.split('-')) == 2:
             return list(range(int(tmp[0]), int(tmp[1])+1))
         return [int(name)]
 
-    def _convert_element(self, tmp, last_part) -> GGE:
+    def _convert_element(self, tmp: str, last_part: GE) -> GGE:
         ''' Engine convertor '''
         if  len((splited := tmp.split('.'))) == 1:
             splited = splited, ''
@@ -169,15 +170,15 @@ class RepresentativeGraphElementAbstract:
     ''' Base image of engine to realize each element of the graph '''
 
     # private pythonic proxy method for RepresentativeGraphElementAbstract.children
-    _children: list = None
+    _children: Optional[List] = None
 
     @abc.abstractmethod
-    def __repr__(self):
+    def __repr__(self) -> str:
         ''' Unique pythonic representation '''
         raise NotImplementedError
 
     @abc.abstractmethod
-    def __str__(self):
+    def __str__(self) -> str:
         ''' Unique string representation '''
         raise NotImplementedError
 
@@ -207,7 +208,7 @@ class RepresentativeGraphElementAbstract:
 
     @property
     @abc.abstractmethod
-    def graph(self):
+    def graph(self) -> StringRegularExpressionMaskAbstract:
         ''' Graph that contains the node '''
         raise NotImplementedError
 
@@ -220,7 +221,7 @@ class RepresentativeGraphElementAbstract:
         return self._children
 
     @property
-    def parents(self) -> Iterable[GraphEngine]:
+    def parents(self) -> GGE:
         ''' Nodes that have pointed by the node '''
         for element in self.graph:
             for child in element.children:

@@ -7,14 +7,14 @@ import config
 from dataclasses import dataclass, field
 from typing import Optional
 
-import base
+from base import *
 
 
 __all__ = ('RepresentativeGraphElement', 'StringRepresentationGraph')
 
 
 @dataclass
-class RepresentativeGraphElementMask(base.RepresentativeGraphElementAbstract):
+class RepresentativeGraphElementMask(RepresentativeGraphElementAbstract):
 
     ''' Sensetive turn off '''
 
@@ -22,7 +22,7 @@ class RepresentativeGraphElementMask(base.RepresentativeGraphElementAbstract):
     part: str = ''
     grouped: str = ''
     body: str = ''
-    graph: Optional[base.StringRegularExpressionMaskAbstract] = None
+    graph: Optional[StringRegularExpressionMaskAbstract] = None
     separater_key: str = ''
 
     def __str__(self):
@@ -44,7 +44,7 @@ class RepresentativeGraphElementMask(base.RepresentativeGraphElementAbstract):
 
 
 @dataclass
-class StringByStringRegularExpressionMask(base.StringRegularExpressionMaskAbstract):
+class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
 
     element_mask: Optional[str] = r'.+(?P<id>\D+)\..?(?P<grouped>.+): (?P<body>.*)\n'
     node_mask: Optional[str] = r'(?P<id>\D+)\((?P<children_list>.*)\)'
@@ -76,7 +76,7 @@ class StringByStringRegularExpressionMask(base.StringRegularExpressionMaskAbstra
             yield from (el for el in self if el.starswith(part) and el.id == id)
         raise IndexError('Unknown id or part')
 
-    def get_element(self, part=None, nid=None) -> base.RepresentativeGraphElementAbstract:
+    def get_element(self, part=None, nid=None) -> RepresentativeGraphElementAbstract:
         return self.get_elements(part, id)[0]
 
     @property
