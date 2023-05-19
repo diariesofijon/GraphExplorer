@@ -11,5 +11,5 @@
 '''
 
 SEPARATES = {
-	'NODE': '\n'
+    'NODE': '\n',
 }

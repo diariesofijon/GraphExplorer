@@ -13,12 +13,14 @@ from typing import Optional, TypeVar, List, Iterable
 
 
 __all__ = (
-    'StringRegularExpressionMaskAbstract', 'RepresentativeGraphElementAbstract', 'GraphElement')
+    'StringRegularExpressionMaskAbstract', 'GE',
+    'RepresentativeGraphElementAbstract')
 
 
 # types
-GraphElement = TypeVar(
+GE = TypeVar(
     'GraphElement', bound='RepresentativeGraphElementAbstract')
+GGE = Iterable[GE]
 
 
 class _Chain(list):
@@ -41,6 +43,7 @@ class _Chain(list):
         pass
 
 
+# fix: remove all NotImplemented Error
 @dataclass
 class StringRegularExpressionMaskAbstract(abc.ABC):
 
@@ -57,7 +60,10 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     def __new__(cls, *args, **kwargs):
-        ''' to fix: Defenition of the graph have attrib or similart to dataclass default values '''
+        '''
+        to fix: Defenition of the graph have attrib or similart
+        to dataclass default values
+        '''
         if not cls.tmp and not kwargs.get('tmp', ''):
             with open(cls.file, 'r', encoding='utf8') as file:
                 cls.tmp = file.read()
@@ -107,7 +113,7 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def element_class(self) -> GraphElement:
+    def element_class(self) -> GE:
         ''' Pythonic class to implement each node to valid form '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
@@ -124,12 +130,12 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @abc.abstractmethod
-    def get_elements(self, part=None, id=None) -> Iterable[GraphElement]:
+    def get_elements(self, part=None, id=None) -> GGE:
         ''' Method that return node by part or id '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
     @abc.abstractmethod
-    def get_element(self, part=None, id=None) -> GraphElement:
+    def get_element(self, part=None, id=None) -> GE:
         ''' Method that return filterd nodes by part or id '''
         raise NotImplementedError(f'Have to definded in {self.__class__.__name__}.')
 
@@ -145,7 +151,7 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
             return list(range(int(tmp[0]), int(tmp[1])+1))
         return [int(name)]
 
-    def _convert_element(self, tmp, last_part) -> Iterable[GraphElement]:
+    def _convert_element(self, tmp, last_part) -> GGE:
         ''' Engine convertor '''
         if  len((splited := tmp.split('.'))) == 1:
             splited = splited, ''
