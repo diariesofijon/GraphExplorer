@@ -40,19 +40,20 @@ class RepresentativeGraphElementMask(RepresentativeGraphElementAbstract):
 
     def show_children(self):
         ''' Texted view of children of the elemenet '''
-        return self._separeter.join(child for child in self.children)
+        return self._separeter().join(child for child in self.children)
 
     def show_parents(self):
         ''' Texted view of parents of the elemenet '''
-        return self._separeter.join(parent for parent in self.parents)
+        return self._separeter().join(parent for parent in self.parents)
 
-    def walk(self, l: bool = True, c: Optional[List] = None):
+    def walk(self, left: bool = True, chain: Optional[List] = None):
         ''' Walking down through the graph to the deep '''
-        yield (next_el := self.children[(i:=c.pop())] if l else self.children.end(i))
+        index = chain.pop()
+        next_el = self.children[index] if left else self.children.end(index)
+        yield next_el
         # fix: make deep searching algorithm based on this property
-        yield from next_el.walk(l=l, c=c)
+        yield from next_el.walk(left=left, chain=chain)
 
-    @property
     def _separeter(self):
         return config.SEPARATES.get(self.separater_key, self.graph.separeter)
 
@@ -100,7 +101,8 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
 
     @property
     def depth_range(self) -> int:
-        return len(self) # fix: make deep searching algorithm based on this property
+        # fix: make deep searching algorithm based on this property
+        return len(self)
 
     @property
     def longes_cain(self) -> Iterable:
