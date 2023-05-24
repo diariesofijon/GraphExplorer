@@ -11,7 +11,7 @@ def walk(
         graph: graph_engine.StringByStringRegularExpressionMask,
         index: Optional[int]=None):
     ''' Walking down through the graph'''
-    index_from = int(index) if index else 1
+    index_from = int(index) if index else 0
     next_element = graph[index_from]
     for element in next_element.walk():
         print('type 1 - to get next left, \
