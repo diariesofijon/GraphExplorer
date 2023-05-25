@@ -2,17 +2,14 @@
 # pylint: disable=C0103,C0114
 
 import sys
-from typing import Optional
 
 import graph_engine
+import base
 
 
-def walk(
-        graph: graph_engine.StringByStringRegularExpressionMask,
-        index: Optional[int]=None):
+def walk(graph: base.GM, index: int =0):
     ''' Walking down through the graph'''
-    index_from = int(index) if index else 0
-    next_element = graph[index_from]
+    next_element = graph[index]
     for element in next_element.walk():
         print('type 1 - to get next left, \
                 2 - to get previous right,\
@@ -26,8 +23,7 @@ def walk(
         print(element.show_children())
         next_element = take_choice(element, index_type)
 
-def take_choice(
-        element: graph_engine.RepresentativeGraphElementMask, index: int):
+def take_choice(element: base.GE, index: int):
     ''' Returns next element '''
     if index not in {1, 2, 3, 4}:
         raise ValueError('Index ' + str(index) + ' is out of range')
@@ -40,15 +36,12 @@ def take_choice(
         next_element = element.parent[index]
     return next_element
 
-def show_pretty_graph(
-        graph: graph_engine.StringByStringRegularExpressionMask,
-        index: Optional[int]=None):
+def show_pretty_graph(graph: base.GM, index: int =1):
     ''' Pretty printing of all graph '''
-    index = int(index) if index else 1
     print('\n\n\n')
     print(index)
     # starting walking from the first element
-    walk(graph, index)
+    walk(graph)
 
 def main():
     ''' Converting list of links to a graph '''
@@ -57,7 +50,6 @@ def main():
     srg = graph_engine.StringByStringRegularExpressionMask()
 
     with open('output.txt', 'w', encoding='utf8') as file:
-        print(srg.tmp)
         file.write(str(srg))
 
     show_pretty_graph(srg, 3)

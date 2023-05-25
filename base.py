@@ -13,13 +13,17 @@ from typing import Optional, TypeVar, List, Iterable, Union
 
 
 __all__ = (
-    'StringRegularExpressionMaskAbstract', 'GE', 'GGE',
+    'StringRegularExpressionMaskAbstract', 'GE', 'GGE', 'GM', 'Chain',
     'RepresentativeGraphElementAbstract')
 
 
 # types
 GE = TypeVar('GE', bound='RepresentativeGraphElementAbstract')
+# TODO: Dependevice injection from graph mask to pythonic graph
+GM = TypeVar('GM', bound='StringByStringRegularExpressionMask')
+# Graph = TypeVar('Graph', bound='...')
 GGE = Iterable[GE]
+Chain = TypeVar('Chain', bound='_Chain')
 
 
 class _Chain(list):
@@ -198,7 +202,7 @@ class RepresentativeGraphElementAbstract:
         ''' Graph that contains the node '''
 
     @property
-    def children(self) -> _Chain:
+    def children(self) -> Chain:
         ''' Nodes that linked on the node '''
         if self._children is None:
             self._children = _Chain(*self.graph.get_elements(
