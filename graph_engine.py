@@ -69,8 +69,8 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
     node_mask: Optional[str] = r'(?P<id>\D+)\((?P<children_list>.*)\)'
     part_mask: Optional[str] = r'.*(?P<id>\S+\D+\).\n'
     tmp: Optional[str] = None
-    separeter: str = '\n'
-    file: str = 'graph_links.txt'
+    separeter: str = config.SEPARATES.get('NODE')
+    file: str = config.FILE_DATA_LOADER_PATH
     last_part: str = 'A1.'
     element_class = RepresentativeGraphElementMask
 
@@ -93,15 +93,16 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
                 continue
             yield from self._convert_element(tmp, self.last_part)
 
-    def get_element(self, part: str =None, id: Union[str, int] =None) -> GE:
-        if id and not part:
+    def get_elements(self, part: str =None, id: Union[str, int] =None) -> GE:
+        if not id and not part:
+            raise IndexError()
+        if not part:
             # fix: it would be good idea if we can search only by id???
             raise IndexError('Part has not defined when id was passed')
         if id and part:
             yield from (el for el in self if el.starswith(part) and el.id == id)
-        raise IndexError('Unknown id or part')
 
-    def get_elements(self, part: str =None, id: Union[str, int] =None) -> GE:
+    def get_element(self, part: str =None, id: Union[str, int] =None) -> GE:
         return self.get_elements(part, id)[0]
 
     @property

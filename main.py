@@ -52,22 +52,15 @@ def show_pretty_graph(
 
 def main():
     ''' Converting list of links to a graph '''
-    index = None
-    if len(sys.argv) and sys.argv[0] == '-from_console':
-        index = 1
-        srg = graph_engine.StringByStringRegularExpressionMask(tmp=input())
-    elif (len(sys.argv)-1) and (file:= sys.argv[1]) and file.endswith('.txt'):
-        index = 2
-        srg = graph_engine.StringByStringRegularExpressionMask(file=file)
-    else:
-        index = 3
-        srg = graph_engine.StringByStringRegularExpressionMask()
+
+    # TODO: make clear console interface
+    srg = graph_engine.StringByStringRegularExpressionMask()
 
     with open('output.txt', 'w', encoding='utf8') as file:
         print(srg.tmp)
         file.write(str(srg))
 
-    show_pretty_graph(srg, index)
+    show_pretty_graph(srg, 3)
 
 if __name__ == '__main__':
     print('input the graph')

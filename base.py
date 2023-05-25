@@ -64,6 +64,13 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
                 cls.tmp = file.read()
         return super().__new__(cls, *args, **kwargs)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(self, *args, **kwargs)
+        if not self.tmp:
+            with open(self.file, 'r', encoding='utf8') as file:
+                self.tmp: str = file.read()
+        # print(self.tmp, ' end ')
+
     @property
     @abc.abstractmethod
     def element_mask(self) -> Optional[str]:
