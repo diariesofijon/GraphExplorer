@@ -88,6 +88,9 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
             if (tmp := link.strip()).endswith('.'):
                 self.last_part = tmp
                 continue
+            if not tmp:
+                # ATTENTION: ignore blank line
+                continue
             yield from self._convert_element(tmp, self.last_part)
 
     def get_element(self, part: str =None, id: Union[str, int] =None) -> GE:
