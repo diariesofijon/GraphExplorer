@@ -8,6 +8,8 @@
 # hot fix: add finding elements of graph in text by pythonic regexp
 # import re
 import abc
+import collections.abc
+# TODO: IMPLEMENT PYTHONIC COLLECTION ABSTRACTION
 from dataclasses import dataclass
 from typing import Optional, TypeVar, List, Iterable, Union
 
@@ -20,7 +22,7 @@ __all__ = (
 # types
 GE = TypeVar('GE', bound='RepresentativeGraphElementAbstract')
 # TODO: Dependevice injection from graph mask to pythonic graph
-GM = TypeVar('GM', bound='StringByStringRegularExpressionMask')
+GM = TypeVar('GM', bound='StringRegularExpressionMaskAbstract')
 # Graph = TypeVar('Graph', bound='...')
 GGE = Iterable[GE]
 Chain = TypeVar('Chain', bound='_Chain')
@@ -33,6 +35,14 @@ class _Chain(list):
     usefull method for searching and slicing any indicator.
     '''
 
+    # TODO: MAKE CHAIN UNIQUE PYTHONIC DATA STRUCTURE
+    # ALSO KNOW AS GENRATOR AND ITERABLE, YAPE!!!!
+
+    # TODO: HOW ARCHITECTURE HAVE TO LOOK LIKE -- READ BELOW
+    # COMPOSITION IS BETTER THAN INHERITANCE!!!
+    # POINT THAT -- CONVERT ALL THIS STUFF TO COMPOSTION LIKE DESIGNED IN
+    # PYTHONIC lib.collections/lib.collections.abc libraries!!!!
+
     def from_start(self, index: int = 0):
         ''' First element of the chain from index '''
         return self[index]
@@ -41,14 +51,16 @@ class _Chain(list):
         ''' Last element of the chain from index'''
         return self[len(self) - index]
 
-    def by_flag(self, flag: bool):
-        ''' Chose which elemnt start from '''
+    def filtered(self, func):
+        ''' returns duplicated collection of filtered by the function due pythonic filter '''
+        return _Chain(filter(func, self))
 
 
 @dataclass
 class StringRegularExpressionMaskAbstract(abc.ABC):
 
     ''' Base image of engine to convert text to a graph '''
+    # TODO: IMPLEMENT PYTHONIC COLLECTION ABSTRACTION
 
     @abc.abstractmethod
     def __repr__(self):
@@ -120,12 +132,12 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def longes_cain(self) -> Iterable[int]:
+    def longest_chain(self) -> Iterable[int]:
         ''' The chain of the longes_road '''
 
     @property
     @abc.abstractmethod
-    def depth_range(self) -> int:
+    def dfs_depth(self) -> int:
         ''' The number that is the length of the longes road '''
 
     @abc.abstractmethod
@@ -160,13 +172,14 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
 
 
 @dataclass
-class RepresentativeGraphElementAbstract:
+class RepresentativeGraphElementAbstract(collections.abc.Hashable):
 
     ''' Base image of engine to realize each element of the graph '''
 
     # private pythonic proxy method for
     # RepresentativeGraphElementAbstract.children
     _children: Optional[List] = None
+    # TODO: IMPLEMENT PYTHONIC COLLECTION ABSTRACTION
 
     @abc.abstractmethod
     def __repr__(self) -> str:
@@ -198,7 +211,7 @@ class RepresentativeGraphElementAbstract:
 
     @property
     @abc.abstractmethod
-    def graph(self) -> StringRegularExpressionMaskAbstract:
+    def graph(self) -> GM:
         ''' Graph that contains the node '''
 
     @property
@@ -210,13 +223,9 @@ class RepresentativeGraphElementAbstract:
         return self._children
 
     @property
-    def parents(self) -> GGE:
+    def parents(self) -> Chain:
         ''' Nodes that have pointed by the node '''
-        for element in self.graph:
-            for child in element.children:
-                if int(child.id) == int(self.id):
-                    yield element
-                    break
+        return _Chain(*self.graph).filtered(lambda el: self in el.children)
 
     # hot fix what do it do
     # def load(self, string=None, part=None, id=None):

@@ -106,10 +106,12 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
         return self.get_elements(part, id)[0]
 
     @property
-    def depth_range(self) -> int:
+    def dfs_depth(self) -> int:
+        ''' The deepth of the graph '''
         # fix: make deep searching algorithm based on this property
         return len(self)
 
     @property
-    def longes_cain(self) -> Iterable:
-        return [0 for _ in range(self.depth_range)]
+    def longest_chain(self) -> Iterable[int]:
+        ''' The logest chain to iterate through the DFS algorithm '''
+        return [0 for _ in range(self.dfs_depth)]
