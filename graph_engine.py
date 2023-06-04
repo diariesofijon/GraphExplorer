@@ -38,6 +38,8 @@ class RepresentativeGraphElementMask(RepresentativeGraphElementAbstract):
     def __repr__(self):
         return self.__str__()
 
+    # TODO: move all show logic to new console or graphic interface in MIXIN
+    # inheretince way
     def show_children(self):
         ''' Texted view of children of the elemenet '''
         return self._separeter().join(child for child in self.children)
