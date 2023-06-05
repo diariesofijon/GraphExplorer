@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# pylint: disable=C0103,W0622
+# pylint: disable=C0103,W0622,E1136
 
 '''
     Loads graph from a file as a text through regexp
@@ -75,6 +75,12 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
     file: str = config.FILE_DATA_LOADER_PATH
     last_part: str = 'A1.'
     element_class = RepresentativeGraphElementMask
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.tmp:
+            with open(self.file, 'r', encoding='utf8') as file:
+                self.tmp: str = file.read()
 
     def __iter__(self):
         return iter(self._get_formated_links())

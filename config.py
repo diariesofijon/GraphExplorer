@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # pylint: disable=C0103
-# pyling: disable=W0622
-# pyling: disable=E0602
+# pylint: disable=W0622
+# pylint: disable=E0602
+# pylint: disable=E0001
 
 '''
         This file contains all settings of the project like constans,

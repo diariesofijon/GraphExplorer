@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# pylint: disable=C0103,W0622
+# pylint: disable=C0103,W0622,E0001
 
 '''
     Abstract classes for graph exploring
@@ -70,22 +70,24 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
     def __str__(self):
         ''' Unique string representation '''
 
-    def __new__(cls, *args, **kwargs):
-        '''
-        to fix: Defenition of the graph have attrib or similart to
-        dataclass default values
-        '''
-        if not cls.tmp and not kwargs.get('tmp', ''):
-            with open(cls.file, 'r', encoding='utf8') as file:
-                cls.tmp = file.read()
-        return super().__new__(cls, *args, **kwargs)
+    # def __new__(cls, *args, **kwargs):
+    #     '''
+    #     to fix: Defenition of the graph have attrib or similart to
+    #     dataclass default values
+    #     '''
+    #     if not cls.tmp and not kwargs.get('tmp', ''):
+    #         with open(cls.file, 'r', encoding='utf8') as file:
+    #             cls.tmp = file.read()
+    #     return super().__new__(cls, *args, **kwargs)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(self, *args, **kwargs)
-        if not self.tmp:
-            with open(self.file, 'r', encoding='utf8') as file:
-                self.tmp: str = file.read()
-        # print(self.tmp, ' end ')
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(self, *args, **kwargs)
+    #     print('self.tmp 1 ', self.tmp)
+    #     if not self.tmp:
+    #         print('self.tmp 2 ', self.tmp)
+    #         with open(self.file, 'r', encoding='utf8') as file:
+    #             print('self.tmp 3 ', self.tmp)
+    #             self.tmp: str = file.read()
 
     @property
     @abc.abstractmethod
