@@ -10,8 +10,8 @@
 import abc
 import collections.abc
 # TODO: IMPLEMENT PYTHONIC COLLECTION ABSTRACTION
-from dataclasses import dataclass
-from typing import Optional, TypeVar, List, Iterable, Union
+from dataclasses import dataclass, field
+from typing import Optional, TypeVar, List, Iterable, Union, Dict
 
 
 __all__ = (
@@ -43,11 +43,11 @@ class _Chain(list):
     # POINT THAT -- CONVERT ALL THIS STUFF TO COMPOSTION LIKE DESIGNED IN
     # PYTHONIC lib.collections/lib.collections.abc libraries!!!!
 
-    def from_start(self, index: int = 0):
+    def start(self, index: int = 0):
         ''' First element of the chain from index '''
         return self[index]
 
-    def from_end(self, index: int = -1):
+    def end(self, index: int = -1):
         ''' Last element of the chain from index'''
         return self[len(self) - index]
 
@@ -57,7 +57,7 @@ class _Chain(list):
 
 
 @dataclass
-class StringRegularExpressionMaskAbstract(abc.ABC):
+class StringRegularExpressionMaskAbstract(collections.abc.Collection):
 
     ''' Base image of engine to convert text to a graph '''
     # TODO: IMPLEMENT PYTHONIC COLLECTION ABSTRACTION
@@ -142,6 +142,9 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
     def dfs_depth(self) -> int:
         ''' The number that is the length of the longes road '''
 
+    # TODO: Can't instantiate abstract class ... with abstract method ids_map
+    ids_map: Dict[str, int] = field(default_factory=lambda:{'A1.': 0})
+
     @abc.abstractmethod
     def get_elements(self, part: str =None, id: Union[str, int] =None) -> GGE:
         ''' Method that return node by part or id '''
@@ -169,7 +172,9 @@ class StringRegularExpressionMaskAbstract(abc.ABC):
         for id in self._get_ids(ids):
             grouped, body = tmp.split(':')
             data = self.element_class(
-                id=id, grouped=grouped, part=last_part, body=body)
+                id=id, grouped=grouped, part=last_part, body=body, graph=self)
+            # TODO: have to be strictly increased instead of redefining
+            self.ids_map[last_part] = id
             yield data
 
 
@@ -180,8 +185,10 @@ class RepresentativeGraphElementAbstract(collections.abc.Hashable):
 
     # private pythonic proxy method for
     # RepresentativeGraphElementAbstract.children
-    _children: Optional[List] = None
+    # _children: Optional[List[int]] = None
+    # _parents: Optional[List[int]] = None
     # TODO: IMPLEMENT PYTHONIC COLLECTION ABSTRACTION
+    # TODO: MAKE IT SINGLETONE
 
     @abc.abstractmethod
     def __repr__(self) -> str:
@@ -204,12 +211,12 @@ class RepresentativeGraphElementAbstract(collections.abc.Hashable):
     @property
     @abc.abstractmethod
     def grouped(self) -> str:
-        ''' Other info about the node '''
+        ''' Other info about the node in the Eisenhower matrix '''
 
     @property
     @abc.abstractmethod
     def body(self) -> str:
-        ''' Body of the node '''
+        ''' The node's body contains info about parent's ids'''
 
     @property
     @abc.abstractmethod
@@ -219,15 +226,23 @@ class RepresentativeGraphElementAbstract(collections.abc.Hashable):
     @property
     def children(self) -> Chain:
         ''' Nodes that linked on the node '''
-        if self._children is None:
-            self._children = _Chain(*self.graph.get_elements(
-                part=self.part, id=self.id))
-        return self._children
+        return _Chain([*self.graph]).filtered(lambda el: self in el.parents)
 
     @property
     def parents(self) -> Chain:
         ''' Nodes that have pointed by the node '''
-        return _Chain(*self.graph).filtered(lambda el: self in el.children)
+        _parents = _Chain()
+        # TODO: FIND MORE BEATIFUL SOLUTION INSTEAD OF [0:len(_)-1]
+        for group in (_:=self.body.split(')'))[0:len(_)-1]:
+            part, ids = group.lstrip(',').strip().split('(')
+            part = list(self.graph.ids_map.keys())[int(part)-1]
+            for g in ids.split(','):
+                for _id in self.graph._get_ids(g):
+                    _id = int(_id)
+                    _parents.append(self.graph.get_element(part=part, id=_id))
+        return _parents
+
+
 
     # hot fix what do it do
     # def load(self, string=None, part=None, id=None):

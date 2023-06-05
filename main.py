@@ -10,9 +10,11 @@ import base
 def walk(graph: base.GM, index: int =0):
     ''' Walking down through the graph'''
     next_element = graph[index]
-    for element in next_element.walk():
+    chain = graph.longest_chain[:5]
+    for element in next_element.walk(chain=chain):
+        print(f'current element {next_element} with index {index}')
         print('type 1 - to get next left, \
-                2 - to get previous right,\
+                2 - to get previous left,\
                 3 - to get next right,    \
                 4 - to get previous right,\
                 5 - to get out of walking')
@@ -22,6 +24,7 @@ def walk(graph: base.GM, index: int =0):
             sys.exit(0)
         print(element.show_children())
         next_element = take_choice(element, index_type)
+    print('chain is ended')
 
 def take_choice(element: base.GE, index: int):
     ''' Returns next element '''
@@ -33,7 +36,7 @@ def take_choice(element: base.GE, index: int):
         next_element = element.children[index]
     else:
         index = 0 if index == 2 else -1
-        next_element = element.parent[index]
+        next_element = element.parents[index]
     return next_element
 
 def show_pretty_graph(graph: base.GM, index: int =1):
