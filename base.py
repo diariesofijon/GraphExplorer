@@ -11,12 +11,12 @@ import abc
 import collections.abc
 # TODO: IMPLEMENT PYTHONIC COLLECTION ABSTRACTION
 from dataclasses import dataclass, field
-from typing import Optional, TypeVar, List, Iterable, Union, Dict
+from typing import Optional, TypeVar, List, Iterable, Union, Dict, FrozenSet
 
 
 __all__ = (
-    'StringRegularExpressionMaskAbstract', 'GE', 'GGE', 'GM', 'Chain',
-    'RepresentativeGraphElementAbstract')
+    'StringRegularExpressionMaskAbstract', 'GE', 'GGE', 'GM', 'Chain', 'Tree',
+    'RepresentativeGraphElementAbstract', 'GraphTreeRepresintationMaskAbstract')
 
 
 # types
@@ -26,6 +26,7 @@ GM = TypeVar('GM', bound='StringRegularExpressionMaskAbstract')
 # Graph = TypeVar('Graph', bound='...')
 GGE = Iterable[GE]
 Chain = TypeVar('Chain', bound='_Chain')
+Tree = TypeVar('Tree', bound='GraphTreeRepresintationMaskAbstract')
 
 
 class _Chain(list):
@@ -54,6 +55,39 @@ class _Chain(list):
     def filtered(self, func):
         ''' returns duplicated collection of filtered by the function due pythonic filter '''
         return _Chain(filter(func, self))
+
+
+class GraphTreeRepresintationMaskAbstract(collections.abc.Mapping):
+
+    ''' Iterable tree representation of a graph '''
+
+    @property
+    @abc.abstractmethod
+    def _sliced_graph(self) -> GM:
+        ''' Private link on a graph  '''
+
+    @property
+    @abc.abstractmethod
+    def element_ids(self) -> FrozenSet[int]:
+        ''' Frozen set of all trees ids'''
+
+    @property
+    @abc.abstractmethod
+    def longest_chain(self) -> Iterable[int]:
+        ''' The chain of the longes_road '''
+
+    @property
+    @abc.abstractmethod
+    def depth(self) -> int:
+        ''' The number that is the length of the longes road '''
+
+    @abc.abstractmethod
+    def dfs(self) -> GGE:
+        ''' DFS as generator '''
+
+    @abc.abstractmethod
+    def bfs(self) -> GGE:
+        ''' BFS as generator '''
 
 
 @dataclass
@@ -89,20 +123,20 @@ class StringRegularExpressionMaskAbstract(collections.abc.Collection):
     #             print('self.tmp 3 ', self.tmp)
     #             self.tmp: str = file.read()
 
-    @property
-    @abc.abstractmethod
-    def element_mask(self) -> Optional[str]:
-        ''' RegExp for finding each element of the node '''
+    # @property
+    # @abc.abstractmethod
+    # def element_mask(self) -> Optional[str]:
+    #     ''' RegExp for finding each element of the node '''
 
-    @property
-    @abc.abstractmethod
-    def node_mask(self) -> Optional[str]:
-        ''' RegExp for finding eahc node of the graph'''
+    # @property
+    # @abc.abstractmethod
+    # def node_mask(self) -> Optional[str]:
+    #     ''' RegExp for finding eahc node of the graph'''
 
-    @property
-    @abc.abstractmethod
-    def part_mask(self) -> Optional[str]:
-        ''' RegExp for finding part of each node '''
+    # @property
+    # @abc.abstractmethod
+    # def part_mask(self) -> Optional[str]:
+    #     ''' RegExp for finding part of each node '''
 
     @property
     @abc.abstractmethod
@@ -132,16 +166,6 @@ class StringRegularExpressionMaskAbstract(collections.abc.Collection):
     def element_class(self) -> GE:
         ''' Pythonic class to implement each node to valid form '''
 
-    @property
-    @abc.abstractmethod
-    def longest_chain(self) -> Iterable[int]:
-        ''' The chain of the longes_road '''
-
-    @property
-    @abc.abstractmethod
-    def dfs_depth(self) -> int:
-        ''' The number that is the length of the longes road '''
-
     # TODO: Can't instantiate abstract class ... with abstract method ids_map
     ids_map: Dict[str, int] = field(default_factory=lambda:{'A1.': 0})
 
@@ -156,6 +180,18 @@ class StringRegularExpressionMaskAbstract(collections.abc.Collection):
     @abc.abstractmethod
     def _get_formated_links(self) -> Iterable[str]:
         ''' Private method that list all nodes '''
+
+    @abc.abstractmethod
+    def exlude_tree(self) -> Tree:
+        '''
+        Find the sequence which can work like a tree. Raise
+        Vaildation Error if it has no any tree variant
+        '''
+
+    @property
+    @abc.abstractmethod
+    def tree_topic(self) -> GE:
+        ''' Highest element in the biggest tree of the graph '''
 
     @staticmethod
     def _get_ids(name: str) -> List[int]:

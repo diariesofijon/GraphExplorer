@@ -1,61 +1,29 @@
 #!/usr/bin/env python
 # pylint: disable=C0103,C0114
 
-import sys
+'''
+    TODO: make DFS step by step
+        1. function as bound method for the graph which fitler them by tree belonging
+        2. function as bound method for the graph which filter them by tree absent
+        3. function that sort elements of the graph by the matrix's part belonging
+        4. matrix data
+        5. visualistaion
+'''
 
-import graph_engine
-import base
+from data_structures import StringByStringRegularExpressionMask
+import cli
 
-
-def walk(graph: base.GM, index: int =0):
-    ''' Walking down through the graph'''
-    next_element = graph[index]
-    chain = graph.longest_chain[:5]
-    for element in next_element.walk(chain=chain):
-        print(f'current element {next_element} with index {index}')
-        print('type 1 - to get next left, \
-                2 - to get previous left,\
-                3 - to get next right,    \
-                4 - to get previous right,\
-                5 - to get out of walking')
-        index_type = int(input())
-        if index_type == 5:
-            print('Have a nice day!')
-            sys.exit(0)
-        print(element.show_children())
-        next_element = take_choice(element, index_type)
-    print('chain is ended')
-
-def take_choice(element: base.GE, index: int):
-    ''' Returns next element '''
-    if index not in {1, 2, 3, 4}:
-        raise ValueError('Index ' + str(index) + ' is out of range')
-    next_element = None
-    if index in {1, 3}:
-        index = 0 if index == 1 else -1
-        next_element = element.children[index]
-    else:
-        index = 0 if index == 2 else -1
-        next_element = element.parents[index]
-    return next_element
-
-def show_pretty_graph(graph: base.GM, index: int =1):
-    ''' Pretty printing of all graph '''
-    print('\n\n\n')
-    print(index)
-    # starting walking from the first element
-    walk(graph)
 
 def main():
     ''' Converting list of links to a graph '''
 
     # TODO: make clear console interface
-    srg = graph_engine.StringByStringRegularExpressionMask()
+    srg = StringByStringRegularExpressionMask()
 
     with open('output.txt', 'w', encoding='utf8') as file:
         file.write(str(srg))
 
-    show_pretty_graph(srg, 3)
+    cli.show_pretty_graph(srg, 3)
 
 if __name__ == '__main__':
     print('input the graph')
