@@ -1,136 +1,159 @@
 #!/usr/bin/env python
+# pylint: disable=C0103,W0622,E1136
 
-import re
-from xml.etree import ElementTree
+'''
+    Loads graph from a file as a text through regexp
+'''
+
+# fix: find another way to find points of graph due pythonic RegExp
+# import re
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, List, Union, Iterable, Dict
 
-import base
+import config
+from base import (
+    StringRegularExpressionMaskAbstract, GE, GGE,
+    RepresentativeGraphElementAbstract)
 
 
-__all__ = ('RepresentativeGraphElement', 'StringRepresentationGraph')
+__all__ = (
+    'RepresentativeGraphElementMask', 'StringByStringRegularExpressionMask')
 
 
 @dataclass
-class RepresentativeGraphElementMask(base.RepresentativeGraphElementAbstract):
-    
+class RepresentativeGraphElementMask(RepresentativeGraphElementAbstract):
+
     ''' Sensetive turn off '''
-    
+
     id: str = ''
     part: str = ''
     grouped: str = ''
     body: str = ''
-    graph: Optional[base.StringRegularExpressionMaskAbstract] = None
-    
+    # TODO: REMOVE OPTIONAL
+    graph: Optional[StringRegularExpressionMaskAbstract] = None
+    separater_key: str = ''
+
     def __str__(self):
         return f'{self.part} id: {self.id} = {self.grouped} - {self.body}'
-    
-    def show_children(self, pretty=True):
-        return '\n'.join((child for child in self.children))
-    
-    def show_parents(self, pretty=True):
-        return '\n'.join((parent for parent in self.parents))
 
-    def walk(self, left=True):
-        first = element.children[0]
-        last = element.children[-1]
-        yield first if left
-        yield last
+    def __repr__(self):
+        return self.__str__()
+
+    # TODO: move all show logic to new console or graphic interface in MIXIN
+    # inheretince way
+    def show_children(self):
+        ''' Texted view of children of the elemenet '''
+        return self._separeter().join(str(child) for child in self.children)
+
+    def show_parents(self):
+        ''' Texted view of parents of the elemenet '''
+        return self._separeter().join(str(parent) for parent in self.parents)
+
+    def walk(self, left: bool = True, chain: Optional[List] = None):
+        '''
+        Walking down through the graph to the deep to see how grap was changed
+        '''
+        if chain:
+            index = chain.pop()
+        else:
+            return self
+        next_el = self.children[index] if left else self.children.end(index)
+        yield next_el
+        # fix: make deep searching algorithm based on this property
+        yield from next_el.walk(left=left, chain=chain)
+
+    def _separeter(self):
+        return config.SEPARATES.get(self.separater_key, self.graph.separeter)
 
 
-@dataclass
-class StringByStringRegularExpressionMask(base.StringRegularExpressionMaskAbstract):
-    
+@dataclass()
+class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
+
+    ''' Sensetive turn off '''
+
     element_mask: Optional[str] = r'.+(?P<id>\D+)\..?(?P<grouped>.+): (?P<body>.*)\n'
     node_mask: Optional[str] = r'(?P<id>\D+)\((?P<children_list>.*)\)'
     part_mask: Optional[str] = r'.*(?P<id>\S+\D+\).\n'
     tmp: Optional[str] = None
-    separeter: Optional[str] = '\n'
-    file: str = 'graph_links.txt'
+    separeter: str = config.SEPARATES.get('NODE')
+    file: str = config.FILE_DATA_LOADER_PATH
     last_part: str = 'A1.'
-    element_class = RepresentativeGraphElementMask
-    
-    def __iter__(self):
+    element_class: GE = RepresentativeGraphElementMask
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.tmp:
+            with open(self.file, 'r', encoding='utf8') as file:
+                self.tmp: str = file.read()
+        # TODO: it worth but i have to load self.ids_map
+        for _ in self:
+            continue
+
+    def __iter__(self) -> GGE:
         return iter(self._get_formated_links())
 
-    def __str__(self):
+    def __len__(self) -> int:
+        return len(list(self._get_formated_links()))
+
+    def __str__(self) -> str:
         return self.separeter.join(str(tmp) for tmp in iter(self))
-    
-    def _get_formated_links(self):        
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
+    def __getitem__(self, key: int, pythonic_list: bool = True) -> GE:
+        if pythonic_list:
+            return tuple(self)[key]
+        for part, _id in self.ids_map:
+            if key <= _id:
+                return self.get_element(part, key)
+            key -= _id
+            continue
+        raise IndexError()
+
+    def __contains__(self, element: GE) -> bool:
+        try:
+            element = self.get_element(element.part, element.id)
+        except IndexError:
+            return False
+        return isinstance(element, self.element_class)
+
+    def _get_formated_links(self):
         for link in self.tmp.split(self.separeter):
             if (tmp := link.strip()).endswith('.'):
                 self.last_part = tmp
                 continue
-            yield from self._convert_element(tmp, self.last_part)
-        
-    def get_elements(self, part=None, id=None):
-        if id and not part:
-            raise Indexerror('Part has not defined when id was passed')
-        elif id and part:
-            for element in filter(el.starswith(part) for el in iter(self)):
-                if element.id == id:
-                    yield element
+            if not tmp:
+                # ATTENTION: ignore blank line
                 continue
-        raise Indexerror('Unknown id or part')
-        
-    def get_element(self, part=None, id=None) -> base.RepresentativeGraphElementAbstract:
-        return self.get_elements(part, id)[0]
+            yield from self._convert_element(tmp, self.last_part)
 
+    def get_elements(self, part: str =None, id: Union[str, int] =None) -> GE:
+        if not id and not part:
+            raise IndexError()
+        if not part:
+            # fix: it would be good idea if we can search only by id???
+            raise IndexError('Part has not defined when id was passed')
+        if id and part:
+            yield from (el for el in self if el.part == part and el.id == id)
 
-class XmlGraphElementMixin(ElementTree.Element):
+    def get_element(self, part: str =None, id: Union[str, int] =None) -> GE:
+        # TODO: refactor the idea of methods get_element and get_elements
+        absolute_id = id
+        for key, value in self.ids_map.items():
+            if key == part:
+                break
+            absolute_id += value
+        # TODO: sequence of keis have to start from zero indstead of one
+        return self[absolute_id-1]
 
-    def getchildren(self, level=1):
-        if self.attrib["color"] == 'red': d['red'] += level
-        elif self.attrib['color'] == 'green': d['green'] += level
-        else: d['blue'] += level
-        level += 1
-        for element in self: getchildren(element, level)
+    @property
+    def dfs_depth(self) -> int:
+        ''' The deepth of the graph '''
+        # fix: make deep searching algorithm based on this property
+        return len(self)-1
 
-    def iterateDeep(self, right=True):
-        index = -1 if right and (len(self) > 1) else 0
-        yield self.attrib.get('color', 'nothing')
-        if len(self):
-            yield from iterateDeep(self[index], right=right)
-
-    def iterateWide(self):
-
-        def iterateFromLastChild(node):
-            if len(node):
-                for child in node:
-                    yield from iterateWide(child)
-            yield node.attrib.get('color', 'nothing')
-
-        return iter([*reversed([*iterateFromLastChild(self)])])
-
-def get_test_xml_data(file='./graph_example.xml'):
-    try:
-        with open(file, 'r') as xml:
-            return xml
-    except Exception as e:
-        return input()
-
-
-if __name__ == '__main__':
-    xml_string = get_test_xml_data()
-
-    root = ElementTree.fromstring(xml_string)
-    root = RepresetativeGraphElement(root, root.attrib)
-
-    root.getchildren()
-
-    print(d['red'], d['green'], d['blue'])
-
-    for color in root.iterateDeep():
-        print(color)
-
-    print()
-
-    for color in root.iterateDeep(right=False):
-        print(color)
-
-    print()
-    print()
-    print()
-
-    for color in root.iterateWide():
-        print(color)
+    @property
+    def longest_chain(self) -> Iterable[int]:
+        ''' The logest chain to iterate through the DFS algorithm '''
+        return [0 for _ in range(self.dfs_depth)]
