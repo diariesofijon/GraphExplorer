@@ -11,7 +11,7 @@
 '''
 
 from data_structures import StringByStringRegularExpressionMask
-import cli
+from interface import cli
 
 
 def main():
