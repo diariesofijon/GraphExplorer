@@ -25,13 +25,12 @@ class RepresentativeGraphElementMask(RepresentativeGraphElementAbstract):
 
     ''' Sensetive turn off '''
 
-    id: str = ''
-    part: str = ''
-    grouped: str = ''
-    body: str = ''
-    # TODO: REMOVE OPTIONAL
-    graph: Optional[StringRegularExpressionMaskAbstract] = None
-    separater_key: str = ''
+    id: str
+    part: str
+    grouped: str
+    body: str
+    graph: StringRegularExpressionMaskAbstract
+    separater_key: str
 
     def __str__(self):
         return f'{self.part} id: {self.id} = {self.grouped} - {self.body}'
