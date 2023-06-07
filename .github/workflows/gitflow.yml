@@ -1,5 +1,5 @@
 name: Gitflow
-on: 
+on:
   # To create pull requests.
   push:
   # To merge pull requests if not possible during the push run. Remove if `auto-merge` is `false`.
@@ -10,7 +10,7 @@ on:
 permissions:
   contents: read
   pull-requests: write
-  
+
 jobs:
   build:
     name: Gitflow
