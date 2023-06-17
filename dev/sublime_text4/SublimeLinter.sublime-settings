@@ -1,0 +1,18 @@
+// SublimeLinter Settings - User
+{
+    // "debug": true,
+
+    "paths": {
+        "osx": [],
+        "linux": [],
+        "windows": [
+            "C:\\Program Files\\Python311\\Scripts\\"
+        ]
+    },
+
+    "linters": {
+        "pylint": {
+            "executable": "pylint"
+        }
+    }
+}
