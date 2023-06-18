@@ -7,8 +7,8 @@
 
 # fix: find another way to find points of graph due pythonic RegExp
 # import re
-from dataclasses import dataclass, field
-from typing import Optional, List, Union, Iterable, Dict, FrozenSet
+from dataclasses import dataclass
+from typing import Optional, List, Union, Iterable, FrozenSet
 
 import config
 from base import (
@@ -30,7 +30,7 @@ class RepresentativeGraphElementMask(RepresentativeGraphElementAbstract):
     grouped: str
     body: str
     graph: StringRegularExpressionMaskAbstract
-    separater_key: str
+    separater_key: str = 'NODE'
 
     def __str__(self):
         return f'{self.part} id: {self.id} = {self.grouped} - {self.body}'

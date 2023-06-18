@@ -17,7 +17,12 @@ import abc
 # TODO: make logger settings and add pythonic logger into the project!!!!
 
 SEPARATES = {
-    'NODE': '\n',
+    # LINES
+    'NODE': '\n', 'STRING': '\n', 'LINE': '\n', 'PRETTY_PARAGRAPH': '\n\n\n\n',
+    # PUNCTUATIONS
+    'ELEMENT': ',', 'ENDING': '.', 'EXAMINATION': ':', 'CAUSE': '-',
+    # CONSOLE INTERFACES
+    'BORDER': '|', 'LOWWER': '_', 'UPPER': '-', 'BALNK': '#', 'POINTER': '*',
 }
 
 ABSOLUTE_PATH = os.path.abspath('.')
