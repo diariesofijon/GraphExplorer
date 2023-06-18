@@ -183,13 +183,12 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
 
     def get_element(self, part: str =None, id: Union[str, int] =None) -> GE:
         # TODO: refactor the idea of methods get_element and get_elements
-        absolute_id = id
         for key, value in self.ids_map.items():
             if key == part:
                 break
-            absolute_id += value
+            id += value
         # TODO: sequence of keis have to start from zero indstead of one
-        return self[absolute_id-1]
+        return self[id-1]
 
     @property
     def tree_topic(self) -> GE:
