@@ -25,11 +25,11 @@ class RepresentativeGraphElementMask(RepresentativeGraphElementAbstract):
 
     ''' Sensetive turn off '''
 
-    id: str
-    part: str
-    grouped: str
-    body: str
-    graph: StringRegularExpressionMaskAbstract
+    id: str = ''
+    part: str = ''
+    grouped: str = ''
+    body: str = ''
+    graph: StringRegularExpressionMaskAbstract = None
     separater_key: str = 'NODE'
 
     def __str__(self):
@@ -69,8 +69,8 @@ class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
 
     ''' Frozen Tree '''
 
-    _sliced_graph: GM
-    element_ids: FrozenSet[int]
+    _sliced_graph: GM = None
+    element_ids: FrozenSet[int] = None
 
     def __iter__(self) -> GGE:
         return iter(self[_id] for _id in self.element_ids)

@@ -9,7 +9,7 @@ import base
 def walk(graph: base.GM, index: int =0):
     ''' Walking down through the graph'''
     next_element = graph[index]
-    chain = graph.longest_chain[:5]
+    chain = graph.exlude_tree().longest_chain[:5]
     for element in next_element.walk(chain=chain):
         print(f'current element {next_element} with index {index}')
         print('type 1 - to get next left, \
