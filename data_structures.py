@@ -70,6 +70,7 @@ class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
     ''' Frozen Tree '''
 
     _sliced_graph: GM = None
+    # TODO: find the way of searching elements by a hash
     element_ids: FrozenSet[int] = None
 
     def __iter__(self) -> GGE:
