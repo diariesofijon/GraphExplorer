@@ -38,6 +38,9 @@ class RepresentativeGraphElementMask(RepresentativeGraphElementAbstract):
     def __repr__(self):
         return self.__str__()
 
+    def __hash__(self):
+        return self.id # TODO: have to use hasheable function instead
+
     # TODO: move all show logic to new console or graphic interface in MIXIN
     # inheretince way
     def show_children(self):
