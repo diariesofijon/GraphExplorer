@@ -100,15 +100,29 @@ class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
     def depth(self) -> int:
         ''' The deepth of the graph '''
         # fix: make deep searching algorithm based on this property
-        return len(self)-1
+        return self.bfs()[0]
 
     @property
     def longest_chain(self) -> Iterable[int]:
         ''' The logest chain to iterate through the DFS algorithm '''
-        return [0 for _ in range(self.depth)]
+        return self.bfs()[1]
 
     def dfs(self) -> GGE:
-        pass
+        # TODO: should to work in the composition way
+        maxdepth = 0
+        visited = []
+        queue = []
+        visited.append(self._sliced_graph.tree_topic)
+        queue.append((self._sliced_graph.tree_topic,1))
+        while queue:
+            x, depth = queue.pop(0)
+            maxdepth = max(maxdepth, depth)
+            # print(x)
+            for child in self._sliced_graph[x].children:
+                if child not in visited:
+                    visited.append(child)
+                    queue.append((child,depth+1))
+        return maxdepth, map(lambda x: x.id, visited)
 
     def bfs(self) -> GGE:
         pass
