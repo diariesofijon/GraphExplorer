@@ -7,13 +7,13 @@
 
 # fix: find another way to find points of graph due pythonic RegExp
 # import re
-from dataclasses import dataclass, field
-from typing import Optional, List, Union, Iterable, Dict
+from dataclasses import dataclass
+from typing import Optional, List, Union, Iterable, FrozenSet
 
 import config
 from base import (
-    StringRegularExpressionMaskAbstract, GE, GGE,
-    RepresentativeGraphElementAbstract)
+    StringRegularExpressionMaskAbstract, GE, GGE, GM, Tree,
+    RepresentativeGraphElementAbstract, GraphTreeRepresintationMaskAbstract)
 
 
 __all__ = (
@@ -29,15 +29,17 @@ class RepresentativeGraphElementMask(RepresentativeGraphElementAbstract):
     part: str = ''
     grouped: str = ''
     body: str = ''
-    # TODO: REMOVE OPTIONAL
-    graph: Optional[StringRegularExpressionMaskAbstract] = None
-    separater_key: str = ''
+    graph: StringRegularExpressionMaskAbstract = None
+    separater_key: str = 'NODE'
 
     def __str__(self):
         return f'{self.part} id: {self.id} = {self.grouped} - {self.body}'
 
     def __repr__(self):
         return self.__str__()
+
+    def __hash__(self):
+        return self.id # TODO: have to use hasheable function instead
 
     # TODO: move all show logic to new console or graphic interface in MIXIN
     # inheretince way
@@ -65,15 +67,75 @@ class RepresentativeGraphElementMask(RepresentativeGraphElementAbstract):
     def _separeter(self):
         return config.SEPARATES.get(self.separater_key, self.graph.separeter)
 
+@dataclass
+class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
 
-@dataclass()
+    ''' Frozen Tree '''
+
+    _sliced_graph: GM = None
+    # TODO: find the way of searching elements by a hash
+    element_ids: FrozenSet[int] = None
+
+    def __iter__(self) -> GGE:
+        return iter(self[_id] for _id in self.element_ids)
+
+    def __len__(self) -> int:
+        return len(list(self[_id] for _id in self.element_ids))
+
+    def __str__(self) -> str:
+        return str(self._sliced_graph + ' Tree')
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
+    def __getitem__(self, key: int, pythonic_list: bool = True) -> GE:
+        if key not in self.element_ids:
+            raise config.OutFromTreeError
+        return self._sliced_graph[key]
+
+    def __contains__(self, element: GE) -> bool:
+        return element.id in self.element_ids
+
+    @property
+    def depth(self) -> int:
+        ''' The deepth of the graph '''
+        # fix: make deep searching algorithm based on this property
+        return self.bfs()[0]
+
+    @property
+    def longest_chain(self) -> Iterable[int]:
+        ''' The logest chain to iterate through the DFS algorithm '''
+        return self.bfs()[1]
+
+    def dfs(self) -> GGE:
+        # TODO: should to work in the composition way
+        maxdepth = 0
+        visited = []
+        queue = []
+        visited.append(self._sliced_graph.tree_topic)
+        queue.append((self._sliced_graph.tree_topic,1))
+        while queue:
+            x, depth = queue.pop(0)
+            maxdepth = max(maxdepth, depth)
+            # print(x)
+            for child in self._sliced_graph[x].children:
+                if child not in visited:
+                    visited.append(child)
+                    queue.append((child,depth+1))
+        return maxdepth, map(lambda x: x.id, visited)
+
+    def bfs(self) -> GGE:
+        pass
+
+@dataclass
 class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
 
     ''' Sensetive turn off '''
 
-    element_mask: Optional[str] = r'.+(?P<id>\D+)\..?(?P<grouped>.+): (?P<body>.*)\n'
-    node_mask: Optional[str] = r'(?P<id>\D+)\((?P<children_list>.*)\)'
-    part_mask: Optional[str] = r'.*(?P<id>\S+\D+\).\n'
+    # TODO: move it to an another class like composition
+    # element_mask: Optional[str] = r'.+(?P<id>\D+)\..?(?P<grouped>.+): (?P<body>.*)\n'
+    # node_mask: Optional[str] = r'(?P<id>\D+)\((?P<children_list>.*)\)'
+    # part_mask: Optional[str] = r'.*(?P<id>\S+\D+\).\n'
     tmp: Optional[str] = None
     separeter: str = config.SEPARATES.get('NODE')
     file: str = config.FILE_DATA_LOADER_PATH
@@ -139,21 +201,22 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
 
     def get_element(self, part: str =None, id: Union[str, int] =None) -> GE:
         # TODO: refactor the idea of methods get_element and get_elements
-        absolute_id = id
         for key, value in self.ids_map.items():
             if key == part:
                 break
-            absolute_id += value
+            id += value
         # TODO: sequence of keis have to start from zero indstead of one
-        return self[absolute_id-1]
+        return self[id-1]
 
     @property
-    def dfs_depth(self) -> int:
-        ''' The deepth of the graph '''
-        # fix: make deep searching algorithm based on this property
-        return len(self)-1
+    def tree_topic(self) -> GE:
+        ''' Highest element in the biggest tree of the graph '''
+        return self[0] # TODO: make magic algortihm which return the top of the biggest tree
 
-    @property
-    def longest_chain(self) -> Iterable[int]:
-        ''' The logest chain to iterate through the DFS algorithm '''
-        return [0 for _ in range(self.dfs_depth)]
+    def exlude_tree(self) -> Tree:
+        '''
+        Find the sequence which can work like a tree. Raise
+        Vaildation Error if it has no any tree variant
+        '''
+        ids = {el.id for el in self.tree_topic.walk()}
+        return GraphTreeRepresentationMask(self, ids)
