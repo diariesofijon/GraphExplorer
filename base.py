@@ -89,6 +89,24 @@ class GraphTreeRepresintationMaskAbstract(collections.abc.Mapping):
     def bfs(self) -> GGE:
         ''' BFS as generator '''
 
+    @property
+    @abc.abstractmethod
+    def cycles(self) -> List[int]:
+        ''' list of closed graphs highs '''
+
+    @abc.abstractmethod
+    def chain(self) -> GGE:
+        ''' clear generator by all of the available tree components '''
+
+    @property
+    @abc.abstractmethod
+    def briges(self) -> List[int]:
+        ''' list of bridges '''
+
+    @abc.abstractmethod
+    def topological_sort(self) -> GGE:
+        ''' Topological sequence '''
+
 
 @dataclass
 class StringRegularExpressionMaskAbstract(collections.abc.Collection):
