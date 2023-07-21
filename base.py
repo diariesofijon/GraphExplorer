@@ -61,6 +61,13 @@ class GraphTreeRepresintationMaskAbstract(collections.abc.Mapping):
 
     ''' Iterable tree representation of a graph '''
 
+    # TODO: step by step
+    # make clear and useful interface for trees
+    # explain available the way in singleton  pattern or not. Whe it frozen by definition.
+    # clearly explain where it properties that listed bellow have to b e used
+    # make the graph easier to use and move functionability due it
+    # take down new documentation of the graph’s functionality
+
     @property
     @abc.abstractmethod
     def _sliced_graph(self) -> GM:
