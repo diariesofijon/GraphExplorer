@@ -6,11 +6,9 @@ import sys
 import data_structures
 import base
 
-def walk(graph: base.GM, index: int =0):
+def walk(graph: base.GM):
     ''' Walking down through the graph'''
-    next_element = graph[index]
-    chain = graph.exlude_tree().longest_chain[:5]
-    for element in next_element.walk(chain=chain):
+    for element in graph.tree_topic.walk(graph.exlude_tree().longest_chain):
         print(f'current element {next_element} with index {index}')
         print('type 1 - to get next left, \
                 2 - to get previous left,\
