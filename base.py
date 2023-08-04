@@ -11,7 +11,7 @@ import abc
 import collections.abc
 # TODO: IMPLEMENT PYTHONIC COLLECTION ABSTRACTION
 from dataclasses import dataclass, field
-from typing import Optional, TypeVar, List, Iterable, Union, Dict, FrozenSet
+from typing import Optional, TypeVar, List, Iterable, Union, Dict, FrozenSet, Set
 
 
 __all__ = (
@@ -20,6 +20,7 @@ __all__ = (
 
 
 # types
+# TODO: move all types to anatother file
 GE = TypeVar('GE', bound='RepresentativeGraphElementAbstract')
 # TODO: Dependevice injection from graph mask to pythonic graph
 GM = TypeVar('GM', bound='StringRegularExpressionMaskAbstract')
@@ -27,6 +28,8 @@ GM = TypeVar('GM', bound='StringRegularExpressionMaskAbstract')
 GGE = Iterable[GE]
 Chain = TypeVar('Chain', bound='_Chain')
 Tree = TypeVar('Tree', bound='GraphTreeRepresintationMaskAbstract')
+NumericalSequence = Set[int]
+ChainNumericals = Set[NumericalSequence]
 
 
 class _Chain(list):
@@ -62,11 +65,13 @@ class GraphTreeRepresintationMaskAbstract(collections.abc.Mapping):
     ''' Iterable tree representation of a graph '''
 
     # TODO: step by step
-    # make clear and useful interface for trees
-    # explain available the way in singleton  pattern or not. Whe it frozen by definition.
-    # clearly explain where it properties that listed bellow have to b e used
+    # make clear and useful interface for trees +
+    # explain available the way in singleton  pattern or not. Whe it frozen by definition. +
+    # clearly explain where it properties that listed bellow have to be used
     # make the graph easier to use and move functionability due it
     # take down new documentation of the graph’s functionality
+
+    # have to explaning augmenting path through the first to the end
 
     @property
     @abc.abstractmethod
@@ -96,19 +101,9 @@ class GraphTreeRepresintationMaskAbstract(collections.abc.Mapping):
     def bfs(self) -> GGE:
         ''' BFS as generator '''
 
-    @property
-    @abc.abstractmethod
-    def cycles(self) -> List[int]:
-        ''' list of closed graphs highs '''
-
     @abc.abstractmethod
     def chain(self) -> GGE:
         ''' clear generator by all of the available tree components '''
-
-    @property
-    @abc.abstractmethod
-    def briges(self) -> List[int]:
-        ''' list of bridges '''
 
     @abc.abstractmethod
     def topological_sort(self) -> GGE:
@@ -207,7 +202,7 @@ class StringRegularExpressionMaskAbstract(collections.abc.Collection):
         ''' Private method that list all nodes '''
 
     @abc.abstractmethod
-    def exlude_tree(self) -> Tree:
+    def exclude_tree(self) -> Tree:
         '''
         Find the sequence which can work like a tree. Raise
         Vaildation Error if it has no any tree variant
@@ -217,6 +212,39 @@ class StringRegularExpressionMaskAbstract(collections.abc.Collection):
     @abc.abstractmethod
     def tree_topic(self) -> GE:
         ''' Highest element in the biggest tree of the graph '''
+
+    @property
+    @abc.abstractmethod
+    def is_bipartite(self) -> bool:
+        ''' Check if a graph is bipartite '''
+        # TODO: in first time it doesn't matter
+        return False
+
+    def bridges(self) -> ChainNumericals:
+        ''' list of bridges '''
+        excluded_ids = set(range(0, len(self) - 1)) - self.exclude_tree().element_ids
+        last_id = excluded_ids.pop()
+        bridge = set()
+        while excluded_ids:
+            bridge.append(last_id)
+            if (excluded_ids.pop() - 1) < last_id:
+                yield bridge
+
+    @property
+    def cycles(self) -> ChainNumericals:
+        ''' list of closed graphs highs '''
+        # TODO: let we try find matrix without cycles
+        return []
+
+    def sub_trees(self) -> Iterable[GM]:
+        ''' List all sub tree in the graph '''
+        for bridge in self.bridges():
+            if (tree := type(self)(bridge).exclude_tree()):
+                yield tree
+
+    def connected_elements(self):
+        yield self.tree_topic
+        yield from self.bridges
 
     @staticmethod
     def _get_ids(name: str) -> List[int]:

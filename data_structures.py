@@ -213,7 +213,7 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
         ''' Highest element in the biggest tree of the graph '''
         return self[0] # TODO: make magic algortihm which return the top of the biggest tree
 
-    def exlude_tree(self) -> Tree:
+    def exclude_tree(self) -> Tree:
         '''
         Find the sequence which can work like a tree. Raise
         Vaildation Error if it has no any tree variant
