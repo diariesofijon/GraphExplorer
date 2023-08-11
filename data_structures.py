@@ -8,11 +8,11 @@
 # fix: find another way to find points of graph due pythonic RegExp
 # import re
 from dataclasses import dataclass
-from typing import Optional, List, Union, Iterable, FrozenSet
+from typing import Optional, List, Union, Iterable, FrozenSet, Callable, Tuple
 
 import config
 from base import (
-    StringRegularExpressionMaskAbstract, GE, GGE, GM, Tree,
+    StringRegularExpressionMaskAbstract, GE, GGE, GM, Tree, _Chain,
     RepresentativeGraphElementAbstract, GraphTreeRepresintationMaskAbstract)
 
 
@@ -56,10 +56,11 @@ class RepresentativeGraphElementMask(RepresentativeGraphElementAbstract):
         Walking down through the graph to the deep to see how grap was changed
         '''
         if chain:
-            index = chain.pop()
+            index, next_el = chain.pop()
         else:
             return self
-        next_el = self.children[index] if left else self.children.end(index)
+        if not left: # TODO: find optimal routing
+            next_el = self.children.end(index)
         yield next_el
         # fix: make deep searching algorithm based on this property
         yield from next_el.walk(left=left, chain=chain)
@@ -67,7 +68,8 @@ class RepresentativeGraphElementMask(RepresentativeGraphElementAbstract):
     def _separeter(self):
         return config.SEPARATES.get(self.separater_key, self.graph.separeter)
 
-@dataclass
+
+# @dataclass TODO: where I have to use dataclasses
 class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
 
     ''' Frozen Tree '''
@@ -75,12 +77,21 @@ class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
     _sliced_graph: GM = None
     # TODO: find the way of searching elements by a hash
     element_ids: FrozenSet[int] = None
+    longest_chain: List[Tuple] = []
+    
+    def __init__(self, _sliced_graph=None, top=None, ids=None, chain=[]):
+        self._sliced_graph: GM = _sliced_graph
+        # TODO: find the way of searching elements by a hash
+        self.element_ids: FrozenSet[int] = None
+        self.longest_chain: List[Tuple] = []
+        self.top = top
+        self.depth = self.dfs()
 
     def __iter__(self) -> GGE:
-        return iter(self[_id] for _id in self.element_ids)
+        return iter(self._sliced_graph[_id] for _id in self.element_ids)
 
     def __len__(self) -> int:
-        return len(list(self[_id] for _id in self.element_ids))
+        return len(list(self._sliced_graph[_id] for _id in self.element_ids))
 
     def __str__(self) -> str:
         return str(self._sliced_graph + ' Tree')
@@ -96,36 +107,41 @@ class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
     def __contains__(self, element: GE) -> bool:
         return element.id in self.element_ids
 
-    @property
-    def depth(self) -> int:
+    def dfs(self) -> int:
         ''' The deepth of the graph '''
         # fix: make deep searching algorithm based on this property
-        return self.bfs()[0]
-
-    @property
-    def longest_chain(self) -> Iterable[int]:
-        ''' The logest chain to iterate through the DFS algorithm '''
-        return self.bfs()[1]
-
-    def dfs(self) -> GGE:
         # TODO: should to work in the composition way
-        maxdepth = 0
-        visited = []
-        queue = []
-        visited.append(self._sliced_graph.tree_topic)
-        queue.append((self._sliced_graph.tree_topic,1))
+        visited, queue, mdepth = [], [], 0
+        visited.append(self.top)
+        queue.append((self.top,1))
         while queue:
             x, depth = queue.pop(0)
-            maxdepth = max(maxdepth, depth)
-            # print(x)
-            for child in self._sliced_graph[x].children:
+            mdepth = max(mdepth, depth)
+            for index, child in enumerate(x.children):
                 if child not in visited:
                     visited.append(child)
                     queue.append((child,depth+1))
-        return maxdepth, map(lambda x: x.id, visited)
+                    self.longest_chain += (index, child)
+        return mdepth
 
-    def bfs(self) -> GGE:
-        pass
+    # @property
+    # def longest_chain(self) -> Iterable[int]:
+    #     ''' The logest chain to iterate through the DFS algorithm '''
+    #     return self._longest_chain
+
+    # def dfs(self) -> GGE:
+    #     # TODO: should to work in the composition way
+    #     visited, queue, self._depth = [], [], 0
+    #     visited.append(self._top)
+    #     queue.append((self._top,1))
+    #     while queue:
+    #         x, depth = queue.pop(0)
+    #         self._depth = max(self._depth, depth)
+    #         for index, child in enumerate(x.children):
+    #             if child not in visited:
+    #                 visited.append(child)
+    #                 queue.append((child,depth+1))
+    #     return self._depth, _Chain(map(lambda x: x.id, visited))
 
 @dataclass
 class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
@@ -141,15 +157,25 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
     file: str = config.FILE_DATA_LOADER_PATH
     last_part: str = 'A1.'
     element_class: GE = RepresentativeGraphElementMask
+    _tree: Optional[Tree] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if not self.tmp:
             with open(self.file, 'r', encoding='utf8') as file:
                 self.tmp: str = file.read()
+
         # TODO: it worth but i have to load self.ids_map
         for _ in self:
             continue
+        
+        _tree = self.exclude_tree(self[0])
+        for index, element in enumerate(self):
+            if not index: continue
+            if _tree.depth < (b:=self.exclude_tree(element)).depth:
+                _tree = b
+            print(_tree.depth)
+        self.tree_topic = _tree
 
     def __iter__(self) -> GGE:
         return iter(self._get_formated_links())
@@ -165,8 +191,8 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
 
     def __getitem__(self, key: int, pythonic_list: bool = True) -> GE:
         if pythonic_list:
-            return tuple(self)[key]
-        for part, _id in self.ids_map:
+            return [el for el in self][key]
+        for part, _id in self.ids_map.items():
             if key <= _id:
                 return self.get_element(part, key)
             key -= _id
@@ -204,19 +230,31 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
         for key, value in self.ids_map.items():
             if key == part:
                 break
-            id += value
+            id += (value - 1)
         # TODO: sequence of keis have to start from zero indstead of one
-        return self[id-1]
+        return self[id]
 
-    @property
-    def tree_topic(self) -> GE:
-        ''' Highest element in the biggest tree of the graph '''
-        return self[0] # TODO: make magic algortihm which return the top of the biggest tree
-
-    def exclude_tree(self) -> Tree:
+    def exclude_tree(self, element: GE) -> Tree:
         '''
         Find the sequence which can work like a tree. Raise
         Vaildation Error if it has no any tree variant
         '''
-        ids = {el.id for el in self.tree_topic.walk()}
-        return GraphTreeRepresentationMask(self, ids)
+        if (t:=type(element)) is not self.element_class:
+            raise TypeError(f'{t} is not a element class')
+        return GraphTreeRepresentationMask(self, element)
+
+    # def _try_another_topic(self) -> Callable:
+    #     topics = set()
+    #     trees = set()
+    #     def tmp():
+    #         topics += self.tree_topic
+    #         trees += self._last_tree
+    #         _all = [_id for _id in self]
+    #         return filtered(lambda x: x not in self.last_tree.element_ids, _all)[0]
+    
+    # def try_another_topic(self) -> GE:
+    #     get_id = self._try_another_topic()
+    #     return self[get_id()]
+    
+    # def set_another_topic(self):
+    #     self.tree_topic = try_another_topic()
