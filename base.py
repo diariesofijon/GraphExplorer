@@ -58,6 +58,13 @@ class _Chain(list):
     def filtered(self, func):
         ''' returns duplicated collection of filtered by the function due pythonic filter '''
         return _Chain(filter(func, self))
+    
+    def by_hash(self, key):
+        return filter(lambda x: hash(x) == key, self)[0]
+
+    def get_seed(self):
+        for index, element in enumerate(self):
+            yield (index, element)
 
 
 class GraphTreeRepresintationMaskAbstract(collections.abc.Mapping):
@@ -83,31 +90,31 @@ class GraphTreeRepresintationMaskAbstract(collections.abc.Mapping):
     def element_ids(self) -> FrozenSet[int]:
         ''' Frozen set of all trees ids'''
 
-    @property
-    @abc.abstractmethod
-    def longest_chain(self) -> Iterable[int]:
-        ''' The chain of the longes_road '''
+    # @property
+    # @abc.abstractmethod
+    # def longest_chain(self) -> Iterable[int]:
+    #     ''' The chain of the longes_road '''
 
-    @property
-    @abc.abstractmethod
-    def depth(self) -> int:
-        ''' The number that is the length of the longes road '''
+    # @property
+    # @abc.abstractmethod
+    # def depth(self) -> int:
+    #     ''' The number that is the length of the longes road '''
 
-    @abc.abstractmethod
-    def dfs(self) -> GGE:
-        ''' DFS as generator '''
+    # @abc.abstractmethod
+    # def dfs(self):
+    #     ''' DFS as generator '''
 
-    @abc.abstractmethod
-    def bfs(self) -> GGE:
-        ''' BFS as generator '''
+    # @abc.abstractmethod
+    # def bfs(self) -> GGE:
+    #     ''' BFS as generator '''
 
-    @abc.abstractmethod
-    def chain(self) -> GGE:
-        ''' clear generator by all of the available tree components '''
+    # @abc.abstractmethod
+    # def chain(self) -> GGE:
+    #     ''' clear generator by all of the available tree components '''
 
-    @abc.abstractmethod
-    def topological_sort(self) -> GGE:
-        ''' Topological sequence '''
+    # @abc.abstractmethod
+    # def topological_sort(self) -> GGE:
+    #     ''' Topological sequence '''
 
 
 @dataclass
@@ -201,65 +208,44 @@ class StringRegularExpressionMaskAbstract(collections.abc.Collection):
     def _get_formated_links(self) -> Iterable[str]:
         ''' Private method that list all nodes '''
 
-    @abc.abstractmethod
-    def exclude_tree(self) -> Tree:
-        '''
-        Find the sequence which can work like a tree. Raise
-        Vaildation Error if it has no any tree variant
-        '''
+    # @abc.abstractmethod
+    # def exclude_tree(self) -> Tree:
+    #     '''
+    #     Find the sequence which can work like a tree. Raise
+    #     Vaildation Error if it has no any tree variant
+    #     '''
+
+    # @property
+    # @abc.abstractmethod
+    # def tree_topic(self) -> GE:
+    #     ''' Highest element in the biggest tree of the graph '''
 
     @property
-    @abc.abstractmethod
-    def tree_topic(self) -> GE:
-        ''' Highest element in the biggest tree of the graph '''
-
-    @property
-    @abc.abstractmethod
     def is_bipartite(self) -> bool:
         ''' Check if a graph is bipartite '''
         # TODO: in first time it doesn't matter
         return False
 
-    def bridges(self) -> ChainNumericals:
-        ''' list of bridges '''
-        excluded_ids = set(range(0, len(self) - 1)) - self.exclude_tree().element_ids
-        last_id = excluded_ids.pop()
-        bridge = set()
-        while excluded_ids:
-            bridge.append(last_id)
-            if (excluded_ids.pop() - 1) < last_id:
-                yield bridge
-
-    @property
-    def cycles(self) -> ChainNumericals:
-        ''' list of closed graphs highs '''
-        # TODO: let we try find matrix without cycles
-        return []
-
-    def sub_trees(self) -> Iterable[GM]:
-        ''' List all sub tree in the graph '''
-        for bridge in self.bridges():
-            if (tree := type(self)(bridge).exclude_tree()):
-                yield tree
-
-    def connected_elements(self):
-        yield self.tree_topic
-        yield from self.bridges
-
     @staticmethod
     def _get_ids(name: str) -> List[int]:
         ''' Clear function that implement name to ids '''
-        if len(tmp := name.split('-')) == 2:
+        if len((tmp := name.split('-'))) == 2:
             return list(range(int(tmp[0]), int(tmp[1])+1))
         return [int(name)]
 
     def _convert_element(self, tmp: str, last_part: GE) -> GGE:
         ''' Engine convertor '''
         if len((splited := tmp.split('.'))) == 1:
-            splited = splited, ''
+            splited = splited[0], ''
         ids, tmp = splited
+        match len((splited:=tmp.split(':'))):
+            case 0:
+                grouped, body = 'splited', 'splited'
+            case 1:
+                grouped, body = splited, splited
+            case _:
+                grouped, body = splited
         for id in self._get_ids(ids):
-            grouped, body = tmp.split(':')
             data = self.element_class(
                 id=id, grouped=grouped, part=last_part, body=body, graph=self)
             # TODO: have to be strictly increased instead of redefining
