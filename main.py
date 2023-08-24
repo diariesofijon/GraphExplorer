@@ -55,7 +55,7 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
                 3 - to get next right, 4 - to get previous right,\
                 5 - to get out of walking')
             tree = self.graph.exclude_tree(self.graph.tree_topic)
-            for element in el.walk(chain=self.tree.longest_chain):
+            for element in el.walk(chain=tree.longest_chain):
                 print(element)
                 print(element.show_children())
                 # iterate(self.choice(element, index))
@@ -69,7 +69,7 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
         top = self.graph[56]#self.graph.tree_topic
         print(top.id, top)
         tree = self.graph.exclude_tree(top)
-        for index, element in self.tree.longest_chain:
+        for index, element in tree.longest_chain:
             print('------------------------------------------')
             print(element, 'is', index)
             print(element.show_children())
@@ -93,4 +93,3 @@ if __name__ == '__main__':
     with open(interface.file_path, 'w', encoding='utf8') as file:
         file.write(str(interface.graph))
     interface.a_parth_matrix()
-
