@@ -58,9 +58,9 @@ class _Chain(list):
     def filtered(self, func):
         ''' returns duplicated collection of filtered by the function due pythonic filter '''
         return _Chain(filter(func, self))
-    
-    def by_hash(self, key):
-        return filter(lambda x: hash(x) == key, self)[0]
+
+    # def by_hash(self, key):
+    #     return filter(lambda x: hash(x) == key, self)[0]
 
     def get_seed(self):
         for index, element in enumerate(self):

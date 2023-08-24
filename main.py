@@ -47,7 +47,7 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
         ''' Walking down through the graph'''
         print('\n\n\n')
         if (index := self.repr_type(input())) not in {1,2,3,4}:
-            raise TyperError(ValueError(f'Index {str(index)} have invalid type'))
+            raise TypeError(ValueError(f'Index {str(index)} have invalid type'))
         # print('CHAIN', graph.exclude_tree().longest_chain)
         def iterate(el=self.graph.tree_topic):
             print(f'current element {el} with index {el.id}' + \
@@ -62,7 +62,7 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
             # for element
         iterate()
         print('chain is ended')
-    
+
     def a_parth_matrix(self):
         print('\n\n\n')
         print(''' Walking down through the graph alongside ''')
