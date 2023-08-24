@@ -78,7 +78,7 @@ class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
     # TODO: find the way of searching elements by a hash
     element_ids: FrozenSet[int] = None
     longest_chain: List[Tuple] = []
-    
+
     def __init__(self, _sliced_graph=None, top=None, ids=None, chain=[]):
         self._sliced_graph: GM = _sliced_graph
         # TODO: find the way of searching elements by a hash
@@ -168,7 +168,7 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
         # TODO: it worth but i have to load self.ids_map
         for _ in self:
             continue
-        
+
         _tree = self.exclude_tree(self[0])
         for index, element in enumerate(self):
             if not index: continue
@@ -251,10 +251,10 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
     #         trees += self._last_tree
     #         _all = [_id for _id in self]
     #         return filtered(lambda x: x not in self.last_tree.element_ids, _all)[0]
-    
+
     # def try_another_topic(self) -> GE:
     #     get_id = self._try_another_topic()
     #     return self[get_id()]
-    
+
     # def set_another_topic(self):
     #     self.tree_topic = try_another_topic()
