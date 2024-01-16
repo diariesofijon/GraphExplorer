@@ -6,7 +6,7 @@ Simple Program Convertor From Graph To Eisenhower's Matrix
 Trailing Spaces \
 Highlight Trailing space \
 Trailing punctuaions \
-Single Trailing Newline \
+Single Trailing Newline 
 
 SublimeLinter \
 SublimeLinter - pylint
