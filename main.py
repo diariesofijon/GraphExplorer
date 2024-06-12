@@ -21,12 +21,17 @@ from base import GM, GE
 
 # TODO: make cool architecture console interface
 class AbstractGraphWalkingInterface(abc.ABC):
-    
+
+    @property
+    @abc.abstractmethod
+    def graph(self) -> GM:
+        ''' StringRegularExpressionMaskAbstract '''
+
     def defined_maximum_vertex_chain_index(self, maximum=5):
         self.graph.defined_maximum_vertex: int = maximum
         for index, top in enumerate(self.graph):
             self.graph.tree_topic = top
-            top_id, visited =  self.graph.dfs()
+            index, visited =  self.graph.dfs()
             edges = sum(len(el.children)-1 for el in visited)
             yield {'index': index, 'depth': maximum, 'vertices': len(visited),
                 'edges': edges, 'handicap': len(visited) - edges}
@@ -50,7 +55,7 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
             index = 0 if index == 2 else -1
             return element.parents[index]
         raise ValueError(f'Index {str(index)} is out of range')
-    
+
     def show_most_usefull_road(self, maximum=5, length=5):
         roads = self.defined_maximum_vertex_chain_index(maximum)
         return sorted(roads, key=lambda x: x['handicap'])[:length]
@@ -58,7 +63,7 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
     def show_most_useless_road(self, maximum=5, length=5):
         roads = self.defined_maximum_vertex_chain_index(maximum)
         return sorted(roads, key=lambda x: x['handicap'])[:length:-1]
-    
+
     def show_graph_image_slice(self):
         maximum: int = int(input('Please, inter the deep of the expected graph: '))
         length: int = int(input('Please, inter the lenght of available slice: '))
@@ -75,7 +80,7 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
             print(f"vertices: {var['vertices']}")
             print(f"edges: {var['edges']}")
             print(f"handicap: {var['handicap']}")
-        
+
 
     def walk(self):
         ''' Walking down through the graph'''

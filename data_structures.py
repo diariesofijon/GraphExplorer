@@ -70,6 +70,23 @@ class RepresentativeGraphElementMask(RepresentativeGraphElementAbstract):
         return config.SEPARATES.get(self.separater_key, self.graph.separeter)
 
 @dataclass
+class VertexInfo:
+
+    # TODO: LETS METACLASS IDICATE VERTEXTINFO DUPLICATES
+
+    graph: Tree = None
+    start: RepresentativeGraphElementMask = None
+    end: RepresentativeGraphElementMask = None
+    depth: int = 0
+
+    def validation(self):
+        if not (self.graph and self.start and self.end):
+            raise config.ValidationError
+        if self.depth and self.start is self.end:
+            raise config.ValidationError
+
+
+@dataclass
 class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
 
     ''' Frozen Tree '''
@@ -78,6 +95,7 @@ class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
     # TODO: find the way of searching elements by a hash
     element_ids: FrozenSet[int] = None
     defined_maximum_vertex: int = 5
+
 
     def __iter__(self) -> GGE:
         return iter(self[_id] for _id in self.element_ids)
@@ -214,10 +232,22 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
         # TODO: sequence of keis have to start from zero indstead of one
         return self[id-1]
 
+    # TODO: refactor it
+    _topic = None
+
     @property
     def tree_topic(self) -> GE:
         ''' Highest element in the biggest tree of the graph '''
-        return self[0] # TODO: make magic algortihm which return the top of the biggest tree
+        if not self._topic:
+            self._topic = self[0]
+        return self._topic # TODO: make magic algortihm which return the top of the biggest tree
+
+    @tree_topic.setter
+    def tree_topic(self, elm: GE) -> GE:
+        ''' Highest element in the biggest tree of the graph '''
+        if elm is RepresentativeGraphElementMask:
+            self._topic = elm
+        raise config.ValidationError
 
     def exlude_tree(self) -> Tree:
         '''
