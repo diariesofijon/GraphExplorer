@@ -23,15 +23,22 @@ from base import GM, GE
 class AbstractGraphWalkingInterface(abc.ABC):
 
     vertexes = dict()
+    _tree = None
 
     @property
     @abc.abstractmethod
     def graph(self) -> GM:
         ''' StringRegularExpressionMaskAbstract '''
 
+    @property
+    def tree(self):
+        if self._tree:
+            return self._tree
+        return self.graph.exlude_tree()
+
     def defined_maximum_vertex_chain_index(self, maximum=5):
         self.graph.defined_maximum_vertex: int = maximum
-        for vertex_info in self.graph.find_the_rigth_tree_by_vertex_size():
+        for vertex_info in self.tree.find_the_rigth_tree_by_vertex_size():
             self.vertexes[vertex_info[1]] = {
                 'size': vertex_info[0], 'left': vertex_info[2], 'right': vertex_info[3]}
             yield vertex_info[1], self.vertexes[vertex_info[1]]
@@ -92,7 +99,7 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
     #         print(f"handicap: {var['handicap']}")
 
     def show_graph_image_slice(self):
-        maximum = int(input)
+        maximum = 5#int(input)
         for depth, vertex in self.defined_maximum_vertex_chain_index(maximum):
             print('Depth is ', depth)
             print('Size is ', vertex['size'])

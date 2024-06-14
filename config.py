@@ -70,6 +70,9 @@ class UndefinedConstant(ConfigError):
 
     ''' Undefined Constant abstract class '''
 
+    #redefine because have to be abstract methods
+    to_do_message: str = 'You have use element which are out of the tree'
+    constant_undefined: str = 'data_structures.Tree'
     traceback_message: str = 'Undefined constant'
 
 class GraphLinksFileNameHasNotDefined(UndefinedConstant):
@@ -93,6 +96,9 @@ class ValidationError(ConfigError):
 
     ''' Explain how to convert one data structure to an antoher '''
 
+    #redefine because have to be abstract methods
+    to_do_message: str = 'You have use element which are out of the tree'
+    constant_undefined: str = 'data_structures.Tree'
     traceback_message: str = 'Validation Error'
 
 # TODO: make classes for graphs, trees and matrixs

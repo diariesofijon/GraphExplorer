@@ -170,6 +170,7 @@ class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
         if not count:
             count = self.defined_maximum_vertex
         self.defined_maximum_vertex = count
+        print(type(top), top)
         self._sliced_graph.tree_topic = top
         for depth in self.vertex_searching_story.keys():
             self.defined_maximum_vertex = depth
@@ -177,8 +178,7 @@ class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
             topic_of_best_tree_left = {count: top}
             topic_of_best_tree_right = {count: top}
             edges_lengths = len(self._sliced_graph) # the best tree has smallest count of edges\
-            size = 0
-            trees = dict()
+            size, trees = 0, dict()
             for element in self._sliced_graph:
                 self._sliced_graph.tree_topic = element
                 self._sliced_graph.tree_topic = top
@@ -233,9 +233,12 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
         return self.__str__()
 
     def __getitem__(self, key: int, pythonic_list: bool = True) -> GE:
-        if pythonic_list:
-            return tuple(self)[key]
-        for part, _id in self.ids_map:
+        # if pythonic_list:
+            # print(len(tuple(self)))
+            # print(tuple(self))
+            # print(key)
+            # return tuple(self)[key]
+        for part, _id in self.ids_map.items():
             if key <= _id:
                 return self.get_element(part, key)
             key -= _id
@@ -270,6 +273,7 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
 
     def get_element(self, part: str =None, id: Union[str, int] =None) -> GE:
         # TODO: refactor the idea of methods get_element and get_elements
+        # TODO: CODE BELOW DON'T WORK!
         for key, value in self.ids_map.items():
             if key == part:
                 break
@@ -284,14 +288,14 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
     def tree_topic(self) -> GE:
         ''' Highest element in the biggest tree of the graph '''
         if not self._topic:
-            self._topic = self[0]
+            self._topic = list(self)[0]
         return self._topic # TODO: make magic algortihm which return the top of the biggest tree
 
     @tree_topic.setter
-    def tree_topic(self, elm: GE) -> GE:
+    def tree_topic(self, element: GE) -> GE:
         ''' Highest element in the biggest tree of the graph '''
-        if elm is RepresentativeGraphElementMask:
-            self._topic = elm
+        if isinstance(element, RepresentativeGraphElementMask):
+            self._topic = element
         raise config.ValidationError
 
     def exlude_tree(self) -> Tree:
@@ -299,5 +303,7 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
         Find the sequence which can work like a tree. Raise
         Vaildation Error if it has no any tree variant
         '''
+        print(type(self.tree_topic))
+        print(self.tree_topic)
         ids = {el.id for el in self.tree_topic.walk()}
         return GraphTreeRepresentationMask(self, ids)
