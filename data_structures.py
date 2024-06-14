@@ -7,8 +7,9 @@
 
 # fix: find another way to find points of graph due pythonic RegExp
 # import re
-from dataclasses import dataclass
-from typing import Optional, List, Union, Iterable, FrozenSet
+from collections import defaultdict
+from dataclasses import dataclass, field
+from typing import Optional, List, Union, Iterable, FrozenSet, Dict
 
 import config
 from base import (
@@ -80,6 +81,7 @@ class VertexInfo:
     depth: int = 0
 
     def validation(self):
+        ''' Have to explain why the Tree could not exists '''
         if not (self.graph and self.start and self.end):
             raise config.ValidationError
         if self.depth and self.start is self.end:
@@ -95,6 +97,10 @@ class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
     # TODO: find the way of searching elements by a hash
     element_ids: FrozenSet[int] = None
     defined_maximum_vertex: int = 5
+    trees_validated_vertex_left: VertexInfo = None
+    trees_validated_vertex_right: VertexInfo = None
+    _vertex_searching_story: defaultdict[dict] = field(default_factory=lambda: defaultdict(dict))
+    dfs_by_vertexs_searching: defaultdict[dict] = field(default_factory=lambda: defaultdict(dict))
 
 
     def __iter__(self) -> GGE:
@@ -116,6 +122,13 @@ class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
 
     def __contains__(self, element: GE) -> bool:
         return element.id in self.element_ids
+
+    @property
+    def vertex_searching_story(self) -> Dict:
+        if not self._vertex_searching_story:
+            self._vertex_searching_story = \
+            {index: 0 for index in range(self.defined_maximum_vertex+1)}
+        return self._vertex_searching_story
 
     @property
     def depth(self) -> int:
@@ -150,6 +163,38 @@ class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
 
     def bfs(self) -> GGE:
         pass
+
+    def find_the_rigth_tree_by_vertex_size(self, count=None, top=None):
+        if not top:
+            top = self._sliced_graph.tree_topic
+        if not count:
+            count = self.defined_maximum_vertex
+        self.defined_maximum_vertex = count
+        self._sliced_graph.tree_topic = top
+        for depth in self.vertex_searching_story.keys():
+            self.defined_maximum_vertex = depth
+            # But also the best count has two varients of the tree
+            topic_of_best_tree_left = {count: top}
+            topic_of_best_tree_right = {count: top}
+            edges_lengths = len(self._sliced_graph) # the best tree has smallest count of edges\
+            size = 0
+            trees = dict()
+            for element in self._sliced_graph:
+                self._sliced_graph.tree_topic = element
+                self._sliced_graph.tree_topic = top
+                visited = []
+                for step in self.dfs():
+                    size += 1
+                    visited += step[1]
+                trees[element] = visited
+                if len(visited) < edges_lengths:
+                    edges_lengths = len(visited)
+                    topic_of_best_tree_right[count] = topic_of_best_tree_left[count]
+                    topic_of_best_tree_left[count] = element
+            yield size, depth, topic_of_best_tree_left, topic_of_best_tree_right
+        self.defined_maximum_vertex = count
+        self._sliced_graph.tree_topic = top
+
 
 @dataclass
 class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):

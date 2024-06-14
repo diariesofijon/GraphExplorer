@@ -22,6 +22,8 @@ from base import GM, GE
 # TODO: make cool architecture console interface
 class AbstractGraphWalkingInterface(abc.ABC):
 
+    vertexes = dict()
+
     @property
     @abc.abstractmethod
     def graph(self) -> GM:
@@ -29,12 +31,20 @@ class AbstractGraphWalkingInterface(abc.ABC):
 
     def defined_maximum_vertex_chain_index(self, maximum=5):
         self.graph.defined_maximum_vertex: int = maximum
-        for index, top in enumerate(self.graph):
-            self.graph.tree_topic = top
-            index, visited =  self.graph.dfs()
-            edges = sum(len(el.children)-1 for el in visited)
-            yield {'index': index, 'depth': maximum, 'vertices': len(visited),
-                'edges': edges, 'handicap': len(visited) - edges}
+        for vertex_info in self.graph.find_the_rigth_tree_by_vertex_size():
+            self.vertexes[vertex_info[1]] = {
+                'size': vertex_info[0], 'left': vertex_info[2], 'right': vertex_info[3]}
+            yield vertex_info[1], self.vertexes[vertex_info[1]]
+
+
+    # def defined_maximum_vertex_chain_index(self, maximum=5):
+    #     self.graph.defined_maximum_vertex: int = maximum
+    #     for index, top in enumerate(self.graph):
+    #         self.graph.tree_topic = top
+    #         top_id, visited =  self.graph.dfs()
+    #         edges = sum(len(el.children)-1 for el in visited)
+    #         yield {'index': index, 'depth': maximum, 'vertices': len(visited),
+    #             'edges': edges, 'handicap': len(visited) - edges}
 
 
 @dataclass
@@ -56,30 +66,48 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
             return element.parents[index]
         raise ValueError(f'Index {str(index)} is out of range')
 
-    def show_most_usefull_road(self, maximum=5, length=5):
-        roads = self.defined_maximum_vertex_chain_index(maximum)
-        return sorted(roads, key=lambda x: x['handicap'])[:length]
+    # def show_most_usefull_road(self, maximum=5, length=5):
+    #     roads = self.defined_maximum_vertex_chain_index(maximum)
+    #     return sorted(roads, key=lambda x: x['handicap'])[:length]
 
-    def show_most_useless_road(self, maximum=5, length=5):
-        roads = self.defined_maximum_vertex_chain_index(maximum)
-        return sorted(roads, key=lambda x: x['handicap'])[:length:-1]
+    # def show_most_useless_road(self, maximum=5, length=5):
+    #     roads = self.defined_maximum_vertex_chain_index(maximum)
+    #     return sorted(roads, key=lambda x: x['handicap'])[:length:-1]
+
+    # def show_graph_image_slice(self):
+    #     maximum: int = int(input('Please, inter the deep of the expected graph: '))
+    #     length: int = int(input('Please, inter the lenght of available slice: '))
+    #     print(f'You can see below all possoble variants due {maximum} depth: ')
+    #     for var in self.show_most_usefull_road(maximum, length):
+    #         print(f"index: {var['index']}")
+    #         print(f"vertices: {var['vertices']}")
+    #         print(f"edges: {var['edges']}")
+    #         print(f"handicap: {var['handicap']}")
+    #     print("\n\n")
+    #     print(f'You can see below all unpossoble variants due {maximum} depth: ')
+    #     for var in self.show_most_useless_road(maximum, length):
+    #         print(f"index: {var['index']}")
+    #         print(f"vertices: {var['vertices']}")
+    #         print(f"edges: {var['edges']}")
+    #         print(f"handicap: {var['handicap']}")
 
     def show_graph_image_slice(self):
-        maximum: int = int(input('Please, inter the deep of the expected graph: '))
-        length: int = int(input('Please, inter the lenght of available slice: '))
-        print(f'You can see below all possoble variants due {maximum} depth: ')
-        for var in self.show_most_usefull_road(maximum, length):
-            print(f"index: {var['index']}")
-            print(f"vertices: {var['vertices']}")
-            print(f"edges: {var['edges']}")
-            print(f"handicap: {var['handicap']}")
-        print("\n\n")
-        print(f'You can see below all unpossoble variants due {maximum} depth: ')
-        for var in self.show_most_useless_road(maximum, length):
-            print(f"index: {var['index']}")
-            print(f"vertices: {var['vertices']}")
-            print(f"edges: {var['edges']}")
-            print(f"handicap: {var['handicap']}")
+        maximum = int(input)
+        for depth, vertex in self.defined_maximum_vertex_chain_index(maximum):
+            print('Depth is ', depth)
+            print('Size is ', vertex['size'])
+            print('vertex left is ')
+            print(vertex['left'])
+            print('vertex right is ')
+            print(vertex['right'])
+            if vertex['size'] == 2:
+                print(depth, " is the best")
+                choice = input("Should we continue: 0 - no, 1 - yes ")
+                if int(choice):
+                    break
+                else:
+                    print('CHOSE THE BEXT TOPIC') # LET IT BE IN THE CODE
+        print('bye-bye')
 
 
     def walk(self):
