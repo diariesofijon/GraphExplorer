@@ -159,7 +159,7 @@ class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
                 if child not in visited:
                     visited.append(child)
                     queue.append((child,depth+1))
-        return map(lambda x: x.id, visited)
+        return queue, visited
 
     def bfs(self) -> GGE:
         pass
@@ -172,26 +172,24 @@ class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
         self.defined_maximum_vertex = count
         print(type(top), top)
         self._sliced_graph.tree_topic = top
+        # TODO: FIRSTLY: change the concpetion of the fucntion and dfs for better and really usefull UX
+        # TODO: FIRSTLY: _vertex_searching_story should be included in the logic of the conception
         for depth in self.vertex_searching_story.keys():
             self.defined_maximum_vertex = depth
             # But also the best count has two varients of the tree
             topic_of_best_tree_left = {count: top}
             topic_of_best_tree_right = {count: top}
             edges_lengths = len(self._sliced_graph) # the best tree has smallest count of edges\
-            size, trees = 0, dict()
             for element in self._sliced_graph:
                 self._sliced_graph.tree_topic = element
                 self._sliced_graph.tree_topic = top
-                visited = []
-                for step in self.dfs():
-                    size += 1
-                    visited += step[1]
-                trees[element] = visited
-                if len(visited) < edges_lengths:
-                    edges_lengths = len(visited)
+                trees_elements, edges = self.dfs()
+                size = len(trees_elements)
+                if len(edges) < edges_lengths:
+                    edges_lengths = len(edges)
                     topic_of_best_tree_right[count] = topic_of_best_tree_left[count]
                     topic_of_best_tree_left[count] = element
-            yield size, depth, topic_of_best_tree_left, topic_of_best_tree_right
+                yield size, depth, topic_of_best_tree_left, topic_of_best_tree_right
         self.defined_maximum_vertex = count
         self._sliced_graph.tree_topic = top
 
@@ -294,9 +292,10 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
     @tree_topic.setter
     def tree_topic(self, element: GE) -> GE:
         ''' Highest element in the biggest tree of the graph '''
-        if isinstance(element, RepresentativeGraphElementMask):
-            self._topic = element
-        raise config.ValidationError
+        # if isinstance(element, RepresentativeGraphElementMask):
+        #     self._topic = element
+        # raise config.ValidationError
+        self._topic = element
 
     def exlude_tree(self) -> Tree:
         '''
