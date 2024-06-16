@@ -170,7 +170,6 @@ class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
         if not count:
             count = self.defined_maximum_vertex
         self.defined_maximum_vertex = count
-        print(type(top), top)
         self._sliced_graph.tree_topic = top
         # TODO: FIRSTLY: change the concpetion of the fucntion and dfs for better and really usefull UX
         # TODO: FIRSTLY: _vertex_searching_story should be included in the logic of the conception
