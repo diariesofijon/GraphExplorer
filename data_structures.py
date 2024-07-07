@@ -61,6 +61,7 @@ class RepresentativeGraphElementMask(RepresentativeGraphElementAbstract):
         if chain:
             index = chain.pop()
         else:
+            # TODO: that's arise trouble because self is not iterable
             return self
         next_el = self.children[index] if left else self.children.end(index)
         yield next_el
@@ -235,6 +236,10 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
             # print(tuple(self))
             # print(key)
             # return tuple(self)[key]
+        # TODO: place awqay the validation
+        if isinstance(key, RepresentativeGraphElementMask):
+            key = key.id
+        # TODO: resolve recursion to find the veretex
         for part, _id in self.ids_map.items():
             if key <= _id:
                 return self.get_element(part, key)
