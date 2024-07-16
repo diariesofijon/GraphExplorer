@@ -116,7 +116,7 @@ class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
     def __repr__(self) -> str:
         return self.__str__()
 
-    def __getitem__(self, key: int, pythonic_list: bool = True) -> GE:
+    def __getitem__(self, key: int) -> GE:
         if key not in self.element_ids:
             raise config.OutFromTreeError
         return self._sliced_graph[key]
@@ -206,7 +206,7 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
     tmp: Optional[str] = None
     separeter: str = config.SEPARATES.get('NODE')
     file: str = config.FILE_DATA_LOADER_PATH
-    last_part: str = 'A1.'
+    _last_part: str = 'A1.'
     element_class: GE = RepresentativeGraphElementMask
 
     def __init__(self, *args, **kwargs):
@@ -215,6 +215,7 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
             with open(self.file, 'r', encoding='utf8') as file:
                 self.tmp: str = file.read()
         # TODO: it worth but i have to load self.ids_map
+        self._get_formated_links()
         for _ in self:
             continue
 
@@ -230,22 +231,19 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
     def __repr__(self) -> str:
         return self.__str__()
 
-    def __getitem__(self, key: int, pythonic_list: bool = True) -> GE:
-        # if pythonic_list:
-            # print(len(tuple(self)))
-            # print(tuple(self))
-            # print(key)
-            # return tuple(self)[key]
+    def __getitem__(self, key: int) -> GE:
         # TODO: place awqay the validation
+        # don't forget that it question about error arised in the same place that
+        # have be corrected instead of doing in another way like done bellow
         if isinstance(key, RepresentativeGraphElementMask):
             key = key.id
-        # TODO: resolve recursion to find the veretex
-        for part, _id in self.ids_map.items():
-            if key <= _id:
-                return self.get_element(part, key)
-            key -= _id
-            continue
-        raise IndexError()
+        # TODO: It have be removed from logic because it have work unrelated to the data
+        last_part = 'A1.'
+        for part in self.ids_map:
+            if len(self.ids_map[last_part]) > key:
+                last_part = part
+        return self.get_element(part=last_part, id=key)
+
 
     def __contains__(self, element: GE) -> bool:
         try:
@@ -257,12 +255,12 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
     def _get_formated_links(self):
         for link in self.tmp.split(self.separeter):
             if (tmp := link.strip()).endswith('.'):
-                self.last_part = tmp
+                self._last_part = tmp
                 continue
             if not tmp:
                 # ATTENTION: ignore blank line
                 continue
-            yield from self._convert_element(tmp, self.last_part)
+            yield from self._convert_element(tmp, self._last_part)
 
     def get_elements(self, part: str =None, id: Union[str, int] =None) -> GE:
         if not id and not part:
@@ -275,13 +273,19 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
 
     def get_element(self, part: str =None, id: Union[str, int] =None) -> GE:
         # TODO: refactor the idea of methods get_element and get_elements
-        # TODO: CODE BELOW DON'T WORK!
-        for key, value in self.ids_map.items():
-            if key == part:
-                break
-            id += value
-        # TODO: sequence of keis have to start from zero indstead of one
-        return self[id-1]
+        print(self.ids_map.keys())
+        print(len(self.ids_map.items()))
+        for element in self.ids_map[part]:
+            # print(self.ids_map)
+            # print(type(element), element)
+            # print(part)
+            if isinstance(element, int):
+                if element == id:
+                    return element
+            if element.id == id:
+                return element
+        # TODO: add the explanation of the trouble
+        raise IndexError()
 
     # TODO: refactor it
     _topic = None

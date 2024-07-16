@@ -185,7 +185,7 @@ class StringRegularExpressionMaskAbstract(collections.abc.Collection):
 
     @property
     @abc.abstractmethod
-    def last_part(self) -> str:
+    def _last_part(self) -> str:
         ''' String iteration flag indecate what node have a part '''
 
     @property
@@ -194,7 +194,7 @@ class StringRegularExpressionMaskAbstract(collections.abc.Collection):
         ''' Pythonic class to implement each node to valid form '''
 
     # TODO: Can't instantiate abstract class ... with abstract method ids_map
-    ids_map: Dict[str, int] = field(default_factory=lambda:{'A1.': 0})
+    ids_map: Dict[str, list] = field(default_factory=lambda:{'A1.': [0]})
 
     @abc.abstractmethod
     def get_elements(self, part: str =None, id: Union[str, int] =None) -> GGE:
@@ -248,8 +248,9 @@ class StringRegularExpressionMaskAbstract(collections.abc.Collection):
         for id in self._get_ids(ids):
             data = self.element_class(
                 id=id, grouped=grouped, part=last_part, body=body, graph=self)
-            # TODO: have to be strictly increased instead of redefining
-            self.ids_map[last_part] = id
+            # TODO: just refactro it
+            tmp = (self.ids_map.get(last_part, []) + [data])
+            self.ids_map[last_part] = tmp
             yield data
 
 
@@ -264,6 +265,10 @@ class RepresentativeGraphElementAbstract(collections.abc.Hashable):
     # _parents: Optional[List[int]] = None
     # TODO: IMPLEMENT PYTHONIC COLLECTION ABSTRACTION
     # TODO: MAKE IT SINGLETONE
+
+    # TODO: should it be abstract method?
+    def __hash__(self):
+        return self.id
 
     @abc.abstractmethod
     def __repr__(self) -> str:
