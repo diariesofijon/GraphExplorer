@@ -142,27 +142,12 @@ class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
         ''' The logest chain to iterate through the DFS algorithm '''
         return self.bfs()
 
-    def dfs(self) -> GGE:
-        # TODO: should to work in the composition way
-        # maxdepth = 0
-        visited = []
-        queue = []
-        visited.append(self._sliced_graph.tree_topic)
-        queue.append((self._sliced_graph.tree_topic,1))
-        while queue:
-            x, depth = queue.pop(0)
-            # TODO: take down documentation about the idea why should we use already defined maxdepth
-            # maxdepth = max(maxdepth, deptsh)
-            # print(x)
-            if depth > self.defined_maximum_vertex:
-                break
-            for child in self._sliced_graph[x].children:
-                if child not in visited:
-                    visited.append(child)
-                    queue.append((child,depth+1))
-        return queue, visited
+    def dfs_from_it(self) -> GGE:
+        self._sliced_graph.tree_topic = self
+        return self._sliced_graph.dfs(vertex=self.defined_maximum_vertex)
 
     def bfs(self) -> GGE:
+        # TODO: let's make something similart with dfs has done
         pass
 
     def find_the_rigth_tree_by_vertex_size(self, count=None, top=None):
@@ -183,7 +168,7 @@ class GraphTreeRepresentationMask(GraphTreeRepresintationMaskAbstract):
             for element in self._sliced_graph:
                 self._sliced_graph.tree_topic = element
                 self._sliced_graph.tree_topic = top
-                trees_elements, edges = self.dfs()
+                trees_elements, edges = self.dfs_from_it()
                 size = len(trees_elements)
                 if len(edges) < edges_lengths:
                     edges_lengths = len(edges)
@@ -276,13 +261,12 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
         print(self.ids_map.keys())
         print(len(self.ids_map.items()))
         for element in self.ids_map[part]:
-            # print(self.ids_map)
-            # print(type(element), element)
-            # print(part)
-            if isinstance(element, int):
-                if element == id:
+            # TODO: trouble with int has not solved just converted in ty exctention
+            # TODO: it has not work due exclude_tree ids_map has defrent logic
+            try:
+                if element.id == id:
                     return element
-            if element.id == id:
+            except:
                 return element
         # TODO: add the explanation of the trouble
         raise IndexError()
@@ -314,3 +298,23 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
         print(self.tree_topic)
         ids = {el.id for el in self.tree_topic.walk()}
         return GraphTreeRepresentationMask(self, ids)
+
+    def dfs(self, vertex = 5) -> GGE:
+        # TODO: should to work in the composition way
+        # maxdepth = 0
+        visited = []
+        queue = []
+        visited.append(self.tree_topic)
+        queue.append((self.tree_topic,1))
+        while queue:
+            x, depth = queue.pop(0)
+            # TODO: take down documentation about the idea why should we use already defined maxdepth
+            # maxdepth = max(maxdepth, deptsh)
+            # print(x)
+            if depth > vertex:
+                break
+            for child in self[x].children:
+                if child not in visited:
+                    visited.append(child)
+                    queue.append((child,depth+1))
+        return queue, visited

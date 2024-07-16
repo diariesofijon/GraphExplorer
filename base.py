@@ -194,6 +194,8 @@ class StringRegularExpressionMaskAbstract(collections.abc.Collection):
         ''' Pythonic class to implement each node to valid form '''
 
     # TODO: Can't instantiate abstract class ... with abstract method ids_map
+    # TODO: it has not work due exclude_tree ids_map has defrent logic
+    # TODO: let's try makes it hardcode
     ids_map: Dict[str, list] = field(default_factory=lambda:{'A1.': [0]})
 
     @abc.abstractmethod
