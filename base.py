@@ -66,7 +66,6 @@ class _Chain(list):
         for index, element in enumerate(self):
             yield (index, element)
 
-
 class GraphTreeRepresintationMaskAbstract(collections.abc.Mapping):
 
     ''' Iterable tree representation of a graph '''
