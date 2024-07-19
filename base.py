@@ -12,6 +12,7 @@ import collections.abc
 # TODO: IMPLEMENT PYTHONIC COLLECTION ABSTRACTION
 from dataclasses import dataclass, field
 from typing import Optional, TypeVar, List, Iterable, Union, Dict, FrozenSet, Set
+import drivers
 
 
 __all__ = (
@@ -183,18 +184,18 @@ class StringRegularExpressionMaskAbstract(collections.abc.Collection):
 
     @property
     @abc.abstractmethod
-    def _last_part(self) -> str:
-        ''' String iteration flag indecate what node have a part '''
+    def loader_class(self) -> drivers.AbstractLoader:
+        ''' The way which defined who would load data '''
+
+    @property
+    @abc.abstractmethod
+    def loader(self) -> drivers.AbstractLoader:
+        ''' The way which defined who would load data '''
 
     @property
     @abc.abstractmethod
     def element_class(self) -> GE:
         ''' Pythonic class to implement each node to valid form '''
-
-    # TODO: Can't instantiate abstract class ... with abstract method ids_map
-    # TODO: it has not work due exclude_tree ids_map has defrent logic
-    # TODO: let's try makes it hardcode
-    ids_map: Dict[str, list] = field(default_factory=lambda:{'A1.': [0]})
 
     @abc.abstractmethod
     def get_elements(self, part: str =None, id: Union[str, int] =None) -> GGE:

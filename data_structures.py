@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Union, Iterable, FrozenSet, Dict
 
 import config
+import drivers
 from base import (
     StringRegularExpressionMaskAbstract, GE, GGE, GM, Tree,
     RepresentativeGraphElementAbstract, GraphTreeRepresintationMaskAbstract)
@@ -191,18 +192,8 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
     tmp: Optional[str] = None
     separeter: str = config.SEPARATES.get('NODE')
     file: str = config.FILE_DATA_LOADER_PATH
-    _last_part: str = 'A1.'
+    loader_class: drivers.AbstractLoader = drivers.EisenhoverMatrixLoader
     element_class: GE = RepresentativeGraphElementMask
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if not self.tmp:
-            with open(self.file, 'r', encoding='utf8') as file:
-                self.tmp: str = file.read()
-        # TODO: it worth but i have to load self.ids_map
-        self._get_formated_links()
-        for _ in self:
-            continue
 
     def __iter__(self) -> GGE:
         return iter(self._get_formated_links())
@@ -258,8 +249,6 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
 
     def get_element(self, part: str =None, id: Union[str, int] =None) -> GE:
         # TODO: refactor the idea of methods get_element and get_elements
-        print(self.ids_map.keys())
-        print(len(self.ids_map.items()))
         for element in self.ids_map[part]:
             # TODO: trouble with int has not solved just converted in ty exctention
             # TODO: it has not work due exclude_tree ids_map has defrent logic

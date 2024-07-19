@@ -9,11 +9,14 @@ import abc
 from dataclasses import dataclass, field
 from typing import Optional, List, Union, Iterable, FrozenSet, Dict
 import config
+import base
 
 
 # TODO: realize the conception from base.py that would be work in singletone way
 # ids_map: Dict[str, list] = field(default_factory=lambda:{'A1.': [0]})
-class IdsMapAbstract(abc.ABC):
+class AbstractLoader(abc.ABC):
+
+    cached_context: str = ''
 
     @property
     @abc.abstractmethod
@@ -38,20 +41,26 @@ class IdsMapAbstract(abc.ABC):
     def convert_element(self, tmp: str):
         pass
 
-class IdsMapBase(IdsMapAbstract):
 
-    def loads_from(self, path: str, type: str= 'txt', mode: str='r', starts: int= 0):
-        context: str = ''
-        with open(path, mode, encoding=config.ENCODING) as file:
-            context: str = file.read()
-        return context[starts:]
+class BaseLoader(AbstractLoader):
 
-
-class IdsMapTxt(IdsMapBase):
-
+    file_path: str = 'output.txt'
     separeter: str = config.SEPARATES.get('NODE')
 
-    def convert_element(self, tmp: str, last_part: GE) -> GGE:
+    def loads_from(self, path: str, type: str= 'txt', mode: str='r', starts: int= 0):
+        with open(path, mode, encoding=config.ENCODING) as file:
+            self.cached_context: str = file.read()
+        return self.cached_context[starts:]
+
+    @property
+    def whole_chain(self) -> Iterable:
+        self.loads_from(self.file_path)
+        yield from self.cached_context.split(self.separeter)
+
+
+class TxtLoader(BaseLoader):
+
+    def convert_element(self, tmp: str) -> base.GGE:
         ''' Engine convertor '''
         if len((splited := tmp.split('.'))) == 1:
             splited = splited[0], ''
@@ -65,10 +74,7 @@ class IdsMapTxt(IdsMapBase):
                 grouped, body = splited
         for id in self.get_ids(ids):
             data = self.element_class(
-                id=id, grouped=grouped, part=last_part, body=body, graph=self)
-        # TODO: just refactro it
-        #     tmp = (self.ids_map.get(last_part, []) + [data])
-        #     self.ids_map[last_part] = tmp
+                id=id, grouped=grouped, body=body, graph=self)
             yield data
 
     @staticmethod
@@ -78,24 +84,33 @@ class IdsMapTxt(IdsMapBase):
             return list(range(int(tmp[0]), int(tmp[1])+1))
         return [int(name)]
 
-class EisenhoverMatrix(IdsMapTxt):
+
+class EisenhoverMatrixLoader(BaseLoader):
+
+    # TODO: Can't instantiate abstract class ... with abstract method ids_map
+    # TODO: it has not work due exclude_tree ids_map has defrent logic
+    # TODO: let's try makes it hardcode
+    ids_map: Dict[str, list] = dict()
 
     def get_formated_links(self):
-        for link in self.tmp.split(self.separeter):
+        for link in self.whole_chain:
             if (tmp := link.strip()).endswith('.'):
-                last_part = tmp
+                self.ids_map[tmp] += 1
                 continue
             if not tmp:
                 # ATTENTION: ignore blank line
                 continue
-            yield from self.convert_element(tmp, last_part)
+            yield from self.convert_element(tmp)
 
     def get_part_by_id(self, id: int):
+        for part in self.ids_map:
+            if self.ids_map[part] >= id:
+                return part
 
 
-class IdsMapCsv(IdsMapBase):
+class CsvLoader(BaseLoader):
     pass
 
 
-class IdsMapYaml(IdsMapBase):
+class YamlLoader(BaseLoader):
     pass
