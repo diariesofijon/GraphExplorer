@@ -19,31 +19,17 @@ class IdsMapAbstract(abc.ABC):
     def whole_chain(self) -> Iterable:
         pass
 
+    @property
+    @abc.abstractmethod
+    def element_class(self) -> Iterable:
+        pass
+
     @abc.abstractmethod
     def convert_element(self, tmp: str):
         pass
 
 class IdsMapBase(IdsMapAbstract):
-
-    def _convert_element(self, tmp: str, last_part: GE) -> GGE:
-        ''' Engine convertor '''
-        if len((splited := tmp.split('.'))) == 1:
-            splited = splited[0], ''
-        ids, tmp = splited
-        match len((splited:=tmp.split(':'))):
-            case 0:
-                grouped, body = 'splited', 'splited'
-            case 1:
-                grouped, body = splited, splited
-            case _:
-                grouped, body = splited
-        for id in self._get_ids(ids):
-            data = self.element_class(
-                id=id, grouped=grouped, part=last_part, body=body, graph=self)
-            # TODO: just refactro it
-            tmp = (self.ids_map.get(last_part, []) + [data])
-            self.ids_map[last_part] = tmp
-            yield data
+    pass
 
 
 class IdsMapTxt(IdsMapBase):
@@ -60,7 +46,7 @@ class IdsMapTxt(IdsMapBase):
                 grouped, body = splited, splited
             case _:
                 grouped, body = splited
-        for id in self._get_ids(ids):
+        for id in self.get_ids(ids):
             data = self.element_class(
                 id=id, grouped=grouped, part=last_part, body=body, graph=self)
             # TODO: just refactro it

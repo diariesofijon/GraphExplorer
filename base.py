@@ -14,9 +14,21 @@ from dataclasses import dataclass, field
 from typing import Optional, TypeVar, List, Iterable, Union, Dict, FrozenSet, Set
 
 
-__all__ = ('StringRegularExpressionMaskAbstract',
+__all__ = (
+    'StringRegularExpressionMaskAbstract', 'GE', 'GGE', 'GM', 'Chain', 'Tree',
     'RepresentativeGraphElementAbstract', 'GraphTreeRepresintationMaskAbstract')
 
+# types
+# TODO: move all types to anatother file
+GE = TypeVar('GE', bound='RepresentativeGraphElementAbstract')
+# TODO: Dependevice injection from graph mask to pythonic graph
+GM = TypeVar('GM', bound='StringRegularExpressionMaskAbstract')
+# Graph = TypeVar('Graph', bound='...')
+GGE = Iterable[GE]
+Chain = TypeVar('Chain', bound='_Chain')
+Tree = TypeVar('Tree', bound='GraphTreeRepresintationMaskAbstract')
+NumericalSequence = Set[int]
+ChainNumericals = Set[NumericalSequence]
 
 class _Chain(list):
 
