@@ -16,6 +16,8 @@ import abc
 
 # TODO: make logger settings and add pythonic logger into the project!!!!
 
+ENCODING = 'utf8'
+
 SEPARATES = {
     # LINES
     'NODE': '\n', 'STRING': '\n', 'LINE': '\n', 'PRETTY_PARAGRAPH': '\n\n\n\n',

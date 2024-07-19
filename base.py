@@ -30,6 +30,7 @@ Tree = TypeVar('Tree', bound='GraphTreeRepresintationMaskAbstract')
 NumericalSequence = Set[int]
 ChainNumericals = Set[NumericalSequence]
 
+
 class _Chain(list):
 
     '''
@@ -203,10 +204,6 @@ class StringRegularExpressionMaskAbstract(collections.abc.Collection):
     def get_element(self, part: str =None, id: Union[str, int] =None) -> GE:
         ''' Method that return filterd nodes by part or id '''
 
-    @abc.abstractmethod
-    def _get_formated_links(self) -> Iterable[str]:
-        ''' Private method that list all nodes '''
-
     # @abc.abstractmethod
     # def exclude_tree(self) -> Tree:
     #     '''
@@ -224,33 +221,6 @@ class StringRegularExpressionMaskAbstract(collections.abc.Collection):
         ''' Check if a graph is bipartite '''
         # TODO: in first time it doesn't matter
         return False
-
-    @staticmethod
-    def _get_ids(name: str) -> List[int]:
-        ''' Clear function that implement name to ids '''
-        if len((tmp := name.split('-'))) == 2:
-            return list(range(int(tmp[0]), int(tmp[1])+1))
-        return [int(name)]
-
-    def _convert_element(self, tmp: str, last_part: GE) -> GGE:
-        ''' Engine convertor '''
-        if len((splited := tmp.split('.'))) == 1:
-            splited = splited[0], ''
-        ids, tmp = splited
-        match len((splited:=tmp.split(':'))):
-            case 0:
-                grouped, body = 'splited', 'splited'
-            case 1:
-                grouped, body = splited, splited
-            case _:
-                grouped, body = splited
-        for id in self._get_ids(ids):
-            data = self.element_class(
-                id=id, grouped=grouped, part=last_part, body=body, graph=self)
-            # TODO: just refactro it
-            tmp = (self.ids_map.get(last_part, []) + [data])
-            self.ids_map[last_part] = tmp
-            yield data
 
 
 @dataclass
