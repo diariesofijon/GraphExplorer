@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Union, Iterable, FrozenSet, Dict
 import config
 import base
+from data_structures import GraphTreeRepresentationMask
 
 
 # TODO: realize the conception from base.py that would be work in singletone way
@@ -25,12 +26,17 @@ class AbstractLoader(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def element_class(self):
+    def element_class(self) -> base.GE:
         pass
 
     @property
     @abc.abstractmethod
-    def ids(self) -> Dict:
+    def ids(self) -> FrozenSet:
+        pass
+
+    @property
+    @abc.abstractmethod
+    def map(self) -> Dict:
         pass
 
     @abc.abstractmethod
@@ -38,14 +44,39 @@ class AbstractLoader(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def convert_element(self, tmp: str):
+    def convert_element(self, tmp: str) -> base.GGE:
         pass
 
 
 class BaseLoader(AbstractLoader):
 
-    file_path: str = 'output.txt'
+    file_path: str = 'example'
     separeter: str = config.SEPARATES.get('NODE')
+    element_class: base.GE = GraphTreeRepresentationMask
+
+    _ids: FrozenSet = frozenset({})
+    _map: Dict = {}
+
+    def __init__(self, etype: base.GE = None):
+        if etype:
+            self.element_class: base.GE = etype
+        self.loads_from(self.file_path)
+
+    def __len__(self):
+        return len(self.ids)
+
+    @property
+    def map(self):
+        if not self._map:
+            for idx, element in enumerate(self.whole_chain):
+                self._map[idx+1] = element
+        return self._map
+
+    @property
+    def ids(self):
+        if not self._ids:
+            self._ids = frozenset(map(int, self.map.keys()))
+        return self._ids
 
     def loads_from(self, path: str, type: str= 'txt', mode: str='r', starts: int= 0):
         with open(path, mode, encoding=config.ENCODING) as file:
@@ -55,11 +86,15 @@ class BaseLoader(AbstractLoader):
     @property
     def whole_chain(self) -> Iterable:
         self.loads_from(self.file_path)
-        yield from self.cached_context.split(self.separeter)
+        separeted: Iterable = self.cached_context.split(self.separeter)
+        yield from map(self.convert_element, separeted)
 
 
 class TxtLoader(BaseLoader):
 
+    file_path: str = 'output.txt'
+
+    # TODO: THAT IS NOT A GENERATOR
     def convert_element(self, tmp: str) -> base.GGE:
         ''' Engine convertor '''
         if len((splited := tmp.split('.'))) == 1:
@@ -85,25 +120,26 @@ class TxtLoader(BaseLoader):
         return [int(name)]
 
 
-class EisenhoverMatrixLoader(BaseLoader):
+class EisenhoverMatrixLoader(TxtLoader):
 
-    # TODO: Can't instantiate abstract class ... with abstract method ids_map
-    # TODO: it has not work due exclude_tree ids_map has defrent logic
-    # TODO: let's try makes it hardcode
-    ids_map: Dict[str, list] = dict()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # TODO: Can't instantiate abstract class ... with abstract method ids_map
+        # TODO: it has not work due exclude_tree ids_map has defrent logic
+        # TODO: let's try makes it hardcode
+        self.ids_map: Dict[str, list] = {}
 
-    def get_formated_links(self):
-        for link in self.whole_chain:
+    @property
+    def whole_chain(self) -> Iterable:
+        for link in super().whole_chain:
             if (tmp := link.strip()).endswith('.'):
                 self.ids_map[tmp] += 1
                 continue
-            if not tmp:
-                # ATTENTION: ignore blank line
-                continue
-            yield from self.convert_element(tmp)
+            if tmp: # ATTENTION: ignore blank line
+                yield from self.convert_element(tmp)
 
     def get_part_by_id(self, id: int):
-        for part in self.ids_map:
+        for part in self.ids_map.items():
             if self.ids_map[part] >= id:
                 return part
 

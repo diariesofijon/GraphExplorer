@@ -65,6 +65,16 @@ def depthFirstSearch():
 for i in range(MAX):
     for j in range(MAX):
         adjMatrix[i][j] = 0
+# LEGACY VARIANT
+    # def get_formated_links(self):
+    #     for link in self.whole_chain:
+    #         if (tmp := link.strip()).endswith('.'):
+    #             self.ids_map[tmp] += 1
+    #             continue
+    #         if not tmp:
+    #             # ATTENTION: ignore blank line
+    #             continue
+    #         yield from self.convert_element(tmp)
 addVertex('S')   # 0
 addVertex('A')   # 1
 addVertex('B')   # 2

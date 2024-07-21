@@ -187,23 +187,28 @@ class StringRegularExpressionMaskAbstract(collections.abc.Collection):
     def loader_class(self) -> drivers.AbstractLoader:
         ''' The way which defined who would load data '''
 
+    _loader = None
+
     @property
     @abc.abstractmethod
     def loader(self) -> drivers.AbstractLoader:
         ''' The way which defined who would load data '''
+        if not self._loader:
+            self._loader = self.loader_class(etype=self.element_class)
+        return self._loader
 
     @property
     @abc.abstractmethod
     def element_class(self) -> GE:
         ''' Pythonic class to implement each node to valid form '''
 
-    @abc.abstractmethod
-    def get_elements(self, part: str =None, id: Union[str, int] =None) -> GGE:
-        ''' Method that return node by part or id '''
+    # @abc.abstractmethod
+    # def get_elements(self, part: str =None, id: Union[str, int] =None) -> GGE:
+    #     ''' Method that return node by part or id '''
 
-    @abc.abstractmethod
-    def get_element(self, part: str =None, id: Union[str, int] =None) -> GE:
-        ''' Method that return filterd nodes by part or id '''
+    # @abc.abstractmethod
+    # def get_element(self, part: str =None, id: Union[str, int] =None) -> GE:
+    #     ''' Method that return filterd nodes by part or id '''
 
     # @abc.abstractmethod
     # def exclude_tree(self) -> Tree:

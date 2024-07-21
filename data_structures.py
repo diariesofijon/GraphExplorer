@@ -192,14 +192,14 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
     tmp: Optional[str] = None
     separeter: str = config.SEPARATES.get('NODE')
     file: str = config.FILE_DATA_LOADER_PATH
-    loader_class: drivers.AbstractLoader = drivers.EisenhoverMatrixLoader
     element_class: GE = RepresentativeGraphElementMask
+    loader_class: drivers.AbstractLoader = drivers.TxtLoader
 
     def __iter__(self) -> GGE:
-        return iter(self._get_formated_links())
+        return iter(self.loader.whole_chain)
 
     def __len__(self) -> int:
-        return len(list(self._get_formated_links()))
+        return len(list(self.loader.whole_chain))
 
     def __str__(self) -> str:
         return self.separeter.join(str(tmp) for tmp in iter(self))
@@ -211,54 +211,19 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
         # TODO: place awqay the validation
         # don't forget that it question about error arised in the same place that
         # have be corrected instead of doing in another way like done bellow
-        if isinstance(key, RepresentativeGraphElementMask):
-            key = key.id
+        # if isinstance(key, RepresentativeGraphElementMask):
+        #     key = key.id # may be trouble araised only in dfs
         # TODO: It have be removed from logic because it have work unrelated to the data
-        last_part = 'A1.'
-        for part in self.ids_map:
-            if len(self.ids_map[last_part]) > key:
-                last_part = part
-        return self.get_element(part=last_part, id=key)
-
+        return self.loader.map[key]
 
     def __contains__(self, element: GE) -> bool:
-        try:
-            element = self.get_element(element.part, element.id)
-        except IndexError:
-            return False
-        return isinstance(element, self.element_class)
-
-    def _get_formated_links(self):
-        for link in self.tmp.split(self.separeter):
-            if (tmp := link.strip()).endswith('.'):
-                self._last_part = tmp
-                continue
-            if not tmp:
-                # ATTENTION: ignore blank line
-                continue
-            yield from self._convert_element(tmp, self._last_part)
-
-    def get_elements(self, part: str =None, id: Union[str, int] =None) -> GE:
-        if not id and not part:
-            raise IndexError()
-        if not part:
-            # fix: it would be good idea if we can search only by id???
-            raise IndexError('Part has not defined when id was passed')
-        if id and part:
-            yield from (el for el in self if el.part == part and el.id == id)
-
-    def get_element(self, part: str =None, id: Union[str, int] =None) -> GE:
-        # TODO: refactor the idea of methods get_element and get_elements
-        for element in self.ids_map[part]:
-            # TODO: trouble with int has not solved just converted in ty exctention
-            # TODO: it has not work due exclude_tree ids_map has defrent logic
-            try:
-                if element.id == id:
-                    return element
-            except:
-                return element
-        # TODO: add the explanation of the trouble
-        raise IndexError()
+        # LEGACY BEFORE LOADER CONCEPTION
+        # try:
+        #     element = self.get_element(element.part, element.id)
+        # except IndexError:
+        #     return False
+        # return isinstance(element, self.element_class)
+        return element in self.loader.map.items()
 
     # TODO: refactor it
     _topic = None
@@ -302,8 +267,41 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
             # print(x)
             if depth > vertex:
                 break
-            for child in self[x].children:
+            for child in self[x.id].children:
                 if child not in visited:
                     visited.append(child)
                     queue.append((child,depth+1))
         return queue, visited
+
+
+class EisenhoverMatrixConvertationMask(StringByStringRegularExpressionMask):
+
+    loader_class: drivers.AbstractLoader = drivers.EisenhoverMatrixLoader
+
+    def get_orthodox_eisenhover_info(self, index: int):
+        part = self.loader.get_part_by_id(index)
+        executive_id = index - self.loader.ids_map[part]
+        return {'part': part, 'executive_id': executive_id}
+
+    # LEGACY BEFORE LOADER CONCEPTION
+    # def get_elements(self, part: str =None, id: Union[str, int] =None) -> GE:
+    #     if not id and not part:
+    #         raise IndexError()
+    #     if not part:
+    #         # fix: it would be good idea if we can search only by id???
+    #         raise IndexError('Part has not defined when id was passed')
+    #     if id and part:
+    #         yield from (el for el in self if el.part == part and el.id == id)
+
+    # def get_element(self, part: str =None, id: Union[str, int] =None) -> GE:
+    #     # TODO: refactor the idea of methods get_element and get_elements
+    #     for element in self.ids_map[part]:
+    #         # TODO: trouble with int has not solved just converted in ty exctention
+    #         # TODO: it has not work due exclude_tree ids_map has defrent logic
+    #         try:
+    #             if element.id == id:
+    #                 return element
+    #         except:
+    #             return element
+    #     # TODO: add the explanation of the trouble
+    #     raise IndexError()
