@@ -10,7 +10,6 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Union, Iterable, FrozenSet, Dict
 import config
 import base
-from data_structures import GraphTreeRepresentationMask
 
 
 # TODO: realize the conception from base.py that would be work in singletone way
@@ -52,7 +51,6 @@ class BaseLoader(AbstractLoader):
 
     file_path: str = 'example'
     separeter: str = config.SEPARATES.get('NODE')
-    element_class: base.GE = GraphTreeRepresentationMask
 
     _ids: FrozenSet = frozenset({})
     _map: Dict = {}
@@ -92,7 +90,7 @@ class BaseLoader(AbstractLoader):
 
 class TxtLoader(BaseLoader):
 
-    file_path: str = 'output.txt'
+    file_path: str = 'graph_links.txt'
 
     # TODO: THAT IS NOT A GENERATOR
     def convert_element(self, tmp: str) -> base.GGE:

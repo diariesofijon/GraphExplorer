@@ -268,6 +268,7 @@ class StringByStringRegularExpressionMask(StringRegularExpressionMaskAbstract):
             if depth > vertex:
                 break
             for child in self[x.id].children:
+            # for child in x.children: # TODO: 
                 if child not in visited:
                     visited.append(child)
                     queue.append((child,depth+1))

@@ -12,7 +12,6 @@ import collections.abc
 # TODO: IMPLEMENT PYTHONIC COLLECTION ABSTRACTION
 from dataclasses import dataclass, field
 from typing import Optional, TypeVar, List, Iterable, Union, Dict, FrozenSet, Set
-import drivers
 
 
 __all__ = (
@@ -184,14 +183,14 @@ class StringRegularExpressionMaskAbstract(collections.abc.Collection):
 
     @property
     @abc.abstractmethod
-    def loader_class(self) -> drivers.AbstractLoader:
+    def loader_class(self):
         ''' The way which defined who would load data '''
 
     _loader = None
 
     @property
     @abc.abstractmethod
-    def loader(self) -> drivers.AbstractLoader:
+    def loader(self):
         ''' The way which defined who would load data '''
         if not self._loader:
             self._loader = self.loader_class(etype=self.element_class)
