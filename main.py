@@ -17,6 +17,7 @@ from typing import Optional
 
 from data_structures import StringByStringRegularExpressionMask
 from base import GM, GE
+import config
 
 
 # TODO: make cool architecture console interface
@@ -59,7 +60,7 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
 
     graph: Optional[GM] = None
     repr_type: type = int
-    file_path: str = 'output.txt'
+    file_path: str = config.FILE_DATA_CONTAINER_NAME
     # TODO: make clear console interface
 
 

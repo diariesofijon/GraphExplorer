@@ -7,7 +7,5 @@ pytest
 
 import sys
 
-import data_structures
-import base
 
 assert True

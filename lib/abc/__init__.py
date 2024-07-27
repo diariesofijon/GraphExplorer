@@ -1,37 +1,14 @@
 #!/usr/bin/env python
 # pylint: disable=C0103,W0622,E0001
 
-'''
-    Abstract classes for graph exploring
-'''
-
-# hot fix: add finding elements of graph in text by pythonic regexp
-# import re
 import abc
 import collections.abc
-# TODO: IMPLEMENT PYTHONIC COLLECTION ABSTRACTION
-from dataclasses import dataclass, field
-from typing import Optional, TypeVar, List, Iterable, Union, Dict, FrozenSet, Set
+from typing import FrozenSet, Optional, Iterable, TypeVar, Set, Dict
+
+from lib.abc.typing import GE, GGE, GM, Tree, Chain
 
 
-__all__ = (
-    'StringRegularExpressionMaskAbstract', 'GE', 'GGE', 'GM', 'Chain', 'Tree',
-    'RepresentativeGraphElementAbstract', 'GraphTreeRepresintationMaskAbstract')
-
-# types
-# TODO: move all types to anatother file
-GE = TypeVar('GE', bound='RepresentativeGraphElementAbstract')
-# TODO: Dependevice injection from graph mask to pythonic graph
-GM = TypeVar('GM', bound='StringRegularExpressionMaskAbstract')
-# Graph = TypeVar('Graph', bound='...')
-GGE = Iterable[GE]
-Chain = TypeVar('Chain', bound='_Chain')
-Tree = TypeVar('Tree', bound='GraphTreeRepresintationMaskAbstract')
-NumericalSequence = Set[int]
-ChainNumericals = Set[NumericalSequence]
-
-
-class _Chain(list):
+class AbstractChain(list):
 
     '''
         Listening of ids and other numerical order of indicators with widly
@@ -56,16 +33,55 @@ class _Chain(list):
 
     def filtered(self, func):
         ''' returns duplicated collection of filtered by the function due pythonic filter '''
-        return _Chain(filter(func, self))
+        return AbstractChain(filter(func, self))
 
-    # def by_hash(self, key):
-    #     return filter(lambda x: hash(x) == key, self)[0]
+    def by_hash(self, key):
+        return filter(lambda x: hash(x) == key, self)[0]
 
     def get_seed(self):
         for index, element in enumerate(self):
             yield (index, element)
 
-class GraphTreeRepresintationMaskAbstract(collections.abc.Mapping):
+    @property
+    @abc.abstractmethod
+    def blank(self) -> bool:
+        ''' Eximine can chain hold blank lines for meta data or can! '''
+
+
+class AbstractLoader(abc.ABC):
+
+    cached_context: str = ''
+
+    @property
+    @abc.abstractmethod
+    def whole_chain(self) -> Iterable:
+        pass
+
+    @property
+    @abc.abstractmethod
+    def element_class(self) -> GE:
+        pass
+
+    @property
+    @abc.abstractmethod
+    def ids(self) -> FrozenSet:
+        pass
+
+    @property
+    @abc.abstractmethod
+    def map(self) -> Dict:
+        pass
+
+    @abc.abstractmethod
+    def loads_from(self, path: str, type: str, mode: str='r', starts: int= 0):
+        pass
+
+    @abc.abstractmethod
+    def convert_element(self, tmp: str) -> GGE:
+    	pass
+
+
+class AbstractTree(collections.abc.Mapping):
 
     ''' Iterable tree representation of a graph '''
 
@@ -88,38 +104,36 @@ class GraphTreeRepresintationMaskAbstract(collections.abc.Mapping):
     def element_ids(self) -> FrozenSet[int]:
         ''' Frozen set of all trees ids'''
 
-    # @property
-    # @abc.abstractmethod
-    # def longest_chain(self) -> Iterable[int]:
-    #     ''' The chain of the longes_road '''
+    @property
+    @abc.abstractmethod
+    def longest_chain(self) -> Iterable[int]:
+        ''' The chain of the longes_road '''
 
-    # @property
-    # @abc.abstractmethod
-    # def depth(self) -> int:
-    #     ''' The number that is the length of the longes road '''
+    @property
+    @abc.abstractmethod
+    def depth(self) -> int:
+        ''' The number that is the length of the longes road '''
 
-    # @abc.abstractmethod
-    # def dfs(self):
-    #     ''' DFS as generator '''
+    @abc.abstractmethod
+    def dfs(self):
+        ''' DFS as generator '''
 
-    # @abc.abstractmethod
-    # def bfs(self) -> GGE:
-    #     ''' BFS as generator '''
+    @abc.abstractmethod
+    def bfs(self) -> GGE:
+        ''' BFS as generator '''
 
-    # @abc.abstractmethod
-    # def chain(self) -> GGE:
-    #     ''' clear generator by all of the available tree components '''
+    @abc.abstractmethod
+    def chain(self) -> GGE:
+        ''' clear generator by all of the available tree components '''
 
-    # @abc.abstractmethod
-    # def topological_sort(self) -> GGE:
-    #     ''' Topological sequence '''
+    @abc.abstractmethod
+    def topological_sort(self) -> GGE:
+        ''' Topological sequence '''
 
 
-@dataclass
-class StringRegularExpressionMaskAbstract(collections.abc.Collection):
+class AbstractGraphMask(collections.abc.Collection):
 
     ''' Base image of engine to convert text to a graph '''
-    # TODO: IMPLEMENT PYTHONIC COLLECTION ABSTRACTION
 
     @abc.abstractmethod
     def __repr__(self):
@@ -130,7 +144,7 @@ class StringRegularExpressionMaskAbstract(collections.abc.Collection):
         ''' Unique string representation '''
 
     # def __new__(cls, *args, **kwargs):
-    #     '''
+    #     ''' TODO: HAVE BE WITH MATECLASSES
     #     to fix: Defenition of the graph have attrib or similart to
     #     dataclass default values
     #     '''
@@ -139,15 +153,7 @@ class StringRegularExpressionMaskAbstract(collections.abc.Collection):
     #             cls.tmp = file.read()
     #     return super().__new__(cls, *args, **kwargs)
 
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(self, *args, **kwargs)
-    #     print('self.tmp 1 ', self.tmp)
-    #     if not self.tmp:
-    #         print('self.tmp 2 ', self.tmp)
-    #         with open(self.file, 'r', encoding='utf8') as file:
-    #             print('self.tmp 3 ', self.tmp)
-    #             self.tmp: str = file.read()
-
+    # TODO: HAVE BE AS REGEXP MIXIN
     # @property
     # @abc.abstractmethod
     # def element_mask(self) -> Optional[str]:
@@ -186,40 +192,27 @@ class StringRegularExpressionMaskAbstract(collections.abc.Collection):
     def loader_class(self):
         ''' The way which defined who would load data '''
 
-    _loader = None
-
     @property
     @abc.abstractmethod
     def loader(self):
         ''' The way which defined who would load data '''
-        if not self._loader:
-            self._loader = self.loader_class(etype=self.element_class)
-        return self._loader
 
     @property
     @abc.abstractmethod
     def element_class(self) -> GE:
         ''' Pythonic class to implement each node to valid form '''
 
-    # @abc.abstractmethod
-    # def get_elements(self, part: str =None, id: Union[str, int] =None) -> GGE:
-    #     ''' Method that return node by part or id '''
+    @abc.abstractmethod
+    def exclude_tree(self) -> Tree:
+        '''
+        Find the sequence which can work like a tree. Raise
+        Vaildation Error if it has no any tree variant
+        '''
 
-    # @abc.abstractmethod
-    # def get_element(self, part: str =None, id: Union[str, int] =None) -> GE:
-    #     ''' Method that return filterd nodes by part or id '''
-
-    # @abc.abstractmethod
-    # def exclude_tree(self) -> Tree:
-    #     '''
-    #     Find the sequence which can work like a tree. Raise
-    #     Vaildation Error if it has no any tree variant
-    #     '''
-
-    # @property
-    # @abc.abstractmethod
-    # def tree_topic(self) -> GE:
-    #     ''' Highest element in the biggest tree of the graph '''
+    @property
+    @abc.abstractmethod
+    def tree_topic(self) -> GE:
+        ''' Highest element in the biggest tree of the graph '''
 
     @property
     def is_bipartite(self) -> bool:
@@ -228,8 +221,7 @@ class StringRegularExpressionMaskAbstract(collections.abc.Collection):
         return False
 
 
-@dataclass
-class RepresentativeGraphElementAbstract(collections.abc.Hashable):
+class AbstractElement(collections.abc.Hashable):
 
     ''' Base image of engine to realize each element of the graph '''
 
@@ -240,9 +232,9 @@ class RepresentativeGraphElementAbstract(collections.abc.Hashable):
     # TODO: IMPLEMENT PYTHONIC COLLECTION ABSTRACTION
     # TODO: MAKE IT SINGLETONE
 
-    # TODO: should it be abstract method?
+    @abc.abstractmethod
     def __hash__(self):
-        return self.id
+        ''' Have works due unique id charcter '''
 
     @abc.abstractmethod
     def __repr__(self) -> str:
@@ -278,33 +270,11 @@ class RepresentativeGraphElementAbstract(collections.abc.Hashable):
         ''' Graph that contains the node '''
 
     @property
+    @abc.abstractmethod
     def children(self) -> Chain:
         ''' Nodes that linked on the node '''
-        return _Chain([*self.graph]).filtered(lambda el: self in el.parents)
 
     @property
+    @abc.abstractmethod
     def parents(self) -> Chain:
         ''' Nodes that have pointed by the node '''
-        _parents = _Chain()
-        # TODO: FIND MORE BEATIFUL SOLUTION INSTEAD OF [0:len(_)-1]
-        for group in (_:=self.body.split(')'))[0:len(_)-1]:
-            part, ids = group.lstrip(',').strip().split('(')
-            part = list(self.graph.ids_map.keys())[int(part)-1]
-            for g in ids.split(','):
-                for _id in self.graph._get_ids(g):
-                    _id = int(_id)
-                    _parents.append(self.graph.get_element(part=part, id=_id))
-        return _parents
-
-
-
-    # hot fix what do it do
-    # def load(self, string=None, part=None, id=None):
-    #     '''   '''
-    #     if file:
-    #         with open(self.graph.file, 'r') as file:
-    #             return self.graph.get_element(part, id)
-    #     elif string:
-    #         return self.graph.get_element(part, id)
-    #     else:
-    #         raise Indexerror('Unexpected behavior')

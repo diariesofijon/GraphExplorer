@@ -5,59 +5,25 @@
 Drivers for loading graphs
 '''
 
-import abc
 from dataclasses import dataclass, field
 from typing import Optional, List, Union, Iterable, FrozenSet, Dict
+
 import config
-import base
+from lib import base, abc, shortcuts
 
 
-# TODO: realize the conception from base.py that would be work in singletone way
-# ids_map: Dict[str, list] = field(default_factory=lambda:{'A1.': [0]})
-class AbstractLoader(abc.ABC):
-
-    cached_context: str = ''
-
-    @property
-    @abc.abstractmethod
-    def whole_chain(self) -> Iterable:
-        pass
-
-    @property
-    @abc.abstractmethod
-    def element_class(self) -> base.GE:
-        pass
-
-    @property
-    @abc.abstractmethod
-    def ids(self) -> FrozenSet:
-        pass
-
-    @property
-    @abc.abstractmethod
-    def map(self) -> Dict:
-        pass
-
-    @abc.abstractmethod
-    def loads_from(self, path: str, type: str, mode: str='r', starts: int= 0):
-        pass
-
-    @abc.abstractmethod
-    def convert_element(self, tmp: str) -> base.GGE:
-        pass
-
-
-class BaseLoader(AbstractLoader):
+class BaseLoader(abc.AbstractLoader):
 
     file_path: str = 'example'
     separeter: str = config.SEPARATES.get('NODE')
+    element_class: abc.typing.GE = base.BaseElement
 
     _ids: FrozenSet = frozenset({})
     _map: Dict = {}
 
-    def __init__(self, etype: base.GE = None):
+    def __init__(self, etype: abc.typing.GE = None):
         if etype:
-            self.element_class: base.GE = etype
+            self.element_class: abc.typing.GE = etype
         self.loads_from(self.file_path)
 
     def __len__(self):
@@ -90,14 +56,11 @@ class BaseLoader(AbstractLoader):
 
 class TxtLoader(BaseLoader):
 
-    file_path: str = 'graph_links.txt'
+    file_path: str = config.FILE_DATA_LOADER_NAME
 
     # TODO: THAT IS NOT A GENERATOR
-    def convert_element(self, tmp: str) -> base.GGE:
+    def convert_element(self, tmp: str) -> abc.typing.GGE:
         ''' Engine convertor '''
-        if len((splited := tmp.split('.'))) == 1:
-            splited = splited[0], ''
-        ids, tmp = splited
         match len((splited:=tmp.split(':'))):
             case 0:
                 grouped, body = 'splited', 'splited'
@@ -105,27 +68,19 @@ class TxtLoader(BaseLoader):
                 grouped, body = splited, splited
             case _:
                 grouped, body = splited
-        for id in self.get_ids(ids):
-            data = self.element_class(
-                id=id, grouped=grouped, body=body, graph=self)
-            yield data
-
-    @staticmethod
-    def get_ids(name: str) -> List[int]:
-        ''' Clear function that implement name to ids '''
-        if len((tmp := name.split('-'))) == 2:
-            return list(range(int(tmp[0]), int(tmp[1])+1))
-        return [int(name)]
+        for id in shortcuts.get_ids(ids):
+        return self.element_class(
+            id=index, grouped=grouped, body=body, graph=self)
 
 
 class EisenhoverMatrixLoader(TxtLoader):
 
     def __init__(self, *args, **kwargs):
+        self.ids_map: Dict[str, list] = {}
         super().__init__(*args, **kwargs)
         # TODO: Can't instantiate abstract class ... with abstract method ids_map
         # TODO: it has not work due exclude_tree ids_map has defrent logic
         # TODO: let's try makes it hardcode
-        self.ids_map: Dict[str, list] = {}
 
     @property
     def whole_chain(self) -> Iterable:
@@ -135,6 +90,10 @@ class EisenhoverMatrixLoader(TxtLoader):
                 continue
             if tmp: # ATTENTION: ignore blank line
                 yield from self.convert_element(tmp)
+
+    def increase_maps_nums(self, line: str):
+        part, indicator = shortcuts.eisenhower_part_spliter(str)
+        self.whole_parts[str(part)] += self.increase_on
 
     def get_part_by_id(self, id: int):
         for part in self.ids_map.items():
