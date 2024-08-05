@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# pylint: disable=E0401
 
 from typing import Iterable, Dict, Tuple, Callable
 

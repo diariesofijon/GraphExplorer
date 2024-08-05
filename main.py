@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 #pylint: disable=C0103,C0114
+# pylint: disable=E0401
 
 '''
     TODO: make DFS step by step

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # pylint: disable=C0103,W0622,E0001
+# pylint: disable=E0401
 
 from lib import abc
 from typing import TypeVar, Iterable, Set

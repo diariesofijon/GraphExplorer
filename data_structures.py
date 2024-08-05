@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # pylint: disable=C0103,W0622,E1136
+# pylint: disable=E0401
 
 '''
     Loads graph from a file as a text through regexp
