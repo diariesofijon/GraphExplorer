@@ -6,7 +6,9 @@ import abc
 import collections.abc
 from typing import FrozenSet, Optional, Iterable, TypeVar, Set, Dict
 
-from lib.abc.typing import GE, GGE, GM, Tree, Chain
+
+__all__ = ('AbstractElement', 'AbstractChain',
+    'AbstractGraphMask','AbstractTree', 'AbstractLoader')
 
 
 class AbstractChain(list):
@@ -60,7 +62,7 @@ class AbstractLoader(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def element_class(self) -> GE:
+    def element_class(self) -> AbstractElement:
         pass
 
     @property
@@ -78,7 +80,7 @@ class AbstractLoader(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def convert_element(self, tmp: str) -> GGE:
+    def convert_element(self, tmp: str) -> Iterable[AbstractElement]:
     	pass
 
 
@@ -97,7 +99,7 @@ class AbstractTree(collections.abc.Mapping):
 
     @property
     @abc.abstractmethod
-    def _sliced_graph(self) -> GM:
+    def _sliced_graph(self) -> AbstractGraphMask:
         ''' Private link on a graph  '''
 
     @property
@@ -120,15 +122,15 @@ class AbstractTree(collections.abc.Mapping):
         ''' DFS as generator '''
 
     @abc.abstractmethod
-    def bfs(self) -> GGE:
+    def bfs(self) -> Iterable[AbstractElement]:
         ''' BFS as generator '''
 
     @abc.abstractmethod
-    def chain(self) -> GGE:
+    def chain(self) -> Iterable[AbstractElement]:
         ''' clear generator by all of the available tree components '''
 
     @abc.abstractmethod
-    def topological_sort(self) -> GGE:
+    def topological_sort(self) -> Iterable[AbstractElement]:
         ''' Topological sequence '''
 
 
@@ -200,11 +202,11 @@ class AbstractGraphMask(collections.abc.Collection):
 
     @property
     @abc.abstractmethod
-    def element_class(self) -> GE:
+    def element_class(self) -> AbstractElement:
         ''' Pythonic class to implement each node to valid form '''
 
     @abc.abstractmethod
-    def exclude_tree(self) -> Tree:
+    def exclude_tree(self) -> AbstractTree:
         '''
         Find the sequence which can work like a tree. Raise
         Vaildation Error if it has no any tree variant
@@ -212,7 +214,7 @@ class AbstractGraphMask(collections.abc.Collection):
 
     @property
     @abc.abstractmethod
-    def tree_topic(self) -> GE:
+    def tree_topic(self) -> AbstractElement:
         ''' Highest element in the biggest tree of the graph '''
 
     @property
@@ -267,15 +269,15 @@ class AbstractElement(collections.abc.Hashable):
 
     @property
     @abc.abstractmethod
-    def graph(self) -> GM:
+    def graph(self) -> AbstractGraphMask:
         ''' Graph that contains the node '''
 
     @property
     @abc.abstractmethod
-    def children(self) -> Chain:
+    def children(self) -> AbstractChain:
         ''' Nodes that linked on the node '''
 
     @property
     @abc.abstractmethod
-    def parents(self) -> Chain:
+    def parents(self) -> AbstractChain:
         ''' Nodes that have pointed by the node '''

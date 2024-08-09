@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Union, Iterable, FrozenSet, Dict
 
 import config
-from lib import drivers, base, abc
+from lib import drivers, base, abc, typing
 
 
 __all__ = ('RepresentativeElement', 'StringByStringGraphMask')
@@ -56,9 +56,9 @@ class VertexInfo:
 
     # TODO: LETS METACLASS IDICATE VERTEXTINFO DUPLICATES
 
-    tree: abc.typing.Tree = field(default=None)
-    start: abc.typing.GE  = field(default=None)
-    end: abc.typing.GE    = field(default=None)
+    tree: typing.Tree = field(default=None)
+    start: typing.GE  = field(default=None)
+    end: typing.GE    = field(default=None)
     depth: int            = field(default=0)
 
     def validation(self):
@@ -91,7 +91,7 @@ class VertexSearcingTree(FrozenTree):
             {index: 0 for index in range(self.defined_maximum_vertex+1)}
         return self._vertex_searching_story
 
-    def dfs_from_it(self) -> abc.typing.GGE:
+    def dfs_from_it(self) -> typing.GGE:
         self._sliced_graph.tree_topic = self
         return self._sliced_graph.dfs(vertex=self.defined_maximum_vertex)
 
@@ -129,7 +129,7 @@ class StringByStringGraphMask(base.BaseGraphMask):
 
     ''' Sensetive turn off '''
 
-    def exlude_tree(self) -> abc.typing.Tree:
+    def exlude_tree(self) -> typing.Tree:
         '''
         Find the sequence which can work like a tree. Raise
         Vaildation Error if it has no any tree variant
@@ -140,7 +140,7 @@ class StringByStringGraphMask(base.BaseGraphMask):
 
 class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
 
-    loader_class: abc.typing.Loader = drivers.EisenhoverMatrixLoader
+    loader_class: typing.Loader = drivers.EisenhoverMatrixLoader
 
     def get_orthodox_eisenhover_info(self, index: int):
         part = self.loader.get_part_by_id(index)

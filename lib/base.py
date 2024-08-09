@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # pylint: disable=C0103,W0622,E0001
+# pylint: disable=E0401
 
 '''
     Abstract classes for graph exploring
@@ -7,11 +8,10 @@
 
 import abc
 from dataclasses import dataclass, field
-from typing import FrozenSet, Tuple, List
+from typing import FrozenSet, Tuple, List, Optional
 
 import config
-from lib.drivers import BaseLoader
-from lib import shortcuts, abc
+from lib import shortcuts, abc, drivers, typing
 
 
 __all__ = ('BaseTree', 'BaseElement', 'BaseGraphMask')
@@ -25,12 +25,12 @@ class BaseGraphMask(abc.AbstractGraphMask):
     tmp: Optional[str] = None
     separeter: str = config.SEPARATES.get('NODE')
     file: str = config.FILE_DATA_LOADER_PATH
-    element_class: abc.GE = RepresentativeGraphElementMask
+    element_class: typing.GE = BaseElement
     loader_class: drivers.AbstractLoader = drivers.TxtLoader
-    loader_class: abc.AbstractLoader = BaseLoader
-    loader: abc.AbstractLoader = field(default=BaseLoader)
+    loader_class: abc.AbstractLoader = drivers.BaseLoader
+    loader: abc.AbstractLoader = field(default=drivers.BaseLoader)
 
-    def __iter__(self) -> abc.typing.GGE:
+    def __iter__(self) -> typing.GGE:
         return iter(self.loader.whole_chain)
 
     def __len__(self) -> int:
@@ -42,7 +42,7 @@ class BaseGraphMask(abc.AbstractGraphMask):
     def __repr__(self) -> str:
         return self.__str__()
 
-    def __getitem__(self, key: int) -> abc.typing.GE:
+    def __getitem__(self, key: int) -> typing.GE:
         # TODO: place awqay the validation
         # don't forget that it question about error arised in the same place that
         # have be corrected instead of doing in another way like done bellow
@@ -51,7 +51,7 @@ class BaseGraphMask(abc.AbstractGraphMask):
         # TODO: It have be removed from logic because it have work unrelated to the data
         return self.loader.map[key]
 
-    def __contains__(self, element: abc.typing.GE) -> bool:
+    def __contains__(self, element: typing.GE) -> bool:
         # LEGACY BEFORE LOADER CONCEPTION
         # try:
         #     element = self.get_element(element.part, element.id)
@@ -64,21 +64,21 @@ class BaseGraphMask(abc.AbstractGraphMask):
     _topic = None
 
     @property
-    def tree_topic(self) -> abc.typing.GE:
+    def tree_topic(self) -> typing.GE:
         ''' Highest element in the biggest tree of the graph '''
         if not self._topic:
             self._topic = list(self)[0]
         return self._topic # TODO: make magic algortihm which return the top of the biggest tree
 
     @tree_topic.setter
-    def tree_topic(self, element: abc.typing.GE) -> abc.typing.GE:
+    def tree_topic(self, element: typing.GE) -> typing.GE:
         ''' Highest element in the biggest tree of the graph '''
         # if isinstance(element, RepresentativeGraphElementMask):
         #     self._topic = element
         # raise config.ValidationError
         self._topic = element
 
-    def exlude_tree(self) -> abc.typing.Tree:
+    def exlude_tree(self) -> typing.Tree:
         '''
         Find the sequence which can work like a tree. Raise
         Vaildation Error if it has no any tree variant
@@ -95,7 +95,7 @@ class BaseGraphMask(abc.AbstractGraphMask):
             x, depth = queue.pop(0)
             if depth > vertex > -1: # TODO: take down docs about negative vertex conceptions
                 break
-            elif:
+            else:
                 # TODO: take down documentation about the idea why should we use already defined maxdepth
                 maxdepth = max(maxdepth, depth)
             # for child in self[x.id].children: # TODO: why have i chosen this variant
@@ -111,11 +111,11 @@ class BaseTree(abc.AbstractGraphMask):
 
     ''' Base Tree '''
 
-    _sliced_graph: abc.typing.GM = None
+    _sliced_graph: typing.GM = None
     # TODO: find the way of searching elements by a hash
     element_ids: FrozenSet[int] = None
 
-    def __iter__(self) -> abc.typing.GGE:
+    def __iter__(self) -> typing.GGE:
         return iter(self[_id] for _id in self.element_ids)
 
     def __len__(self) -> int:
@@ -127,12 +127,12 @@ class BaseTree(abc.AbstractGraphMask):
     def __repr__(self) -> str:
         return self.__str__()
 
-    def __getitem__(self, key: int) -> abc.typing.GE:
+    def __getitem__(self, key: int) -> typing.GE:
         if key not in self.element_ids:
             raise config.OutFromTreeError
         return self._sliced_graph[key]
 
-    def __contains__(self, element: abc.typing.GE) -> bool:
+    def __contains__(self, element: typing.GE) -> bool:
         return element.id in self.element_ids
 
     @property
@@ -178,13 +178,13 @@ class BaseElement(abc.AbstractElement):
         return self.id # TODO: have to use hasheable function instead
 
     @property
-    def children(self) -> abc.typing.Chain:
+    def children(self) -> typing.Chain:
         ''' Nodes that linked on the node '''
         param = lambda el: self in el.parents
         return self.graph.loader.chain_type([*self.graph]).filtered(param)
 
     @property
-    def parents(self) -> abc.typing.Chain:
+    def parents(self) -> typing.Chain:
         ''' Nodes that have pointed by the node '''
         _parents = self.graph.loader.chain_type()
         splited_by_body = self.body.split(')')

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # pylint: disable=C0103,W0622,E0001
+# pylint: disable=E0401
 
 '''
 Drivers for loading graphs
@@ -9,21 +10,21 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Union, Iterable, FrozenSet, Dict
 
 import config
-from lib import base, abc, shortcuts
+from lib import base, abc, shortcuts, typing
 
 
 class BaseLoader(abc.AbstractLoader):
 
     file_path: str = 'example'
     separeter: str = config.SEPARATES.get('NODE')
-    element_class: abc.typing.GE = base.BaseElement
+    element_class: typing.GE = base.BaseElement
 
     _ids: FrozenSet = frozenset({})
     _map: Dict = {}
 
-    def __init__(self, etype: abc.typing.GE = None):
+    def __init__(self, etype: typing.GE = None):
         if etype:
-            self.element_class: abc.typing.GE = etype
+            self.element_class: typing.GE = etype
         self.loads_from(self.file_path)
 
     def __len__(self):
@@ -57,9 +58,10 @@ class BaseLoader(abc.AbstractLoader):
 class TxtLoader(BaseLoader):
 
     file_path: str = config.FILE_DATA_LOADER_NAME
+    _last_index: int = 0
 
     # TODO: THAT IS NOT A GENERATOR
-    def convert_element(self, tmp: str) -> abc.typing.GGE:
+    def convert_element(self, tmp: str) -> typing.GGE:
         ''' Engine convertor '''
         match len((splited:=tmp.split(':'))):
             case 0:
@@ -68,9 +70,9 @@ class TxtLoader(BaseLoader):
                 grouped, body = splited, splited
             case _:
                 grouped, body = splited
-        for id in shortcuts.get_ids(ids):
+        self._last_index += 1
         return self.element_class(
-            id=index, grouped=grouped, body=body, graph=self)
+            id=self._last_index, grouped=grouped, body=body, graph=self)
 
 
 class EisenhoverMatrixLoader(TxtLoader):
