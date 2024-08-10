@@ -4,11 +4,14 @@
 
 import abc
 import collections.abc
-from typing import FrozenSet, Optional, Iterable, TypeVar, Set, Dict, Callable
+from typing import (
+    FrozenSet, Optional, Iterable, TypeVar, Set, Dict, Callable, List)
 
 
 __all__ = ('AbstractElement', 'AbstractChain',
     'AbstractGraphMask','AbstractTree', 'AbstractLoader')
+
+# TODO: Should I add typing or not
 
 
 class AbstractChain(list):
@@ -62,7 +65,7 @@ class AbstractLoader(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def element_class(self) -> AbstractElement:
+    def element_class(self):
         pass
 
     @property
@@ -80,7 +83,7 @@ class AbstractLoader(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def convert_element(self, tmp: str) -> AbstractElement:
+    def convert_element(self, tmp: str):
     	pass
 
     @abc.abstractmethod
@@ -106,12 +109,12 @@ class AbstractTree(collections.abc.Mapping):
 
     @property
     @abc.abstractmethod
-    def _sliced_graph(self) -> AbstractGraphMask:
+    def _sliced_graph(self):
         ''' Private link on a graph  '''
 
     @property
     @abc.abstractmethod
-    def element_ids(self) -> FrozenSet[int]:
+    def element_ids(self) -> List[int]:
         ''' Frozen set of all trees ids'''
 
     @property
@@ -129,16 +132,20 @@ class AbstractTree(collections.abc.Mapping):
         ''' DFS as generator '''
 
     @abc.abstractmethod
-    def bfs(self) -> Iterable[AbstractElement]:
-        ''' BFS as generator '''
+    def top(self):
+        ''' DFS as generator '''
 
-    @abc.abstractmethod
-    def chain(self) -> Iterable[AbstractElement]:
-        ''' clear generator by all of the available tree components '''
+    # @abc.abstractmethod
+    # def bfs(self):
+    #     ''' BFS as generator '''
 
-    @abc.abstractmethod
-    def topological_sort(self) -> Iterable[AbstractElement]:
-        ''' Topological sequence '''
+    # @abc.abstractmethod
+    # def chain(self):
+    #     ''' clear generator by all of the available tree components '''
+
+    # @abc.abstractmethod
+    # def topological_sort(self):
+    #     ''' Topological sequence '''
 
 
 class AbstractGraphMask(collections.abc.Collection):
@@ -209,11 +216,11 @@ class AbstractGraphMask(collections.abc.Collection):
 
     @property
     @abc.abstractmethod
-    def element_class(self) -> AbstractElement:
+    def element_class(self):
         ''' Pythonic class to implement each node to valid form '''
 
     @abc.abstractmethod
-    def exclude_tree(self) -> AbstractTree:
+    def exclude_tree(self):
         '''
         Find the sequence which can work like a tree. Raise
         Vaildation Error if it has no any tree variant
@@ -221,7 +228,7 @@ class AbstractGraphMask(collections.abc.Collection):
 
     @property
     @abc.abstractmethod
-    def tree_topic(self) -> AbstractElement:
+    def tree_topic(self):
         ''' Highest element in the biggest tree of the graph '''
 
     @property
@@ -276,15 +283,15 @@ class AbstractElement(collections.abc.Hashable):
 
     @property
     @abc.abstractmethod
-    def graph(self) -> AbstractGraphMask:
+    def graph(self):
         ''' Graph that contains the node '''
 
     @property
     @abc.abstractmethod
-    def children(self) -> AbstractChain:
+    def children(self):
         ''' Nodes that linked on the node '''
 
     @property
     @abc.abstractmethod
-    def parents(self) -> AbstractChain:
+    def parents(self):
         ''' Nodes that have pointed by the node '''

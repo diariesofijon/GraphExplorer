@@ -14,42 +14,15 @@ from typing import Optional, List, Union, Iterable, FrozenSet, Dict
 
 import config
 from lib import drivers, base, abc, typing
+from elements import RepresentativeElement
 
 
-__all__ = ('RepresentativeElement', 'StringByStringGraphMask')
+__all__ = (
+    'StringByStringGraphMask', 'FrozenTree', 'VertexSearcingTree',
+    'VertexInfo', 'EisenhoverMatrixConvertationMask',)
 
 # https://www.javatpoint.com/bfs-vs-dfs#:~:text=DFS%20stands%20for%20Depth%20First,Last%20In%20First%20Out)%20principle
 
-
-@dataclass
-class RepresentativeElement(base.BaseElement):
-
-    ''' Sensetive turn off '''
-
-
-    # TODO: move all show logic to new console or graphic interface in MIXIN
-    # inheretince way
-    def show_children(self):
-        ''' Texted view of children of the elemenet '''
-        return self._separeter().join(str(child) for child in self.children)
-
-    def show_parents(self):
-        ''' Texted view of parents of the elemenet '''
-        return self._separeter().join(str(parent) for parent in self.parents)
-
-    def walk(self, left: bool = True, chain: Optional[List] = None):
-        '''
-        Walking down through the graph to the deep to see how grap was changed
-        '''
-        if chain:
-            index = chain.pop()
-        else:
-            # TODO: that's arise trouble because self is not iterable
-            return self
-        next_el = self.children[index] if left else self.children.end(index)
-        yield next_el
-        # fix: make deep searching algorithm based on this property
-        yield from next_el.walk(left=left, chain=chain)
 
 @dataclass
 class VertexInfo:
@@ -71,7 +44,10 @@ class VertexInfo:
 
 @dataclass
 class FrozenTree(base.BaseTree):
-    pass
+
+    element_class: typing.GE = RepresentativeElement
+    loader_class: typing.Loader = drivers.TxtLoader
+
 
 @dataclass
 class VertexSearcingTree(FrozenTree):
@@ -92,7 +68,7 @@ class VertexSearcingTree(FrozenTree):
         return self._vertex_searching_story
 
     def dfs_from_it(self) -> typing.GGE:
-        self._sliced_graph.tree_topic = self
+        self._sliced_graph.tree_topic = self.top
         return self._sliced_graph.dfs(vertex=self.defined_maximum_vertex)
 
     def find_the_rigth_tree_by_vertex_size(self, count=None, top=None):
@@ -127,9 +103,11 @@ class VertexSearcingTree(FrozenTree):
 @dataclass
 class StringByStringGraphMask(base.BaseGraphMask):
 
+    element_class: typing.GE = RepresentativeElement
+
     ''' Sensetive turn off '''
 
-    def exlude_tree(self) -> typing.Tree:
+    def exclude_tree(self) -> typing.Tree:
         '''
         Find the sequence which can work like a tree. Raise
         Vaildation Error if it has no any tree variant
@@ -138,6 +116,7 @@ class StringByStringGraphMask(base.BaseGraphMask):
         return VertexSearcingTree(self, ids)
 
 
+@dataclass
 class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
 
     loader_class: typing.Loader = drivers.EisenhoverMatrixLoader

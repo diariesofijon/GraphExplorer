@@ -33,11 +33,11 @@ LOADS_DATA_FROM_DATABASE = False
 
 LOADS_DATA_FROM_THE_FILE = not LOADS_DATA_FROM_DATABASE
 
-FILE_DATA_LOADER_NAME = 'graph_links.txt'
+FILE_DATA_LOADER_NAME_TXT = 'graph_links.txt'
 
 FILE_DATA_CONTAINER_NAME = 'output.txt'
 
-FILE_DATA_LOADER_PATH = f'{ABSOLUTE_PATH}/{FILE_DATA_LOADER_NAME}'
+FILE_DATA_LOADER_PATH = f'{ABSOLUTE_PATH}/{FILE_DATA_LOADER_NAME_TXT}'
 
 FILE_DATA_CONTAINER_PATH = f'{ABSOLUTE_PATH}/{FILE_DATA_CONTAINER_NAME}'
 
@@ -83,7 +83,7 @@ class GraphLinksFileNameHasNotDefined(UndefinedConstant):
 
     to_do_message: str = 'Define in configs files path which from \
         shoud loud the data'
-    constant_undefined: str = 'config.FILE_DATA_LOADER_NAME'
+    constant_undefined: str = 'config.FILE_DATA_LOADER_NAME_TXT'
 
 
 class OutPutLinksFileNameHasNotDefined(UndefinedConstant):

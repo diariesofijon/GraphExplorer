@@ -16,9 +16,9 @@ import abc
 from dataclasses import dataclass
 from typing import Optional
 
-from data_structures import StringByStringRegularExpressionMask
-from base import GM, GE
+from data_structures import EisenhoverMatrixConvertationMask
 import config
+import lib
 
 
 # TODO: make cool architecture console interface
@@ -29,14 +29,14 @@ class AbstractGraphWalkingInterface(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def graph(self) -> GM:
+    def graph(self) -> lib.typing.GM:
         ''' StringRegularExpressionMaskAbstract '''
 
     @property
     def tree(self):
         if self._tree:
             return self._tree
-        return self.graph.exlude_tree()
+        return self.graph.exclude_tree()
 
     def defined_maximum_vertex_chain_index(self, maximum=5):
         self.graph.defined_maximum_vertex: int = maximum
@@ -59,13 +59,13 @@ class AbstractGraphWalkingInterface(abc.ABC):
 @dataclass
 class CliGraphWalking(AbstractGraphWalkingInterface):
 
-    graph: Optional[GM] = None
+    graph: Optional[lib.typing.GM] = None
     repr_type: type = int
     file_path: str = config.FILE_DATA_CONTAINER_NAME
     # TODO: make clear console interface
 
 
-    def choice(self, element: GE, index: int):
+    def choice(self, element: lib.typing.GE, index: int):
         ''' Returns next element '''
         if index in {1, 3}:
             index = 0 if index == 1 else -1
@@ -162,7 +162,7 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
 
 
 if __name__ == '__main__':
-    interface = CliGraphWalking(StringByStringRegularExpressionMask())
+    interface = CliGraphWalking(EisenhoverMatrixConvertationMask())
     # TODO: cut it bellow when issuses will be closed
     print(interface.graph)
     print(interface)

@@ -13,63 +13,15 @@ from typing import (
 
 import config
 from lib import base, abc, shortcuts, typing
+from elements import RepresentativeElement
 
 
-class BaseLoader(abc.AbstractLoader):
+class TxtLoader(base.BaseLoader):
 
-    file_path: str = 'example'
-    separeter: str = config.SEPARATES.get('NODE')
-    element_class: typing.GE = base.BaseElement
+    file_path: str           = config.FILE_DATA_LOADER_NAME_TXT
+    element_class: typing.GE = RepresentativeElement
 
-    _ids: FrozenSet = frozenset({})
-    _map: Dict = {}
-
-    def __init__(self, etype: Optional[typing.GE] = None):
-        if etype:
-            self.element_class: typing.GE = etype
-        self.loads_from(self.file_path)
-
-    def __len__(self):
-        return len(self.ids)
-
-    @property
-    def map(self):
-        if not self._map:
-            for idx, element in enumerate(self.whole_chain):
-                self._map[idx+1] = element
-        return self._map
-
-    @property
-    def ids(self):
-        if not self._ids:
-            self._ids = frozenset(map(int, self.map.keys()))
-        return self._ids
-
-    def loads_from(self, path: str, mode: str='r', starts: int= 0):
-        with open(path, mode, encoding=config.ENCODING) as file:
-            self.cached_context: str = file.read()
-        return self.cached_context[starts:]
-
-    @property
-    def whole_chain(self) -> Iterable:
-        self.loads_from(self.file_path)
-        separeted: Iterable = self.cached_context.split(self.separeter)
-        yield from self.mapping_fuction(self.chain_mapping_fuction, separeted)
-
-    # TODO: explain the idea in docs
-    def mapping_fuction(self, func: Callable, sequence: Iterable):
-        yield from map(func, sequence)
-
-    # TODO: explain the idea in docs
-    def chain_mapping_fuction(self, *args, **kwargs):
-        return self.convert_element(*args, **kwargs)
-
-
-class TxtLoader(BaseLoader):
-
-    file_path: str = config.FILE_DATA_LOADER_NAME
     _last_index: int = 0
-
 
     # TODO: don't foget legace convert element and make the idea to
     # TODO: uneffectable deletion legace come true
@@ -112,7 +64,7 @@ class TxtLoader(BaseLoader):
 class EisenhoverMatrixLoader(TxtLoader):
 
     def __init__(self, *args, **kwargs):
-        self.ids_map: Dict[str, list] = {}
+        self.ids_map: Dict[str] = {'A1.': 0, 'B2.': 0, 'C3.': 0, 'L4.': 0}
         super().__init__(*args, **kwargs)
         # TODO: Can't instantiate abstract class ... with abstract method ids_map
         # TODO: it has not work due exclude_tree ids_map has defrent logic
@@ -143,9 +95,9 @@ class EisenhoverMatrixLoader(TxtLoader):
         return (self.convert_element(lines) for _ in ids)
 
 
-class CsvLoader(BaseLoader):
+class CsvLoader(base.BaseLoader):
     pass
 
 
-class YamlLoader(BaseLoader):
+class YamlLoader(base.BaseLoader):
     pass

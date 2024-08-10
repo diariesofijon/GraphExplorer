@@ -8,7 +8,7 @@ import base
 
 def walk(graph: base.GM):
     ''' Walking down through the graph'''
-    for element in graph.tree_topic.walk(graph.exlude_tree().longest_chain):
+    for element in graph.tree_topic.walk(graph.exclude_tree().longest_chain):
         print(f'current element {next_element} with index {index}')
         print('type 1 - to get next left, \
                 2 - to get previous left,\

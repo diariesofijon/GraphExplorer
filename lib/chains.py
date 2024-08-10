@@ -35,7 +35,7 @@ class TxtChain(BaseChain):
 class EisenhowerMatrixChain(TxtChain):
 
     blank: bool       = True
-    whole_parts: Dict = {'A1': 0, 'B2': 0, 'C3': 0, 'L4': 0}
+    whole_parts: Dict = {'A1.': 0, 'B2.': 0, 'C3.': 0, 'L4.': 0}
     increase_on: int  = 1
 
     def skip_blank(self, element) -> bool:
