@@ -24,7 +24,7 @@ import config
 # TODO: make cool architecture console interface
 class AbstractGraphWalkingInterface(abc.ABC):
 
-    vertexes = dict()
+    vertexes = {}
     _tree = None
 
     @property

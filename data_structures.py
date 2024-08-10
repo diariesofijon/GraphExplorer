@@ -59,7 +59,7 @@ class VertexInfo:
     tree: typing.Tree = field(default=None)
     start: typing.GE  = field(default=None)
     end: typing.GE    = field(default=None)
-    depth: int            = field(default=0)
+    depth: int        = field(default=0)
 
     def validation(self):
         ''' Have to explain why the Tree could not exists '''

@@ -4,7 +4,7 @@
 
 import abc
 import collections.abc
-from typing import FrozenSet, Optional, Iterable, TypeVar, Set, Dict
+from typing import FrozenSet, Optional, Iterable, TypeVar, Set, Dict, Callable
 
 
 __all__ = ('AbstractElement', 'AbstractChain',
@@ -80,9 +80,16 @@ class AbstractLoader(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def convert_element(self, tmp: str) -> Iterable[AbstractElement]:
+    def convert_element(self, tmp: str) -> AbstractElement:
     	pass
 
+    @abc.abstractmethod
+    def chain_mapping_fuction(self, *args, **kwargs):
+        pass
+
+    @abc.abstractmethod
+    def mapping_fuction(self, func: Callable, sequence: Iterable):
+        pass
 
 class AbstractTree(collections.abc.Mapping):
 
