@@ -49,13 +49,7 @@ class TxtLoader(base.BaseLoader):
     # TODO: THAT IS NOT A GENERATOR
     def convert_element(self, tmp: str) -> typing.GGE:
         ''' Engine convertor '''
-        match len((splited:=tmp.split(':'))):
-            case 0:
-                grouped, body = 'splited', 'splited'
-            case 1:
-                grouped, body = splited, splited
-            case _:
-                grouped, body = splited
+        grouped, body = shortcuts.separete_from_text_element(tmp)
         self._last_index += 1
         return self.element_class(
             id=self._last_index, grouped=grouped, body=body, graph=self)

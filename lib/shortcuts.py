@@ -14,3 +14,13 @@ def eisenhower_part_spliter(tmp: str) -> Tuple[str]:
     if len((splited := tmp.split('.'))) == 1:
         return splited[0], ''
     return splited[0], splited[1]
+
+def separete_from_text_element(tmp: str):
+    ''' like that 12. A|B: 3(10), 4(13,46,118) '''
+    match len((splited:=tmp.split(':'))):
+        case 0:
+            return 'splited', 'splited'
+        case 1:
+            return splited, splited
+        case _:
+            return splited[0], splited[1]

@@ -112,7 +112,7 @@ class StringByStringGraphMask(base.BaseGraphMask):
         Find the sequence which can work like a tree. Raise
         Vaildation Error if it has no any tree variant
         '''
-        ids = {el.id for el in self.tree_topic.walk()}
+        ids = [el.id for el in self.tree_topic.walk()]
         return VertexSearcingTree(self, ids)
 
 

@@ -5,6 +5,7 @@ from typing import Iterable, Dict, Tuple, Callable
 
 from lib import abc, shortcuts
 
+
 class BaseChain(abc.AbstractChain):
 
     blank: bool = False
@@ -15,6 +16,14 @@ class BaseChain(abc.AbstractChain):
         else:
             flambda: Callable[Iterable] = self.store_blank
         super().__init__(filter(flambda, iterable), *args, **kwargs)
+
+    def filtered(self, func) -> typing.Chain:
+        '''
+        returns duplicated collection of filtered by the function
+        due pythonic filter
+        '''
+        chain_class: typing.Chain = type(self)
+        return chain_class(filter(func, self))
 
     def skip_blank(self, element) -> bool:
         return bool(element)

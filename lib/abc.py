@@ -37,16 +37,18 @@ class AbstractChain(list):
         ''' Last element of the chain from index'''
         return self[len(self) - index]
 
+    @abc.abstractmethod
     def filtered(self, func):
-        ''' returns duplicated collection of filtered by the function due pythonic filter '''
-        return AbstractChain(filter(func, self))
+        '''
+        returns duplicated collection of filtered by the function
+        due pythonic filter
+        '''
 
     def by_hash(self, key):
         return filter(lambda x: hash(x) == key, self)[0]
 
     def get_seed(self):
-        for index, element in enumerate(self):
-            yield (index, element)
+        yield from enumerate(self)
 
     @property
     @abc.abstractmethod
@@ -114,7 +116,7 @@ class AbstractTree(collections.abc.Mapping):
 
     @property
     @abc.abstractmethod
-    def element_ids(self) -> List[int]:
+    def element_ids(self) -> Iterable[int]:
         ''' Frozen set of all trees ids'''
 
     @property
