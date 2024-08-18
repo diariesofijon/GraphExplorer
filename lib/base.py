@@ -22,21 +22,15 @@ class BaseElement(abc.AbstractElement):
 
     ''' Base Element from the Graph '''
 
-    id: str = ''
-    part: str = ''
-    grouped: str = ''
-    body: str = ''
-    graph: typing.GM = None
-    separater_key: str = 'NODE'
+    id: str            = field(hash=True)
+    part: str          = field()
+    grouped: str       = field()
+    body: str          = field()
+    graph: typing.GM   = field(hash=True)
+    separater: str     = config.SEPARATES.get('NODE')
 
     def __str__(self):
         return f'{self.part} id: {self.id} = {self.grouped} - {self.body}'
-
-    def __repr__(self):
-        return self.__str__()
-
-    def __hash__(self):
-        return self.id # TODO: have to use hasheable function instead
 
     @property
     def children(self) -> typing.Chain:
@@ -57,17 +51,11 @@ class BaseElement(abc.AbstractElement):
                 _parents.append(self.graph[index])
         return _parents
 
-    # PRIVATE
-
-    def _separeter(self):
-        return config.SEPARATES.get(self.separater_key, self.graph.separeter)
-
-
 
 class BaseLoader(abc.AbstractLoader):
 
-    file_path: str = 'example'
-    separeter: str = config.SEPARATES.get('NODE')
+    file_path: str           = 'example'
+    separeter: str           = config.SEPARATES.get('NODE')
     element_class: typing.GE = BaseElement
 
     _ids: FrozenSet = frozenset({})
@@ -131,12 +119,10 @@ class BaseGraphMask(abc.AbstractGraphMask):
 
     ''' Sensetive turn on '''
 
-    tmp: Optional[str] = None
-    separeter: str = config.SEPARATES.get('NODE')
-    file: str = config.FILE_DATA_LOADER_PATH
+    separeter: str           = config.SEPARATES.get('NODE')
+    file: str                = config.FILE_DATA_LOADER_PATH
     element_class: typing.GE = BaseElement
-    loader_class: typing.Loader = BaseLoader
-    # loader: typing.Loader = field(default=BaseLoader())
+    loader: typing.Loader    = field(default=BaseLoader())
 
     def __iter__(self) -> typing.GGE:
         return iter(self.loader.whole_chain)
@@ -200,7 +186,8 @@ class BaseGraphMask(abc.AbstractGraphMask):
         Vaildation Error if it has no any tree variant
         '''
         ids = [el.id for el in self.tree_topic.walk()]
-        return BaseTree(self, ids)
+        return BaseTree(self,
+            element_ids=ids, element_class=self.element_class, top=self.tree_topic)
 
     def dfs(self, vertex: int = -1) -> Tuple[List]:
         # TODO: should to work in the composition way
@@ -227,10 +214,9 @@ class BaseTree(abc.AbstractTree):
 
     ''' Base Tree '''
 
-    _sliced_graph: typing.GM = None
-    # TODO: find the way of searching elements by a hash
-    element_ids: Optional[List[int]] = None
+    element_ids: List[int]   = field(hash=True)
     element_class: typing.GE = BaseElement
+    top: typing.GE           = field(hash=True)
 
     def __iter__(self) -> typing.GGE:
         return iter(self[_id] for _id in self.element_ids)
@@ -241,21 +227,22 @@ class BaseTree(abc.AbstractTree):
     def __str__(self) -> str:
         return str(self._sliced_graph + ' Tree')
 
-    def __repr__(self) -> str:
-        return self.__str__()
-
     def __getitem__(self, key: int) -> typing.GE:
-        if key not in self.element_ids:
-            raise config.OutFromTreeError
-        return self._sliced_graph[key]
+        # TODO: would it be work with logarithmic complexity
+        if key == top.id:
+            return self.top
+        elif key in self.element_ids:
+            smaller = filter(lambda x: x <= key, self.element_ids)
+            smaller = filter(lambda x: x in smaller, self.bfs())
+            return filter(lambda x: x.id == key, smaller)[0]
+        raise config.OutFromTreeError
 
     def __contains__(self, element: typing.GE) -> bool:
         return element.id in self.element_ids
 
     @property
     def longest_chain(self) -> Iterable:
-        _, visited = self.dfs()
-        yield from visited
+        yield from self.dfs()[0]
 
     @property
     def depth(self) -> int:
@@ -263,20 +250,24 @@ class BaseTree(abc.AbstractTree):
         # fix: make deep searching algorithm based on this property
         return len(self.longest_chain)
 
-    @property
-    def top(self) -> typing.GE:
-        return self.element_ids[0]
-
     def dfs(self):
+        '''
+        Best case performance for a depth-first algorithm is O(1),
+        while worst case performance is O(N). In another words The time
+        complexity of the DFS algorithm is O(V+E), where V is the number
+        of vertices and E is the number of edges in the graph.
+        '''
         maxdepth, visited, queue = 0, [], []
         visited.append(self.top)
         queue.append((self.top,1))
         while queue:
             x, depth = queue.pop(0)
             maxdepth = max(maxdepth, depth)
-            # for child in self[x.id].children: # TODO: why have i chosen this variant
             for child in x.children:
-                if child not in visited:
+                if child not in visited and child.id in self.element_ids:
                     visited.append(child)
                     queue.append((child,depth+1))
         return queue, visited
+
+    def bfs(self):
+        pass

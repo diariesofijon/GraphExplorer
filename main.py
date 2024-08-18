@@ -13,7 +13,7 @@
 
 import sys
 import abc
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 from data_structures import EisenhoverMatrixConvertationMask
@@ -41,7 +41,7 @@ class AbstractGraphWalkingInterface(abc.ABC):
     def defined_maximum_vertex_chain_index(self, maximum=5):
         self.graph.defined_maximum_vertex: int = maximum
         for vertex_info in self.tree.find_the_rigth_tree_by_vertex_size():
-            self.vertexes[vertex_info[1]] = {
+            self.vertexes[vertex_info[0]] = {
                 'size': vertex_info[0], 'left': vertex_info[2], 'right': vertex_info[3]}
             yield vertex_info[1], self.vertexes[vertex_info[1]]
 
@@ -59,9 +59,9 @@ class AbstractGraphWalkingInterface(abc.ABC):
 @dataclass
 class CliGraphWalking(AbstractGraphWalkingInterface):
 
-    graph: Optional[lib.typing.GM] = None
-    repr_type: type = int
-    file_path: str = config.FILE_DATA_CONTAINER_NAME
+    graph: lib.typing.GM = field()
+    repr_type: type      = int
+    file_path: str       = config.FILE_DATA_CONTAINER_NAME
     # TODO: make clear console interface
 
 
@@ -115,7 +115,7 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
                 if int(choice):
                     break
                 else:
-                    print('CHOSE THE BEXT TOPIC') # LET IT BE IN THE CODE
+                    print('CHOSE THE BEST TOPIC') # LET IT BE IN THE CODE
         print('bye-bye')
 
 

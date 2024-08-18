@@ -29,10 +29,16 @@ class VertexInfo:
 
     # TODO: LETS METACLASS IDICATE VERTEXTINFO DUPLICATES
 
-    tree: typing.Tree = field(default=None)
-    start: typing.GE  = field(default=None)
+    # tree: typing.Tree = field(default=None)
+    start: typing.GE  = field()
     end: typing.GE    = field(default=None)
     depth: int        = field(default=0)
+    edges: int        = field(default=0)
+    story: Dict       = field(default_factory=lambda: defaultdict(dict))
+
+    @property
+    def maximum_vertex(self):
+        return max(self.story.keys())
 
     def validation(self):
         ''' Have to explain why the Tree could not exists '''
@@ -46,7 +52,7 @@ class VertexInfo:
 class FrozenTree(base.BaseTree):
 
     element_class: typing.GE = RepresentativeElement
-    loader_class: typing.Loader = drivers.TxtLoader
+    loader: typing.Loader    = field(default_factory=drivers.TxtLoader())
 
 
 @dataclass
@@ -54,50 +60,8 @@ class VertexSearcingTree(FrozenTree):
 
     ''' Frozen Tree '''
 
-    defined_maximum_vertex: int = 5
-    trees_validated_vertex_left: VertexInfo = None
-    trees_validated_vertex_right: VertexInfo = None
-    _vertex_searching_story: defaultdict[dict] = field(default_factory=lambda: defaultdict(dict))
-    dfs_by_vertexs_searching: defaultdict[dict] = field(default_factory=lambda: defaultdict(dict))
-
-    @property
-    def vertex_searching_story(self) -> Dict:
-        if not self._vertex_searching_story:
-            self._vertex_searching_story = \
-            {index: 0 for index in range(self.defined_maximum_vertex+1)}
-        return self._vertex_searching_story
-
-    def dfs_from_it(self) -> typing.GGE:
-        self._sliced_graph.tree_topic = self.top
-        return self._sliced_graph.dfs(vertex=self.defined_maximum_vertex)
-
-    def find_the_rigth_tree_by_vertex_size(self, count=None, top=None):
-        if not top:
-            top = self._sliced_graph.tree_topic
-        if not count:
-            count = self.defined_maximum_vertex
-        self.defined_maximum_vertex = count
-        self._sliced_graph.tree_topic = top
-        # TODO: FIRSTLY: change the concpetion of the fucntion and dfs for better and really usefull UX
-        # TODO: FIRSTLY: _vertex_searching_story should be included in the logic of the conception
-        for depth in self.vertex_searching_story.keys():
-            self.defined_maximum_vertex = depth
-            # But also the best count has two varients of the tree
-            topic_of_best_tree_left = {count: top}
-            topic_of_best_tree_right = {count: top}
-            edges_lengths = len(self._sliced_graph) # the best tree has smallest count of edges\
-            for element in self._sliced_graph:
-                self._sliced_graph.tree_topic = element
-                self._sliced_graph.tree_topic = top
-                trees_elements, edges = self.dfs_from_it()
-                size = len(trees_elements)
-                if len(edges) < edges_lengths:
-                    edges_lengths = len(edges)
-                    topic_of_best_tree_right[count] = topic_of_best_tree_left[count]
-                    topic_of_best_tree_left[count] = element
-                yield size, depth, topic_of_best_tree_left, topic_of_best_tree_right
-        self.defined_maximum_vertex = count
-        self._sliced_graph.tree_topic = top
+    left: VertexInfo  = field()
+    right: VertexInfo = field()
 
 
 @dataclass
@@ -113,15 +77,52 @@ class StringByStringGraphMask(base.BaseGraphMask):
         Vaildation Error if it has no any tree variant
         '''
         ids = [el.id for el in self.tree_topic.walk()]
-        return VertexSearcingTree(self, ids)
+        return FrozenTree(self,
+            element_ids=ids, element_class=self.element_class, top=self.tree_topic)
 
 
 @dataclass
 class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
 
-    loader_class: typing.Loader = drivers.EisenhoverMatrixLoader
+    loader: typing.Loader = field(default_factory=drivers.EisenhoverMatrixLoader())
+    vertexes: Dict        = {}
+
+    def exclude_tree(self, left: VertexInfo, right: VertexInfo) -> typing.Tree:
+        # TODO: tree's class have be located in the class fields versus
+        # tree's instance have be initialized from this bound method?
+        '''
+        Find the sequence which can work like a tree. Raise
+        Vaildation Error if it has no any tree variant
+        '''
+        ids = [el.id for el in self.tree_topic.walk()]
+        return VertexSearcingTree(self,
+            element_ids=ids, element_class=self.element_class, top=self.tree_topic)
 
     def get_orthodox_eisenhover_info(self, index: int):
         part = self.loader.get_part_by_id(index)
         executive_id = index - self.loader.ids_map[part]
         return {'part': part, 'executive_id': executive_id}
+
+    def find_the_rigth_tree_by_vertex_size(self, count: int=5, recursion: bool=False):
+        # But also the best count has two varients of the tree
+        # the best tree has smallest count of edge
+        left_story, right_story, edges_lengths = {count: top}, {count: top}, len(self)
+        # TODO: THIRDLY: convert this for loop to recursion conception from another function interface!!!
+        for left, right in zip(self, self[::-1]):
+            # TODO: FOURTHLY: move it logic to the VertexInfo
+            self.tree_topic = right
+            right_tree, right_edges = self.dfs()
+            right_size = len(right_tree)
+            self.tree_topic = left
+            left_tree, left_edges = self.dfs()
+            left_size = len(left_tree)
+            if len(left_edges) < edges_lengths:
+                edges_lengths = len(left_edges)
+                left_story[count] = element
+            if len(right_edges) < edges_lengths:
+                edges_lengths = len(rigth_edges)
+                right_story[count] = element
+            tree = self.exclude_tree(left=left_story, right=right_story)
+            yield best_size, tree, left_story, right_story
+            self.tree_topic = element
+        if recursion and 

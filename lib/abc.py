@@ -208,11 +208,6 @@ class AbstractGraphMask(collections.abc.Collection):
 
     @property
     @abc.abstractmethod
-    def loader_class(self):
-        ''' The way which defined who would load data '''
-
-    @property
-    @abc.abstractmethod
     def loader(self):
         ''' The way which defined who would load data '''
 

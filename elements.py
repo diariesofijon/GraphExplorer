@@ -19,11 +19,11 @@ class RepresentativeElement(base.BaseElement):
     # inheretince way
     def show_children(self):
         ''' Texted view of children of the elemenet '''
-        return self._separeter().join(str(child) for child in self.children)
+        return self.separater.join(str(child) for child in self.children)
 
     def show_parents(self):
         ''' Texted view of parents of the elemenet '''
-        return self._separeter().join(str(parent) for parent in self.parents)
+        return self.separater.join(str(parent) for parent in self.parents)
 
     def walk(self, left: bool = True, chain: Optional[List] = None):
         '''
