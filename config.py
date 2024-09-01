@@ -14,6 +14,7 @@
 import os.path
 import abc
 
+
 # TODO: make logger settings and add pythonic logger into the project!!!!
 
 ENCODING = 'utf8'
@@ -68,6 +69,7 @@ class ConfigError(abc.ABC, Exception):
         last_traceback += '.'
         super().__init__(self, last_traceback, *args, **kwargs)
 
+
 class UndefinedConstant(ConfigError):
 
     ''' Undefined Constant abstract class '''
@@ -76,6 +78,7 @@ class UndefinedConstant(ConfigError):
     to_do_message: str = 'You have use element which are out of the tree'
     constant_undefined: str = 'data_structures.Tree'
     traceback_message: str = 'Undefined constant'
+
 
 class GraphLinksFileNameHasNotDefined(UndefinedConstant):
 
@@ -103,7 +106,9 @@ class ValidationError(ConfigError):
     constant_undefined: str = 'data_structures.Tree'
     traceback_message: str = 'Validation Error'
 
+
 # TODO: make classes for graphs, trees and matrixs
+
 
 class OutFromTreeError(ValidationError):
 

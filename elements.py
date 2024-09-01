@@ -9,6 +9,7 @@ from dataclasses import dataclass
 
 from lib import base
 
+
 @dataclass
 class RepresentativeElement(base.BaseElement):
 

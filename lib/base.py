@@ -119,10 +119,14 @@ class BaseGraphMask(abc.AbstractGraphMask):
 
     ''' Sensetive turn on '''
 
-    separeter: str           = config.SEPARATES.get('NODE')
-    file: str                = config.FILE_DATA_LOADER_PATH
-    element_class: typing.GE = BaseElement
-    loader: typing.Loader    = field(default=BaseLoader())
+    separeter: str                   = config.SEPARATES.get('NODE')
+    file: str                        = config.FILE_DATA_LOADER_PATH
+    element_class: typing.GE         = BaseElement
+    loader: typing.Loader            = field(default=BaseLoader())
+
+    _visited: List[typing.GE]        = field(default=None)
+    _queue:   List[typing.GE]        = field(default=None)
+    _loader: Optional[typing.Loader] = field(default=None)
 
     def __iter__(self) -> typing.GGE:
         return iter(self.loader.whole_chain)
@@ -153,8 +157,6 @@ class BaseGraphMask(abc.AbstractGraphMask):
         #     return False
         # return isinstance(element, self.element_class)
         return element in self.loader.map.items()
-
-    _loader: Optional[typing.Loader] = None
 
     @property
     def loader(self) -> typing.Loader:
@@ -208,15 +210,35 @@ class BaseGraphMask(abc.AbstractGraphMask):
                     queue.append((child,depth+1))
         return queue, visited
 
+    def bfs(self, node: Optional[typing.GE]=None, visited: Optional[List]=None):
+        '''#function for BFS'''
+        if node is None and visited is None: # should work with visited
+            node = self.top                  # because graph should use it too
+        if not self._visited or not self._queue:
+            self._visited, self._queue = [node], [node]
+        elif visited:
+            self._visited, self._queue = visited, [node]
+        while self._queue: # Creating loop to visit each node
+            last = self._queue.pop(0) # logged it to understand how it works
+            for neighbour in last.children:
+                if neighbour not in self._visited:
+                    self._visited.append(neighbour)
+                    self._queue.append(neighbour)
+
+        return self._visited, self._queue
+
 
 @dataclass
 class BaseTree(abc.AbstractTree):
 
     ''' Base Tree '''
 
-    element_ids: List[int]   = field(hash=True)
-    element_class: typing.GE = BaseElement
-    top: typing.GE           = field(hash=True)
+    element_ids: List[int]    = field(hash=True)
+    element_class: typing.GE  = BaseElement
+    top: typing.GE            = field(hash=True)
+
+    _visited: List[typing.GE] = field(default=None)
+    _queue:   List[typing.GE] = field(default=None)
 
     def __iter__(self) -> typing.GGE:
         return iter(self[_id] for _id in self.element_ids)
@@ -229,11 +251,11 @@ class BaseTree(abc.AbstractTree):
 
     def __getitem__(self, key: int) -> typing.GE:
         # TODO: would it be work with logarithmic complexity
-        if key == top.id:
+        if key == self.top.id:
             return self.top
-        elif key in self.element_ids:
+        if key in self.element_ids:
             smaller = filter(lambda x: x <= key, self.element_ids)
-            smaller = filter(lambda x: x in smaller, self.bfs())
+            smaller = filter(lambda x: x in smaller, self.bfs()[0])
             return filter(lambda x: x.id == key, smaller)[0]
         raise config.OutFromTreeError
 
@@ -269,5 +291,19 @@ class BaseTree(abc.AbstractTree):
                     queue.append((child,depth+1))
         return queue, visited
 
-    def bfs(self):
-        pass
+    def bfs(self, node: Optional[typing.GE]=None, visited: Optional[List]=None):
+        '''#function for BFS'''
+        if node is None and visited is None: # should work with visited
+            node = self.top                  # because graph should use it too
+        if not self._visited or not self._queue:
+            self._visited, self._queue = [node], [node]
+        elif visited:
+            self._visited, self._queue = visited, [node]
+        while self._queue: # Creating loop to visit each node
+            last = self._queue.pop(0) # logged it to understand how it works
+            for neighbour in last.children:
+                if neighbour not in self._visited:
+                    self._visited.append(neighbour)
+                    self._queue.append(neighbour)
+
+        return self._visited, self._queue

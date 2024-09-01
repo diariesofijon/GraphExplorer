@@ -96,6 +96,7 @@ class AbstractLoader(abc.ABC):
     def mapping_fuction(self, func: Callable, sequence: Iterable):
         pass
 
+
 class AbstractTree(collections.abc.Mapping):
 
     ''' Iterable tree representation of a graph '''
