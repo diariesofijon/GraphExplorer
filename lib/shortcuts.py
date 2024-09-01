@@ -24,3 +24,10 @@ def separete_from_text_element(tmp: str):
             return splited, splited
         case _:
             return splited[0], splited[1]
+
+def is_bipartite(edges: List):
+    '''
+    The function expects that the vertex has only two tops which
+    indicate the best varienty of the graph.
+    '''
+    return len(edges) == 2 and edges[0] == edges[1]

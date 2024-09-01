@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Union, Iterable, FrozenSet, Dict
 
 import config
-from lib import drivers, base, abc, typing
+from lib import drivers, base, abc, typing, shortcuts
 from elements import RepresentativeElement
 
 
@@ -87,7 +87,7 @@ class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
     loader: typing.Loader = field(default_factory=drivers.EisenhoverMatrixLoader())
     vertexes: Dict        = {}
 
-    def exclude_tree(self, left: VertexInfo, right: VertexInfo) -> typing.Tree:
+    def exclude_tree(self, story: VertexInfo) -> typing.Tree:
         # TODO: tree's class have be located in the class fields versus
         # tree's instance have be initialized from this bound method?
         '''
@@ -95,7 +95,7 @@ class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
         Vaildation Error if it has no any tree variant
         '''
         ids = [el.id for el in self.tree_topic.walk()]
-        return VertexSearcingTree(self,
+        return VertexSearcingTree(self, left=story, right=story,
             element_ids=ids, element_class=self.element_class, top=self.tree_topic)
 
     def get_orthodox_eisenhover_info(self, index: int):
@@ -106,23 +106,19 @@ class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
     def find_the_rigth_tree_by_vertex_size(self, count: int=5, recursion: bool=False):
         # But also the best count has two varients of the tree
         # the best tree has smallest count of edge
-        left_story, right_story, edges_lengths = {count: top}, {count: top}, len(self)
+        story, story, edges_lengths = {count: self.tree_topic}, len(self)
         # TODO: THIRDLY: convert this for loop to recursion conception from another function interface!!!
-        for left, right in zip(self, self[::-1]):
+        for element in self:
             # TODO: FOURTHLY: move it logic to the VertexInfo
-            self.tree_topic = right
-            right_tree, right_edges = self.dfs()
-            right_size = len(right_tree)
-            self.tree_topic = left
-            left_tree, left_edges = self.dfs()
-            left_size = len(left_tree)
-            if len(left_edges) < edges_lengths:
-                edges_lengths = len(left_edges)
-                left_story[count] = element
-            if len(right_edges) < edges_lengths:
-                edges_lengths = len(rigth_edges)
-                right_story[count] = element
-            tree = self.exclude_tree(left=left_story, right=right_story)
-            yield best_size, tree, left_story, right_story
             self.tree_topic = element
-        if recursion and 
+            tree, edges = self.dfs()
+            size = len(tree)
+            if len(edges) < edges_lengths:
+                edges_lengths = len(edges)
+                story[count] = element
+            tree = self.exclude_tree(left=story, right=story)
+            yield size, tree, story, shortcuts.is_bipartite(edges)
+            self.tree_topic = element
+        if recursion and count:
+            yield from self.find_the_rigth_tree_by_vertex_size(
+                count=(count-1), recursion=recursion)
