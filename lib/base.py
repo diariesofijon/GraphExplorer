@@ -30,7 +30,14 @@ class BaseElement(abc.AbstractElement):
     separater: str     = config.SEPARATES.get('NODE')
 
     def __str__(self):
-        return f'{self.part} id: {self.id} = {self.grouped} - {self.body}'
+        return f'{self.part} id: {self.id} = {self.grouped} - {self.body}'\
+
+    def __del__(self):
+        '''
+        Pythonic Element's Garbadge Collector
+        '''
+        for child in self.children:
+            del child
 
     @property
     def children(self) -> typing.Chain:
@@ -126,7 +133,6 @@ class BaseGraphMask(abc.AbstractGraphMask):
 
     _visited: List[typing.GE]        = field(default=None)
     _queue:   List[typing.GE]        = field(default=None)
-    _loader: Optional[typing.Loader] = field(default=None)
 
     def __iter__(self) -> typing.GGE:
         return iter(self.loader.whole_chain)
@@ -158,11 +164,13 @@ class BaseGraphMask(abc.AbstractGraphMask):
         # return isinstance(element, self.element_class)
         return element in self.loader.map.items()
 
-    @property
-    def loader(self) -> typing.Loader:
-        if not self._loader:
-            self._loader: typing.Loader = self.loader_class()
-        return self._loader
+    def __del__(self):
+        '''
+        Pythonic Graph's Garbadge Collector
+        '''
+        del self._visited
+        del self._queue
+        del self.loader
 
     # TODO: refactor it
     _topic = None

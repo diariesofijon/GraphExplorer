@@ -84,8 +84,8 @@ class StringByStringGraphMask(base.BaseGraphMask):
 @dataclass
 class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
 
-    loader: typing.Loader = field(default_factory=drivers.EisenhoverMatrixLoader())
-    vertexes: Dict        = {}
+    loader: typing.Loader = field(default_factory=drivers.EisenhoverMatrixLoader)
+    vertexes: Dict        = field(default_factory=lambda: defaultdict(dict))
 
     def exclude_tree(self, story: VertexInfo) -> typing.Tree:
         # TODO: tree's class have be located in the class fields versus
@@ -98,27 +98,26 @@ class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
         return VertexSearcingTree(self, left=story, right=story,
             element_ids=ids, element_class=self.element_class, top=self.tree_topic)
 
-    def get_orthodox_eisenhover_info(self, index: int):
-        part = self.loader.get_part_by_id(index)
-        executive_id = index - self.loader.ids_map[part]
+    def get_orthodox_eisenhover_info(self, index: int) -> Dict:
+        part: str = self.loader.get_part_by_id(index)
+        executive_id: int = index - self.loader.ids_map[part]
         return {'part': part, 'executive_id': executive_id}
 
     def find_the_rigth_tree_by_vertex_size(self, count: int=5, recursion: bool=False):
         # But also the best count has two varients of the tree
         # the best tree has smallest count of edge
-        story, story, edges_lengths = {count: self.tree_topic}, len(self)
+        story, edges_lengths = {count: self.tree_topic}, len(self)
         # TODO: THIRDLY: convert this for loop to recursion conception from another function interface!!!
         for element in self:
             # TODO: FOURTHLY: move it logic to the VertexInfo
             self.tree_topic = element
             tree, edges = self.dfs()
-            size = len(tree)
             if len(edges) < edges_lengths:
-                edges_lengths = len(edges)
-                story[count] = element
+                edges_lengths, story[count] = len(edges), element
             tree = self.exclude_tree(left=story, right=story)
-            yield size, tree, story, shortcuts.is_bipartite(edges)
-            self.tree_topic = element
+            yield len(tree), tree, story, shortcuts.is_bipartite(edges)
         if recursion and count:
             yield from self.find_the_rigth_tree_by_vertex_size(
                 count=(count-1), recursion=recursion)
+
+    def 
