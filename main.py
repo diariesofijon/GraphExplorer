@@ -46,16 +46,6 @@ class AbstractGraphWalkingInterface(abc.ABC):
             yield vertex_info[1], self.vertexes[vertex_info[1]]
 
 
-    # def defined_maximum_vertex_chain_index(self, maximum=5):
-    #     self.graph.defined_maximum_vertex: int = maximum
-    #     for index, top in enumerate(self.graph):
-    #         self.graph.tree_topic = top
-    #         top_id, visited =  self.graph.dfs()
-    #         edges = sum(len(el.children)-1 for el in visited)
-    #         yield {'index': index, 'depth': maximum, 'vertices': len(visited),
-    #             'edges': edges, 'handicap': len(visited) - edges}
-
-
 @dataclass
 class CliGraphWalking(AbstractGraphWalkingInterface):
 
@@ -74,31 +64,6 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
             index = 0 if index == 2 else -1
             return element.parents[index]
         raise ValueError(f'Index {str(index)} is out of range')
-
-    # def show_most_usefull_road(self, maximum=5, length=5):
-    #     roads = self.defined_maximum_vertex_chain_index(maximum)
-    #     return sorted(roads, key=lambda x: x['handicap'])[:length]
-
-    # def show_most_useless_road(self, maximum=5, length=5):
-    #     roads = self.defined_maximum_vertex_chain_index(maximum)
-    #     return sorted(roads, key=lambda x: x['handicap'])[:length:-1]
-
-    # def show_graph_image_slice(self):
-    #     maximum: int = int(input('Please, inter the deep of the expected graph: '))
-    #     length: int = int(input('Please, inter the lenght of available slice: '))
-    #     print(f'You can see below all possoble variants due {maximum} depth: ')
-    #     for var in self.show_most_usefull_road(maximum, length):
-    #         print(f"index: {var['index']}")
-    #         print(f"vertices: {var['vertices']}")
-    #         print(f"edges: {var['edges']}")
-    #         print(f"handicap: {var['handicap']}")
-    #     print("\n\n")
-    #     print(f'You can see below all unpossoble variants due {maximum} depth: ')
-    #     for var in self.show_most_useless_road(maximum, length):
-    #         print(f"index: {var['index']}")
-    #         print(f"vertices: {var['vertices']}")
-    #         print(f"edges: {var['edges']}")
-    #         print(f"handicap: {var['handicap']}")
 
     def show_graph_image_slice(self):
         maximum = 5#int(input)

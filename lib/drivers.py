@@ -12,7 +12,7 @@ from typing import (
     Dict, Callable)
 
 import config
-from lib import base, abc, shortcuts, typing
+from lib import base, shortcuts, typing
 from elements import RepresentativeElement
 
 
@@ -23,29 +23,6 @@ class TxtLoader(base.BaseLoader):
 
     _last_index: int = 0
 
-    # TODO: don't foget legace convert element and make the idea to
-    # TODO: uneffectable deletion legace come true
-    # def _convert_element(self, tmp: str, last_part: GE) -> GGE:
-    #     ''' Engine convertor '''
-    #     # shortcuts.eisenhower_part_spliter
-    #     if len((splited := tmp.split('.'))) == 1:
-    #         splited = splited[0], ''
-    #     ids, tmp = splited
-    #     match len((splited:=tmp.split(':'))):
-    #         case 0:
-    #             grouped, body = 'splited', 'splited'
-    #         case 1:
-    #             grouped, body = splited, splited
-    #         case _:
-    #             grouped, body = splited
-    #     # shortcuts.get_ids
-    #     for id in self._get_ids(ids):
-    #         data = self.element_class(
-    #             id=id, grouped=grouped, part=last_part, body=body, graph=self)
-    #         # TODO: have to be strictly increased instead of redefining
-    #         self.ids_map[last_part] = id
-    #         yield data
-
     # TODO: THAT IS NOT A GENERATOR
     def convert_element(self, tmp: str) -> typing.GGE:
         ''' Engine convertor '''
@@ -55,14 +32,10 @@ class TxtLoader(base.BaseLoader):
             id=self._last_index, grouped=grouped, body=body, graph=self)
 
 
+@dataclass
 class EisenhoverMatrixLoader(TxtLoader):
 
-    def __init__(self, *args, **kwargs):
-        self.ids_map: Dict[str] = {'A1.': 0, 'B2.': 0, 'C3.': 0, 'L4.': 0}
-        super().__init__(*args, **kwargs)
-        # TODO: Can't instantiate abstract class ... with abstract method ids_map
-        # TODO: it has not work due exclude_tree ids_map has defrent logic
-        # TODO: let's try makes it hardcode
+    ids_map: Dict[str] = field(default={'A1.': 0, 'B2.': 0, 'C3.': 0, 'L4.': 0})
 
     def mapping_fuction(self, func: Callable, sequence: Iterable):
         for line in sequence:

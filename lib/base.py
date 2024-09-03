@@ -190,14 +190,20 @@ class BaseGraphMask(abc.AbstractGraphMask):
         # raise config.ValidationError
         self._topic: typing.GE = element
 
+    @property
+    def _ids(self) -> List[int]:
+        '''
+        Simplified id's list constructed by BFS algorithm
+        '''
+        return [el.id for el in self.tree_topic.walk()]
+
     def exclude_tree(self) -> typing.Tree:
         '''
         Find the sequence which can work like a tree. Raise
         Vaildation Error if it has no any tree variant
         '''
-        ids = [el.id for el in self.tree_topic.walk()]
-        return BaseTree(self,
-            element_ids=ids, element_class=self.element_class, top=self.tree_topic)
+        return BaseTree(self, element_ids=self._ids,
+            element_class=self.element_class, top=self.tree_topic)
 
     def dfs(self, vertex: int = -1) -> Tuple[List]:
         # TODO: should to work in the composition way

@@ -60,8 +60,7 @@ class VertexSearcingTree(FrozenTree):
 
     ''' Frozen Tree '''
 
-    left: VertexInfo  = field()
-    right: VertexInfo = field()
+    story: VertexInfo  = field()
 
 
 @dataclass
@@ -94,9 +93,8 @@ class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
         Find the sequence which can work like a tree. Raise
         Vaildation Error if it has no any tree variant
         '''
-        ids = [el.id for el in self.tree_topic.walk()]
-        return VertexSearcingTree(self, left=story, right=story,
-            element_ids=ids, element_class=self.element_class, top=self.tree_topic)
+        return VertexSearcingTree(self, story=story, element_ids=self._ids,
+            element_class=self.element_class, top=self.tree_topic)
 
     def get_orthodox_eisenhover_info(self, index: int) -> Dict:
         part: str = self.loader.get_part_by_id(index)
@@ -114,10 +112,8 @@ class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
             tree, edges = self.dfs()
             if len(edges) < edges_lengths:
                 edges_lengths, story[count] = len(edges), element
-            tree = self.exclude_tree(left=story, right=story)
+            tree = self.exclude_tree(story=story)
             yield len(tree), tree, story, shortcuts.is_bipartite(edges)
         if recursion and count:
             yield from self.find_the_rigth_tree_by_vertex_size(
                 count=(count-1), recursion=recursion)
-
-    def 
