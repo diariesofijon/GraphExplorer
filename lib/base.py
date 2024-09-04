@@ -76,6 +76,19 @@ class BaseLoader(abc.AbstractLoader):
     def __len__(self):
         return len(self.ids)
 
+    def __del__(self):
+        '''
+        Pythonic Loader's Garbadge Collector
+        Don't use when it is not pythonic dataclass
+        '''
+        # del self.file_path
+        # del self.separeter
+        # del self.element_class
+        # del self._ids
+        # del self._map
+        # del self.cached_context
+        pass
+
     @property
     def map(self):
         if not self._map:
@@ -129,7 +142,7 @@ class BaseGraphMask(abc.AbstractGraphMask):
     separeter: str                   = config.SEPARATES.get('NODE')
     file: str                        = config.FILE_DATA_LOADER_PATH
     element_class: typing.GE         = BaseElement
-    loader: typing.Loader            = field(default=BaseLoader())
+    loader: typing.Loader            = field(default_factory=BaseLoader)
 
     _visited: List[typing.GE]        = field(default=None)
     _queue:   List[typing.GE]        = field(default=None)
@@ -168,9 +181,13 @@ class BaseGraphMask(abc.AbstractGraphMask):
         '''
         Pythonic Graph's Garbadge Collector
         '''
+        del self.file
+        del self.separeter
+        del self.element_class
+        del self.loader
         del self._visited
         del self._queue
-        del self.loader
+        del self._topic
 
     # TODO: refactor it
     _topic = None
@@ -250,9 +267,9 @@ class BaseTree(abc.AbstractTree):
 
     ''' Base Tree '''
 
-    element_ids: List[int]    = field(hash=True)
+    element_ids: List[int]    = field(hash=True, default_factory=list)
     element_class: typing.GE  = BaseElement
-    top: typing.GE            = field(hash=True)
+    top: typing.GE            = field(hash=True, default=None)
 
     _visited: List[typing.GE] = field(default_factory=list)
     _queue:   List[typing.GE] = field(default_factory=list)

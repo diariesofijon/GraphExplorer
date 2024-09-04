@@ -116,10 +116,10 @@ class AbstractTree(collections.abc.Mapping):
 
     # have to explaning augmenting path through the first to the end
 
-    @property
-    @abc.abstractmethod
-    def _sliced_graph(self):
-        ''' Private link on a graph  '''
+    # @property
+    # @abc.abstractmethod
+    # def _sliced_graph(self):
+    #     ''' Private link on a graph  '''
 
     @property
     @abc.abstractmethod
@@ -175,37 +175,6 @@ class AbstractGraphMask(collections.abc.Collection):
     def __str__(self):
         ''' Unique string representation '''
 
-    # def __new__(cls, *args, **kwargs):
-    #     ''' TODO: HAVE BE WITH MATECLASSES
-    #     to fix: Defenition of the graph have attrib or similart to
-    #     dataclass default values
-    #     '''
-    #     if not cls.tmp and not kwargs.get('tmp', ''):
-    #         with open(cls.file, 'r', encoding='utf8') as file:
-    #             cls.tmp = file.read()
-    #     return super().__new__(cls, *args, **kwargs)
-
-    # TODO: HAVE BE AS REGEXP MIXIN
-    # @property
-    # @abc.abstractmethod
-    # def element_mask(self) -> Optional[str]:
-    #     ''' RegExp for finding each element of the node '''
-
-    # @property
-    # @abc.abstractmethod
-    # def node_mask(self) -> Optional[str]:
-    #     ''' RegExp for finding eahc node of the graph'''
-
-    # @property
-    # @abc.abstractmethod
-    # def part_mask(self) -> Optional[str]:
-    #     ''' RegExp for finding part of each node '''
-
-    @property
-    @abc.abstractmethod
-    def tmp(self) -> Optional[str]:
-        ''' String of full texted graph '''
-
     @property
     @abc.abstractmethod
     def separeter(self) -> Optional[str]:
@@ -219,10 +188,10 @@ class AbstractGraphMask(collections.abc.Collection):
     def file(self) -> str:
         ''' Which file from engine have to load text of the graph '''
 
-    @property
-    @abc.abstractmethod
-    def loader(self):
-        ''' The way which defined who would load data '''
+    # @property
+    # @abc.abstractmethod
+    # def loader(self):
+    #     ''' The way which defined who would load data '''
 
     @property
     @abc.abstractmethod

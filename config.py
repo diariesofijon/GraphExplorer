@@ -5,10 +5,10 @@
 # pylint: disable=E0001
 
 '''
-        This file contains all settings of the project like constans,
-    dictionaries, list and variables. All of data are strictly designed due
-    idea of keeping easear to change behavior of anythings deal of the module
-    in theruntime.
+    This file contains all settings of the project like constans,
+dictionaries, list and variables. All of data are strictly designed due
+idea of keeping easear to change behavior of anythings deal of the module
+in the runtime.
 '''
 
 import os.path

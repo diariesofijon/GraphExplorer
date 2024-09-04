@@ -52,7 +52,6 @@ class VertexInfo:
 class FrozenTree(base.BaseTree):
 
     element_class: typing.GE = RepresentativeElement
-    loader: typing.Loader    = field(default_factory=drivers.TxtLoader())
 
 
 @dataclass
@@ -60,13 +59,14 @@ class VertexSearcingTree(FrozenTree):
 
     ''' Frozen Tree '''
 
-    story: VertexInfo  = field()
+    story: VertexInfo = field(default=None)
 
 
 @dataclass
 class StringByStringGraphMask(base.BaseGraphMask):
 
     element_class: typing.GE = RepresentativeElement
+    loader: typing.Loader    = field(default_factory=drivers.TxtLoader)
 
     ''' Sensetive turn off '''
 

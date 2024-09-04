@@ -32,10 +32,8 @@ class RepresentativeElement(base.BaseElement):
         '''
         if chain:
             index = chain.pop()
+            next_el = self.children[index] if left else self.children.end(index)
+            yield next_el
+            yield from next_el.walk(left=left, chain=chain)
         else:
-            # TODO: that's arise trouble because self is not iterable
-            return self
-        next_el = self.children[index] if left else self.children.end(index)
-        yield next_el
-        # fix: make deep searching algorithm based on this property
-        yield from next_el.walk(left=left, chain=chain)
+            yield self
