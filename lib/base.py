@@ -206,22 +206,25 @@ class BaseGraphMask(abc.AbstractGraphMask):
             element_class=self.element_class, top=self.tree_topic)
 
     def dfs(self, vertex: int = -1) -> Tuple[List]:
+        '''
+        Best case performance for a depth-first algorithm is O(1),
+        while worst case performance is O(N). In another words The time
+        complexity of the DFS algorithm is O(V+E), where V is the number
+        of vertices and E is the number of edges in the graph.
+        '''
         # TODO: should to work in the composition way
-        maxdepth, visited, queue = 0, [], []
-        visited.append(self.tree_topic)
-        queue.append((self.tree_topic,1))
+        maxdepth, visited, queue = 0, [self.tree_topic], [(self.tree_topic,1)]
         while queue:
             x, depth = queue.pop(0)
+            # TODO: take down documentation about the idea why should we use already defined maxdepth
+            maxdepth = max(maxdepth, depth)
             if depth > vertex > -1: # TODO: take down docs about negative vertex conceptions
                 break
-            else:
-                # TODO: take down documentation about the idea why should we use already defined maxdepth
-                maxdepth = max(maxdepth, depth)
             # for child in self[x.id].children: # TODO: why have i chosen this variant
             for child in x.children:
                 if child not in visited:
-                    visited.append(child)
-                    queue.append((child,depth+1))
+                    visited += child
+                    queue += (child,depth+1)
         return queue, visited
 
     def bfs(self, node: Optional[typing.GE]=None, visited: Optional[List]=None):
@@ -236,8 +239,8 @@ class BaseGraphMask(abc.AbstractGraphMask):
             last = self._queue.pop(0) # logged it to understand how it works
             for neighbour in last.children:
                 if neighbour not in self._visited:
-                    self._visited.append(neighbour)
-                    self._queue.append(neighbour)
+                    self._visited += neighbour
+                    self._queue += neighbour
 
         return self._visited, self._queue
 
@@ -251,8 +254,8 @@ class BaseTree(abc.AbstractTree):
     element_class: typing.GE  = BaseElement
     top: typing.GE            = field(hash=True)
 
-    _visited: List[typing.GE] = field(default=None)
-    _queue:   List[typing.GE] = field(default=None)
+    _visited: List[typing.GE] = field(default_factory=list)
+    _queue:   List[typing.GE] = field(default_factory=list)
 
     def __iter__(self) -> typing.GGE:
         return iter(self[_id] for _id in self.element_ids)
@@ -293,16 +296,14 @@ class BaseTree(abc.AbstractTree):
         complexity of the DFS algorithm is O(V+E), where V is the number
         of vertices and E is the number of edges in the graph.
         '''
-        maxdepth, visited, queue = 0, [], []
-        visited.append(self.top)
-        queue.append((self.top,1))
+        maxdepth, visited, queue = 0, [self.top], [(self.top,1)]
         while queue:
             x, depth = queue.pop(0)
             maxdepth = max(maxdepth, depth)
             for child in x.children:
                 if child not in visited and child.id in self.element_ids:
-                    visited.append(child)
-                    queue.append((child,depth+1))
+                    visited += child
+                    queue += (child,depth+1)
         return queue, visited
 
     def bfs(self, node: Optional[typing.GE]=None, visited: Optional[List]=None):
@@ -317,7 +318,7 @@ class BaseTree(abc.AbstractTree):
             last = self._queue.pop(0) # logged it to understand how it works
             for neighbour in last.children:
                 if neighbour not in self._visited:
-                    self._visited.append(neighbour)
-                    self._queue.append(neighbour)
+                    self._visited += neighbour
+                    self._queue += neighbour
 
         return self._visited, self._queue
