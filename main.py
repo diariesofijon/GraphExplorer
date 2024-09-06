@@ -66,7 +66,7 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
         raise ValueError(f'Index {str(index)} is out of range')
 
     def show_graph_image_slice(self):
-        maximum = 5#int(input)
+        maximum = typed if (typed:=int(input('times:'))) else 5
         for depth, vertex in self.defined_maximum_vertex_chain_index(maximum):
             print('Depth is ', depth)
             print('Size is ', vertex['size'])
@@ -81,6 +81,13 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
                     break
                 else:
                     print('CHOSE THE BEST TOPIC') # LET IT BE IN THE CODE
+                    if int(input('left is 0 or right is 1')):
+                        print(vertex['right'])
+                    else:
+                        print(vertex['left'])
+        else:
+            if int(input("Should we continue: 0 - no, 1 - yes ")):
+                self.show_graph_image_slice()
         print('bye-bye')
 
 

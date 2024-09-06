@@ -3,7 +3,7 @@
 
 from typing import Iterable, Dict, Tuple, Callable
 
-from lib import abc, shortcuts
+from lib import abc, shortcuts, typing
 
 
 class BaseChain(abc.AbstractChain):

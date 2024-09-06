@@ -181,13 +181,14 @@ class BaseGraphMask(abc.AbstractGraphMask):
         '''
         Pythonic Graph's Garbadge Collector
         '''
-        del self.file
-        del self.separeter
-        del self.element_class
-        del self.loader
-        del self._visited
-        del self._queue
-        del self._topic
+        # del self.file
+        # del self.separeter
+        # del self.element_class
+        # del self.loader
+        # del self._visited
+        # del self._queue
+        # del self._topic
+        pass
 
     # TODO: refactor it
     _topic = None

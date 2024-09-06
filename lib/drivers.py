@@ -35,7 +35,7 @@ class TxtLoader(base.BaseLoader):
 @dataclass
 class EisenhoverMatrixLoader(TxtLoader):
 
-    ids_map: Dict[str,int] = field(default_factory={'A1.': 0, 'B2.': 0, 'C3.': 0, 'L4.': 0})
+    ids_map: Dict[str,int] = field(default={'A1.': 0, 'B2.': 0, 'C3.': 0, 'L4.': 0})
 
     def mapping_fuction(self, func: Callable, sequence: Iterable):
         for line in sequence:

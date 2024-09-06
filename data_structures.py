@@ -34,7 +34,7 @@ class VertexInfo:
     end: typing.GE    = field(hash=True)
     depth: int        = field(default=0)
     edges: int        = field(default=0)
-    story: Dict       = field(default_factory=lambda: defaultdict(dict))
+    story: Dict       = field(default_factory=lambda: defaultdict({}))
 
     @property
     def maximum_vertex(self):
@@ -81,8 +81,13 @@ class StringByStringGraphMask(base.BaseGraphMask):
 @dataclass
 class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
 
-    loader: typing.Loader = field(default_factory=drivers.EisenhoverMatrixLoader)
-    vertexes: Dict        = field(default_factory=lambda: defaultdict(dict))
+    loader: typing.Loader = field(default=drivers.EisenhoverMatrixLoader())
+    vertexes: Dict        = field(default_factory=lambda: defaultdict({}))
+
+    def __init__(self, *args, **kwargs):
+        print(super(), type(super()), self, type(self))
+        super().__init__(self, *args, **kwargs)
+        print(self.vertexes)
 
     def exclude_tree(self, story: VertexInfo) -> typing.Tree:
         # TODO: tree's class have be located in the class fields versus
