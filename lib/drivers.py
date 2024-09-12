@@ -6,6 +6,7 @@
 Drivers for loading graphs
 '''
 
+from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import (
     Optional, List, Union, Iterable, FrozenSet,
@@ -32,10 +33,9 @@ class TxtLoader(base.BaseLoader):
             id=self._last_index, grouped=grouped, body=body, graph=self)
 
 
-@dataclass
 class EisenhoverMatrixLoader(TxtLoader):
 
-    ids_map: Dict[str,int] = field(default={'A1.': 0, 'B2.': 0, 'C3.': 0, 'L4.': 0})
+    ids_map: Dict[str,int] = {'A1.': 0, 'B2.': 0, 'C3.': 0, 'L4.': 0}
 
     def mapping_fuction(self, func: Callable, sequence: Iterable):
         for line in sequence:

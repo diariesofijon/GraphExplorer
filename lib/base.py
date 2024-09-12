@@ -22,12 +22,12 @@ class BaseElement(abc.AbstractElement):
 
     ''' Base Element from the Graph '''
 
-    id: str            = field(hash=True)
-    part: str          = field()
-    grouped: str       = field()
-    body: str          = field()
-    graph: typing.GM   = field(hash=True)
-    separater: str     = config.SEPARATES.get('NODE')
+    id: str          = field(hash=True)
+    part: str        = field()
+    grouped: str     = field()
+    body: str        = field()
+    graph: typing.GM = field(hash=True)
+    separater: str   = config.SEPARATES.get('NODE')
 
     def __str__(self):
         return f'{self.part} id: {self.id} = {self.grouped} - {self.body}'\
@@ -139,13 +139,13 @@ class BaseGraphMask(abc.AbstractGraphMask):
 
     ''' Sensetive turn on '''
 
-    separeter: str                   = config.SEPARATES.get('NODE')
-    file: str                        = config.FILE_DATA_LOADER_PATH
-    element_class: typing.GE         = BaseElement
-    loader: typing.Loader            = field(default_factory=BaseLoader)
+    separeter: str            = config.SEPARATES.get('NODE')
+    file: str                 = config.FILE_DATA_LOADER_PATH
+    element_class: typing.GE  = BaseElement
+    loader: typing.Loader     = field(default_factory=BaseLoader)
 
-    _visited: List[typing.GE]        = field(default=None)
-    _queue:   List[typing.GE]        = field(default=None)
+    _visited: List[typing.GE] = field(default=None)
+    _queue:   List[typing.GE] = field(default=None)
 
     def __iter__(self) -> typing.GGE:
         return iter(self.loader.whole_chain)
