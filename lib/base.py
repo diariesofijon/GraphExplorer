@@ -23,9 +23,9 @@ class BaseElement(abc.AbstractElement):
     ''' Base Element from the Graph '''
 
     id: str          = field(hash=True)
-    part: str        = field()
-    grouped: str     = field()
-    body: str        = field()
+    part: str        = field(default='')
+    grouped: str     = field(default='')
+    body: str        = field(default='')
     graph: typing.GM = field(hash=True)
     separater: str   = config.SEPARATES.get('NODE')
 
@@ -65,10 +65,11 @@ class BaseLoader(abc.AbstractLoader):
     separeter: str           = config.SEPARATES.get('NODE')
     element_class: typing.GE = BaseElement
 
-    _ids: FrozenSet = frozenset({})
-    _map: Dict = {}
+    _ids: FrozenSet = {}
+    _map: Dict      = {}
 
-    def __init__(self, etype: Optional[typing.GE] = None):
+    def __init__(self, graph: typing.GM, etype: Optional[typing.GE] = None):
+        self.instance_graph: typing.GM = graph
         if etype:
             self.element_class: typing.GE = etype
         self.loads_from(self.file_path)
@@ -139,10 +140,10 @@ class BaseGraphMask(abc.AbstractGraphMask):
 
     ''' Sensetive turn on '''
 
-    separeter: str            = config.SEPARATES.get('NODE')
-    file: str                 = config.FILE_DATA_LOADER_PATH
-    element_class: typing.GE  = BaseElement
-    loader: typing.Loader     = field(default_factory=BaseLoader)
+    separeter: str             = config.SEPARATES.get('NODE')
+    file: str                  = config.FILE_DATA_LOADER_PATH
+    element_class: typing.GE   = BaseElement
+    loader_class: typing.Loader= BaseLoader
 
     _visited: List[typing.GE] = field(default=None)
     _queue:   List[typing.GE] = field(default=None)
@@ -189,6 +190,15 @@ class BaseGraphMask(abc.AbstractGraphMask):
         # del self._queue
         # del self._topic
         pass
+
+    _loader = None
+
+    @property
+    def loader(self):
+        if not self._loader:
+            self._loader = self.loader_class(
+                graph=self,etype=self.element_class)
+        return self._loader
 
     # TODO: refactor it
     _topic = None
