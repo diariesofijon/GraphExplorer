@@ -13,6 +13,9 @@ __all__ = ('AbstractElement', 'AbstractChain',
 
 # TODO: Should I add typing or not
 
+# TODO: Examine `__post_init__ ` for using dataclasses
+# TODO: Examine `pickle` module for using pythonic dundermethods
+
 
 class AbstractChain(list):
 
@@ -28,6 +31,31 @@ class AbstractChain(list):
     # COMPOSITION IS BETTER THAN INHERITANCE!!!
     # POINT THAT -- CONVERT ALL THIS STUFF TO COMPOSTION LIKE DESIGNED IN
     # PYTHONIC lib.collections/lib.collections.abc libraries!!!!
+
+    @property
+    @abc.abstractmethod
+    def __buffer__(self):
+        ''' memoryview(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __realease_buffer__(self):
+        ''' del memoryview(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __copy__(self):
+        ''' copy.copy(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __deepcopy__(self, memo):
+        ''' copy.deepcopy(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __sizeof__(self):
+        ''' sys.getsizeof(self) '''
 
     def start(self, index: int = 0):
         ''' First element of the chain from index '''
@@ -57,6 +85,31 @@ class AbstractChain(list):
 
 
 class AbstractLoader(abc.ABC):
+
+    @property
+    @abc.abstractmethod
+    def __buffer__(self):
+        ''' memoryview(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __realease_buffer__(self):
+        ''' del memoryview(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __copy__(self):
+        ''' copy.copy(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __deepcopy__(self, memo):
+        ''' copy.deepcopy(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __sizeof__(self):
+        ''' sys.getsizeof(self) '''
 
     cached_context: str = ''
 
@@ -109,9 +162,9 @@ class AbstractTree(collections.abc.Mapping):
 
     # TODO: step by step
     # make clear and useful interface for trees +
-    # explain available the way in singleton  pattern or not. Whe it frozen by definition. +
-    # clearly explain where it properties that listed bellow have to be used
-    # make the graph easier to use and move functionability due it
+    # explain available the way in singleton  pattern or not. Whe it frozen by
+    # definition. + clearly explain where it properties that listed bellow have
+    # to be used make the graph easier to use and move functionability due it
     # take down new documentation of the graph’s functionality
 
     # have to explaning augmenting path through the first to the end
@@ -120,6 +173,31 @@ class AbstractTree(collections.abc.Mapping):
     # @abc.abstractmethod
     # def _sliced_graph(self):
     #     ''' Private link on a graph  '''
+
+    @property
+    @abc.abstractmethod
+    def __buffer__(self):
+        ''' memoryview(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __realease_buffer__(self):
+        ''' del memoryview(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __copy__(self):
+        ''' copy.copy(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __deepcopy__(self, memo):
+        ''' copy.deepcopy(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __sizeof__(self):
+        ''' sys.getsizeof(self) '''
 
     @property
     @abc.abstractmethod
@@ -174,6 +252,31 @@ class AbstractGraphMask(collections.abc.Collection):
     @abc.abstractmethod
     def __str__(self):
         ''' Unique string representation '''
+
+    @property
+    @abc.abstractmethod
+    def __buffer__(self):
+        ''' memoryview(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __realease_buffer__(self):
+        ''' del memoryview(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __copy__(self):
+        ''' copy.copy(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __deepcopy__(self, memo):
+        ''' copy.deepcopy(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __sizeof__(self):
+        ''' sys.getsizeof(self) '''
 
     @property
     @abc.abstractmethod
@@ -245,6 +348,31 @@ class AbstractElement(collections.abc.Hashable):
     @abc.abstractmethod
     def __str__(self) -> str:
         ''' Unique string representation '''
+
+    @property
+    @abc.abstractmethod
+    def __buffer__(self):
+        ''' memoryview(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __realease_buffer__(self):
+        ''' del memoryview(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __copy__(self):
+        ''' copy.copy(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __deepcopy__(self, memo):
+        ''' copy.deepcopy(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __sizeof__(self):
+        ''' sys.getsizeof(self) '''
 
     @property
     @abc.abstractmethod
