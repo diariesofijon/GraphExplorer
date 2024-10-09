@@ -4,9 +4,9 @@
 
 '''
     TODO: make DFS step by step
-        1. function as bound method for the graph which fitler them by tree belonging
-        2. function as bound method for the graph which filter them by tree absent
-        3. function that sort elements of the graph by the matrix' s part belonging
+        1. function bounded method for the graph which fitler by tree belonging
+        2. function bounded method for the graph which filter by tree absent
+        3. function that sort graphs elements by the matrix' s part belonging
         4. matrix data
         5. visualistaion
 '''
@@ -42,7 +42,9 @@ class AbstractGraphWalkingInterface(abc.ABC):
         self.graph.defined_maximum_vertex: int = maximum
         for vertex_info in self.tree.find_the_rigth_tree_by_vertex_size():
             self.vertexes[vertex_info[0]] = {
-                'size': vertex_info[0], 'left': vertex_info[2], 'right': vertex_info[3]}
+                'size': vertex_info[0],
+                'left': vertex_info[2],
+                'right': vertex_info[3]}
             yield vertex_info[1], self.vertexes[vertex_info[1]]
 
 
@@ -95,7 +97,7 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
         ''' Walking down through the graph'''
         print('\n\n\n')
         if (index := self.repr_type(input())) not in {1,2,3,4}:
-            raise TypeError(ValueError(f'Index {str(index)} have invalid type'))
+            raise TypeError(ValueError(f'{str(index)} have invalid type'))
         # print('CHAIN', graph.exclude_tree().longest_chain)
         def iterate(el=self.graph.tree_topic):
             print(f'current element {el} with index {el.id}' + \
