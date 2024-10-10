@@ -17,16 +17,27 @@ from lib import shortcuts, abc, drivers, typing
 __all__ = ('BaseTree', 'BaseElement', 'BaseGraphMask')
 
 
-@dataclass
+def index_factory(return_type=str):
+
+    _index = -1
+
+    def mechanism():
+        _index += 1
+        return return_type(_index)
+
+    return mechanism
+
+
+@dataclass(frozen=True, kw_only=True, slots=True, unsafe_hash=True)
 class BaseElement(abc.AbstractElement):
 
     ''' Base Element from the Graph '''
 
-    id: str          = field(hash=True)
+    id: str          = field(hash=True, default_factory=index_factory())
     part: str        = field(default='')
     grouped: str     = field(default='')
     body: str        = field(default='')
-    graph: typing.GM = field(hash=True)
+    graph: typing.GM = field(hash=True, default=None)
     separater: str   = config.SEPARATES.get('NODE')
 
     def __str__(self):
@@ -65,13 +76,16 @@ class BaseLoader(abc.AbstractLoader):
     separeter: str           = config.SEPARATES.get('NODE')
     element_class: typing.GE = BaseElement
 
-    _ids: FrozenSet = {}
-    _map: Dict      = {}
+    _ids: FrozenSet  = {}
+    _map: Dict       = {}
+    _last_index: int = 0
 
     def __init__(self, graph: typing.GM, etype: Optional[typing.GE] = None):
         self.instance_graph: typing.GM = graph
         if etype:
             self.element_class: typing.GE = etype
+        if self.instance_graph.element_class is not self.element_class:
+            raise config.ElementClassHasNotDefined
         self.loads_from(self.file_path)
 
     def __len__(self):
@@ -116,15 +130,10 @@ class BaseLoader(abc.AbstractLoader):
 
     def convert_element(self, tmp: str) -> typing.GGE:
         ''' Engine convertor '''
-        match len((splited:=tmp.split(':'))):
-            case 0:
-                grouped, body = 'splited', 'splited'
-            case 1:
-                grouped, body = splited, splited
-            case _:
-                grouped, body = splited
-        return self.element_class(
-            id=self._last_index, grouped=grouped, body=body, graph=self)
+        grouped, body = shortcuts.separete_from_text_element(tmp)
+        self._last_index += 1
+        return self.element_class(graph=self.instance_graph,
+            id=self._last_index, grouped=grouped, body=body)
 
     # TODO: explain the idea in docs
     def mapping_fuction(self, func: Callable, sequence: Iterable):

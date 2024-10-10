@@ -81,8 +81,8 @@ class StringByStringGraphMask(base.BaseGraphMask):
 @dataclass
 class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
 
-    loader: typing.Loader = field(default=drivers.EisenhoverMatrixLoader())
-    vertexes: Dict        = field(default_factory=lambda: defaultdict({}))
+    loader_class: typing.Loader = drivers.EisenhoverMatrixLoader
+    vertexes: Dict              = field(default_factory=lambda: {})
 
     def __init__(self, *args, **kwargs):
         print(super(), type(super()), self, type(self))

@@ -97,6 +97,16 @@ class OutPutLinksFileNameHasNotDefined(UndefinedConstant):
         to place the data'
     constant_undefined: str = 'config.FILE_DATA_CONTAINER_NAME'
 
+
+class ElementClassHasNotDefined(UndefinedConstant):
+
+    ''' Explain how to define path which from shoud loud the data '''
+
+    to_do_message: str = 'Define algorithm that will be used as mechanism to\
+        store each element of the graph'
+    constant_undefined: str = 'loader.element_class'
+
+
 class ValidationError(ConfigError):
 
     ''' Explain how to convert one data structure to an antoher '''

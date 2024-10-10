@@ -22,16 +22,6 @@ class TxtLoader(base.BaseLoader):
     file_path: str           = config.FILE_DATA_LOADER_NAME_TXT
     element_class: typing.GE = RepresentativeElement
 
-    _last_index: int = 0
-
-    # TODO: THAT IS NOT A GENERATOR
-    def convert_element(self, tmp: str) -> typing.GGE:
-        ''' Engine convertor '''
-        grouped, body = shortcuts.separete_from_text_element(tmp)
-        self._last_index += 1
-        return self.element_class(
-            id=self._last_index, grouped=grouped, body=body, graph=self)
-
 
 class EisenhoverMatrixLoader(TxtLoader):
 

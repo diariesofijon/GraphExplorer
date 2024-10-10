@@ -32,30 +32,30 @@ class AbstractChain(list):
     # POINT THAT -- CONVERT ALL THIS STUFF TO COMPOSTION LIKE DESIGNED IN
     # PYTHONIC lib.collections/lib.collections.abc libraries!!!!
 
-    @property
-    @abc.abstractmethod
-    def __buffer__(self):
-        ''' memoryview(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __buffer__(self):
+    #     ''' memoryview(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __realease_buffer__(self):
-        ''' del memoryview(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __realease_buffer__(self):
+    #     ''' del memoryview(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __copy__(self):
-        ''' copy.copy(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __copy__(self):
+    #     ''' copy.copy(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __deepcopy__(self, memo):
-        ''' copy.deepcopy(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __deepcopy__(self, memo):
+    #     ''' copy.deepcopy(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __sizeof__(self):
-        ''' sys.getsizeof(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __sizeof__(self):
+    #     ''' sys.getsizeof(self) '''
 
     def start(self, index: int = 0):
         ''' First element of the chain from index '''
@@ -86,30 +86,30 @@ class AbstractChain(list):
 
 class AbstractLoader(abc.ABC):
 
-    @property
-    @abc.abstractmethod
-    def __buffer__(self):
-        ''' memoryview(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __buffer__(self):
+    #     ''' memoryview(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __realease_buffer__(self):
-        ''' del memoryview(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __realease_buffer__(self):
+    #     ''' del memoryview(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __copy__(self):
-        ''' copy.copy(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __copy__(self):
+    #     ''' copy.copy(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __deepcopy__(self, memo):
-        ''' copy.deepcopy(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __deepcopy__(self, memo):
+    #     ''' copy.deepcopy(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __sizeof__(self):
-        ''' sys.getsizeof(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __sizeof__(self):
+    #     ''' sys.getsizeof(self) '''
 
     cached_context: str = ''
 
@@ -174,30 +174,30 @@ class AbstractTree(collections.abc.Mapping):
     # def _sliced_graph(self):
     #     ''' Private link on a graph  '''
 
-    @property
-    @abc.abstractmethod
-    def __buffer__(self):
-        ''' memoryview(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __buffer__(self):
+    #     ''' memoryview(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __realease_buffer__(self):
-        ''' del memoryview(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __realease_buffer__(self):
+    #     ''' del memoryview(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __copy__(self):
-        ''' copy.copy(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __copy__(self):
+    #     ''' copy.copy(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __deepcopy__(self, memo):
-        ''' copy.deepcopy(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __deepcopy__(self, memo):
+    #     ''' copy.deepcopy(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __sizeof__(self):
-        ''' sys.getsizeof(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __sizeof__(self):
+    #     ''' sys.getsizeof(self) '''
 
     @property
     @abc.abstractmethod
@@ -253,30 +253,30 @@ class AbstractGraphMask(collections.abc.Collection):
     def __str__(self):
         ''' Unique string representation '''
 
-    @property
-    @abc.abstractmethod
-    def __buffer__(self):
-        ''' memoryview(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __buffer__(self):
+    #     ''' memoryview(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __realease_buffer__(self):
-        ''' del memoryview(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __realease_buffer__(self):
+    #     ''' del memoryview(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __copy__(self):
-        ''' copy.copy(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __copy__(self):
+    #     ''' copy.copy(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __deepcopy__(self, memo):
-        ''' copy.deepcopy(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __deepcopy__(self, memo):
+    #     ''' copy.deepcopy(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __sizeof__(self):
-        ''' sys.getsizeof(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __sizeof__(self):
+    #     ''' sys.getsizeof(self) '''
 
     @property
     @abc.abstractmethod
@@ -349,30 +349,30 @@ class AbstractElement(collections.abc.Hashable):
     def __str__(self) -> str:
         ''' Unique string representation '''
 
-    @property
-    @abc.abstractmethod
-    def __buffer__(self):
-        ''' memoryview(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __buffer__(self):
+    #     ''' memoryview(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __realease_buffer__(self):
-        ''' del memoryview(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __realease_buffer__(self):
+    #     ''' del memoryview(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __copy__(self):
-        ''' copy.copy(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __copy__(self):
+    #     ''' copy.copy(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __deepcopy__(self, memo):
-        ''' copy.deepcopy(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __deepcopy__(self, memo):
+    #     ''' copy.deepcopy(self) '''
 
-    @property
-    @abc.abstractmethod
-    def __sizeof__(self):
-        ''' sys.getsizeof(self) '''
+    # @property
+    # @abc.abstractmethod
+    # def __sizeof__(self):
+    #     ''' sys.getsizeof(self) '''
 
     @property
     @abc.abstractmethod

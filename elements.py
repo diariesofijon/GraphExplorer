@@ -10,11 +10,10 @@ from dataclasses import dataclass
 from lib import base
 
 
-@dataclass
+@dataclass(frozen=True, kw_only=True, slots=True, unsafe_hash=True)
 class RepresentativeElement(base.BaseElement):
 
     ''' Sensetive turn off '''
-
 
     # TODO: move all show logic to new console or graphic interface in MIXIN
     # inheretince way
