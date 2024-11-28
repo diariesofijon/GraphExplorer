@@ -7,6 +7,7 @@
 from typing import Optional, List
 from dataclasses import dataclass
 
+from bin import metaclasses
 from lib import base
 
 
@@ -14,6 +15,8 @@ from lib import base
 class RepresentativeElement(base.BaseElement):
 
     ''' Sensetive turn off '''
+
+    __metaclass__ = metaclasses.MetaRepresentativeElement
 
     # TODO: move all show logic to new console or graphic interface in MIXIN
     # inheretince way
