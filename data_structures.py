@@ -13,6 +13,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Union, Iterable, FrozenSet, Dict
 
 import config
+from bin import metaclasses
 from lib import drivers, base, abc, typing, shortcuts
 from elements import RepresentativeElement
 
@@ -51,6 +52,8 @@ class VertexInfo:
 @dataclass
 class FrozenTree(base.BaseTree):
 
+    __metaclasses__ = metaclasses.MetaFrozenTree
+
     element_class: typing.GE = RepresentativeElement
 
 
@@ -64,6 +67,8 @@ class VertexSearcingTree(FrozenTree):
 
 @dataclass
 class StringByStringGraphMask(base.BaseGraphMask):
+
+    __metaclasses__ = metaclasses.MetaRepresentativeGraph
 
     element_class: typing.GE = RepresentativeElement
     loader: typing.Loader    = field(default_factory=drivers.TxtLoader)
