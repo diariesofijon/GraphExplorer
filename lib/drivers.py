@@ -13,17 +13,22 @@ from typing import (
     Dict, Callable)
 
 import config
+from bin import metaclasses
 from lib import base, shortcuts, typing
 from elements import RepresentativeElement
 
 
 class TxtLoader(base.BaseLoader):
 
+    __metaclass__            = metaclasses.MetaTxtLoader
+
     file_path: str           = config.FILE_DATA_LOADER_NAME_TXT
     element_class: typing.GE = RepresentativeElement
 
 
 class EisenhoverMatrixLoader(TxtLoader):
+
+    __metaclass__          = metaclasses.MetaEisenhoverLoader
 
     ids_map: Dict[str,int] = {'A1.': 0, 'B2.': 0, 'C3.': 0, 'L4.': 0}
 
@@ -53,8 +58,10 @@ class EisenhoverMatrixLoader(TxtLoader):
 
 
 class CsvLoader(base.BaseLoader):
-    pass
+    
+    __metaclass__ = metaclasses.MetaCsvLoader
 
 
 class YamlLoader(base.BaseLoader):
-    pass
+    
+    __metaclass__ = metaclasses.MetaYamlLoader
