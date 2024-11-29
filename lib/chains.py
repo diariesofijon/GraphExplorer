@@ -3,6 +3,8 @@
 
 from typing import Iterable, Dict, Tuple, Callable
 
+from bin import metaclasses
+
 from lib import abc, shortcuts, typing
 
 
@@ -33,6 +35,8 @@ class BaseChain(abc.AbstractChain):
 
 
 class TxtChain(BaseChain):
+
+    _metaclass__    = metaclasses.MetaChain
 
     blank: bool = False
 

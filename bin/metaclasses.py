@@ -14,25 +14,25 @@ should be based on abc classes
 
 
 class MetaChain(type):
-	
+
 	def __new__(mls, cls, bases, attrs):
-		if len(mro(mls)) > config.MetaClassIneritanceDepth:
+		if len(mls.__mro__) > config.MetaClassIneritanceDepth:
 			raise config.MetaChainException(cls, bases, attrs)
 		return type.__new__(mls, cls, bases, attrs)
 
 
 class MetaLoader(type):
-	
+
 	def __new__(mls, cls, bases, attrs):
-		if len(mro(mls)) > config.MetaClassIneritanceDepth:
+		if len(mls.__mro__) > config.MetaClassIneritanceDepth:
 			raise config.MetaLoaderException(cls, bases, attrs)
 		return type.__new__(mls, cls, bases, attrs)
 
 
 class MetaTxtLoader(MetaLoader):
-	
+
 	def __new__(mls, cls, bases, attrs):
-		if len(mro(mls)) > config.MetaClassIneritanceDepth:
+		if len(mls.__mro__) > config.MetaClassIneritanceDepth:
 			raise config.MetaLoaderException(cls, bases, attrs)
 		return type.__new__(mls, cls, bases, attrs)
 
@@ -50,9 +50,9 @@ class MetaEisehowerLoader(MetaLoader):
 
 
 class MetaElement(type):
-	
+
 	def __new__(mls, cls, bases, attrs):
-		if len(mro(mls)) > config.MetaClassIneritanceDepth:
+		if len(mls.__mro__) > config.MetaClassIneritanceDepth:
 			raise config.MetaElementException(cls, bases, attrs)
 		return type.__new__(mls, cls, bases, attrs)
 
@@ -65,9 +65,9 @@ class MetaRepresentativeElement(MetaElement):
 
 
 class MetaGraph(type):
-	
+
 	def __new__(mls, cls, bases, attrs):
-		if len(mro(mls)) > config.MetaClassIneritanceDepth:
+		if len(mls.__mro__) > config.MetaClassIneritanceDepth:
 			raise config.MetaGraphException(cls, bases, attrs)
 		return type.__new__(mls, cls, bases, attrs)
 
@@ -87,9 +87,9 @@ class MetaAnalogGraph(MetaGraph):
 
 
 class MetaTree(type):
-	
+
 	def __new__(mls, cls, bases, attrs):
-		if len(mro(mls)) > config.MetaClassIneritanceDepth:
+		if len(mls.__mro__) > config.MetaClassIneritanceDepth:
 			raise config.MetaTreeException(cls, bases, attrs)
 		return type.__new__(mls, cls, bases, attrs)
 

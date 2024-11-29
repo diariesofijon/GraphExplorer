@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 from typing import FrozenSet, Tuple, List, Optional, Dict, Iterable, Callable
 
 import config
+from bin import metaclasses
 from lib import shortcuts, abc, drivers, typing
 
 
@@ -32,6 +33,8 @@ def index_factory(return_type=str):
 class BaseElement(abc.AbstractElement):
 
     ''' Base Element from the Graph '''
+
+    _metaclass__    = metaclasses.MetaElement
 
     id: str          = field(hash=True, default_factory=index_factory())
     part: str        = field(default='')
@@ -71,6 +74,8 @@ class BaseElement(abc.AbstractElement):
 
 
 class BaseLoader(abc.AbstractLoader):
+
+    _metaclass__    = metaclasses.MetaLoader
 
     file_path: str           = 'example'
     separeter: str           = config.SEPARATES.get('NODE')
@@ -148,6 +153,8 @@ class BaseLoader(abc.AbstractLoader):
 class BaseGraphMask(abc.AbstractGraphMask):
 
     ''' Sensetive turn on '''
+
+    _metaclass__    = metaclasses.MetaGraph
 
     separeter: str             = config.SEPARATES.get('NODE')
     file: str                  = config.FILE_DATA_LOADER_PATH
@@ -286,6 +293,8 @@ class BaseGraphMask(abc.AbstractGraphMask):
 class BaseTree(abc.AbstractTree):
 
     ''' Base Tree '''
+
+    _metaclass__    = metaclasses.MetaTree
 
     element_ids: List[int]    = field(hash=True, default_factory=list)
     element_class: typing.GE  = BaseElement
