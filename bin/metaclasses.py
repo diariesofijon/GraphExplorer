@@ -10,98 +10,107 @@ should be based on abc classes
 '''
 
 
+__all__ = ('MetaChain', 'MetaLoader', 'MetaTxtLoader', 'MetaCsvLoader',
+    'MetaYamlLoader', 'MetaEisehowerLoader', 'MetaElement', 'MetaGraph',
+    'MetaRepresentativeGraph', 'MetaRepresentativeElement', 'MetaAnalogGraph',
+    'MetaTree', 'MetaAnalogTree', 'MetaFrozenTree')
+
 # TODO: Inheritance deep of any MetaClass has no bigger 3 times
 
 
 class MetaChain(type):
 
-	def __new__(mls, cls, bases, attrs):
-		if len(mls.__mro__) > config.MetaClassIneritanceDepth:
-			raise config.MetaChainException(cls, bases, attrs)
-		return type.__new__(mls, cls, bases, attrs)
+    def __new__(mls, cls, bases, attrs):
+        if len(mls.__mro__) > config.MetaClassIneritanceDepth:
+            raise config.MetaChainException(cls, bases, attrs)
+        return type.__new__(mls, cls, bases, attrs)
 
 
 class MetaLoader(type):
 
-	def __new__(mls, cls, bases, attrs):
-		if len(mls.__mro__) > config.MetaClassIneritanceDepth:
-			raise config.MetaLoaderException(cls, bases, attrs)
-		return type.__new__(mls, cls, bases, attrs)
+    def __new__(mls, cls, bases, attrs):
+        if len(mls.__mro__) > config.MetaClassIneritanceDepth:
+            raise config.MetaLoaderException(cls, bases, attrs)
+        return type.__new__(mls, cls, bases, attrs)
 
 
 class MetaTxtLoader(MetaLoader):
 
-	def __new__(mls, cls, bases, attrs):
-		if len(mls.__mro__) > config.MetaClassIneritanceDepth:
-			raise config.MetaLoaderException(cls, bases, attrs)
-		return type.__new__(mls, cls, bases, attrs)
+    def __new__(mls, cls, bases, attrs):
+        if len(mls.__mro__) > config.MetaClassIneritanceDepth:
+            raise config.MetaLoaderException(cls, bases, attrs)
+        return type.__new__(mls, cls, bases, attrs)
 
 
 class MetaCsvLoader(MetaLoader):
-	pass
+    pass
 
 
 class MetaYamlLoader(MetaLoader):
-	pass
+    pass
 
 
 class MetaEisehowerLoader(MetaLoader):
-	pass
+    pass
 
 
 class MetaElement(type):
 
-	def __new__(mls, cls, bases, attrs):
-		if len(mls.__mro__) > config.MetaClassIneritanceDepth:
-			raise config.MetaElementException(cls, bases, attrs)
-		return type.__new__(mls, cls, bases, attrs)
+    def __new__(mls, cls, bases, attrs):
+        if len(mls.__mro__) > config.MetaClassIneritanceDepth:
+            raise config.MetaElementException(cls, bases, attrs)
+        return type.__new__(mls, cls, bases, attrs)
 
 
 class MetaRepresentativeElement(MetaElement):
-	'''
- 	The element is easier to show and easier to debugging. But the element
-  	is harder to store in the memory.
- 	'''
+    '''
+    The element is easier to show and easier to debugging. But the element
+    is harder to store in the memory.
+    '''
 
 
 class MetaGraph(type):
 
-	def __new__(mls, cls, bases, attrs):
-		if len(mls.__mro__) > config.MetaClassIneritanceDepth:
-			raise config.MetaGraphException(cls, bases, attrs)
-		return type.__new__(mls, cls, bases, attrs)
+    def __new__(mls, cls, bases, attrs):
+        if len(mls.__mro__) > config.MetaClassIneritanceDepth:
+            raise config.MetaGraphException(cls, bases, attrs)
+        return type.__new__(mls, cls, bases, attrs)
 
 
 class MetaRepresentativeGraph(MetaGraph):
-	'''
- 	The graph is easier to show and easier to debugging. But the graph
-  	is harder to store in the memory.
- 	'''
+    '''
+    The graph is easier to show and easier to debugging. But the graph
+    is harder to store in the memory.
+    '''
 
 
 class MetaAnalogGraph(MetaGraph):
-	'''
- 	Produce analog graph's algorithms behavior strictly and will detect that
-  	the graph has accepted existed logic or similar to base logic.
- 	'''
+    '''
+    Produce analog graph's algorithms behavior strictly and will detect that
+    the graph has accepted existed logic or similar to base logic.
+    '''
 
 
 class MetaTree(type):
 
-	def __new__(mls, cls, bases, attrs):
-		if len(mls.__mro__) > config.MetaClassIneritanceDepth:
-			raise config.MetaTreeException(cls, bases, attrs)
-		return type.__new__(mls, cls, bases, attrs)
+    def __new__(mls, cls, bases, attrs):
+        if len(mls.__mro__) > config.MetaClassIneritanceDepth:
+            raise config.MetaTreeException(cls, bases, attrs)
+        return type.__new__(mls, cls, bases, attrs)
 
 
-class MetaAnalogGraph(MetaTree):
-	'''
- 	Produce analog graph's algorithms behavior strictly and will detect that
-  	the graph has accepted existed logic or similar to base logic.
- 	'''
+class MetaAnalogTree(MetaTree):
+    '''
+    Produce analog graph's algorithms behavior strictly and will detect that
+    the graph has accepted existed logic or similar to base logic.
+    '''
 
 
 class MetaFrozenTree(MetaTree):
-	'''
-	Tree has immutable and sized less than mutable.
- 	'''
+    '''
+    Tree has immutable and sized less than mutable.
+    '''
+
+# TODO: Let's check mro through assertion here!!!
+
+assert config.META_CLASS_INHERITANCE_DEPTH

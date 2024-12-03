@@ -58,10 +58,10 @@ class EisenhoverMatrixLoader(TxtLoader):
 
 
 class CsvLoader(base.BaseLoader):
-    
+
     __metaclass__ = metaclasses.MetaCsvLoader
 
 
 class YamlLoader(base.BaseLoader):
-    
+
     __metaclass__ = metaclasses.MetaYamlLoader
