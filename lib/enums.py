@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from enum import Enume
+from enum import Enum
 
 
 class VertexInfo(Enum):

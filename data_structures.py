@@ -61,6 +61,7 @@ class FrozenTree(base.BaseTree):
 class VertexSearcingTree(FrozenTree):
 
     ''' Frozen Tree '''
+    # TODO: move to the bin/metaclasses.py through the enum.py
 
     story: VertexInfo = field(default=None)
 

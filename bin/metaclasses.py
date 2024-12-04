@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import config
-
+import lib
 
 '''
 Have to manipulate dataclasses mechanism to make data structures easier to use.
@@ -71,10 +71,19 @@ class MetaRepresentativeElement(MetaElement):
 
 class MetaGraph(type):
 
+    # detect meta data from the source to clearly understand what should do for
+    # each element
+    story: dict[lib.typing.GM, dict] = {}
+
     def __new__(mls, cls, bases, attrs):
         if len(mls.__mro__) > config.MetaClassIneritanceDepth:
             raise config.MetaGraphException(cls, bases, attrs)
-        return type.__new__(mls, cls, bases, attrs)
+
+        graph = type.__new__(mls, cls, bases, attrs)
+
+        mls.story[graph] = {'attrs': attrs}
+
+        return graph
 
 
 class MetaRepresentativeGraph(MetaGraph):
