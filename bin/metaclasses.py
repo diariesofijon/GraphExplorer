@@ -18,28 +18,23 @@ __all__ = ('MetaChain', 'MetaLoader', 'MetaTxtLoader', 'MetaCsvLoader',
 # TODO: Inheritance deep of any MetaClass has no bigger 3 times
 
 
-class MetaChain(type):
+class MetaConfig(type):
 
-    def __new__(mls, cls, bases, attrs):
-        if len(mls.__mro__) > config.MetaClassIneritanceDepth:
-            raise config.MetaChainException(cls, bases, attrs)
-        return type.__new__(mls, cls, bases, attrs)
+    def __init_subclass__(mcs):
+        if len(mcs.__mro__) > config.META_CLASS_INHERITANCE_DEPTH:
+            raise config.MetaMroError(mcs)
 
 
-class MetaLoader(type):
+class MetaChain(MetaConfig):
+    pass
 
-    def __new__(mls, cls, bases, attrs):
-        if len(mls.__mro__) > config.MetaClassIneritanceDepth:
-            raise config.MetaLoaderException(cls, bases, attrs)
-        return type.__new__(mls, cls, bases, attrs)
+
+class MetaLoader(MetaConfig):
+    pass
 
 
 class MetaTxtLoader(MetaLoader):
-
-    def __new__(mls, cls, bases, attrs):
-        if len(mls.__mro__) > config.MetaClassIneritanceDepth:
-            raise config.MetaLoaderException(cls, bases, attrs)
-        return type.__new__(mls, cls, bases, attrs)
+    pass
 
 
 class MetaCsvLoader(MetaLoader):
@@ -54,12 +49,8 @@ class MetaEisehowerLoader(MetaLoader):
     pass
 
 
-class MetaElement(type):
-
-    def __new__(mls, cls, bases, attrs):
-        if len(mls.__mro__) > config.MetaClassIneritanceDepth:
-            raise config.MetaElementException(cls, bases, attrs)
-        return type.__new__(mls, cls, bases, attrs)
+class MetaElement(MetaConfig):
+    pass
 
 
 class MetaRepresentativeElement(MetaElement):
@@ -69,19 +60,19 @@ class MetaRepresentativeElement(MetaElement):
     '''
 
 
-class MetaGraph(type):
+class MetaGraph(MetaConfig):
 
     # detect meta data from the source to clearly understand what should do for
     # each element
     story: dict[lib.typing.GM, dict] = {}
 
-    def __new__(mls, cls, bases, attrs):
-        if len(mls.__mro__) > config.MetaClassIneritanceDepth:
+    def __new__(mcs, cls, bases, attrs):
+        if len(mcs.__mro__) > config.MetaClassIneritanceDepth:
             raise config.MetaGraphException(cls, bases, attrs)
 
-        graph = type.__new__(mls, cls, bases, attrs)
+        graph = MetaConfig.__new__(mcs, cls, bases, attrs)
 
-        mls.story[graph] = {'attrs': attrs}
+        mcs.story[graph] = {'attrs': attrs}
 
         return graph
 
@@ -100,12 +91,8 @@ class MetaAnalogGraph(MetaGraph):
     '''
 
 
-class MetaTree(type):
-
-    def __new__(mls, cls, bases, attrs):
-        if len(mls.__mro__) > config.MetaClassIneritanceDepth:
-            raise config.MetaTreeException(cls, bases, attrs)
-        return type.__new__(mls, cls, bases, attrs)
+class MetaTree(MetaConfig):
+    pass
 
 
 class MetaAnalogTree(MetaTree):

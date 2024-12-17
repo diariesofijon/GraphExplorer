@@ -42,8 +42,13 @@ FILE_DATA_LOADER_PATH = f'{ABSOLUTE_PATH}/{FILE_DATA_LOADER_NAME_TXT}'
 
 FILE_DATA_CONTAINER_PATH = f'{ABSOLUTE_PATH}/{FILE_DATA_CONTAINER_NAME}'
 
-META_CLASS_INHERITANCE_DEPTH = 4
+META_CLASS_INHERITANCE_DEPTH = 5
 # TODO: concept rising errors to inspect too huge MRO.
+
+META_CLASS_TRACEBACKS = {
+    '__mro__': 'is bigger then META_CLASS_INHERITANCE_DEPTH',
+}
+
 
 class ConfigError(abc.ABC, Exception):
 
@@ -70,6 +75,30 @@ class ConfigError(abc.ABC, Exception):
             [self.constant_undefined, self.to_do_message])
         last_traceback += '.'
         super().__init__(self, last_traceback, *args, **kwargs)
+
+
+class MetaError(ConfigError):
+
+    to_do_message: str = 'See the config to find the missconception'
+    constant_undefined: str = 'bin.metaclasses.MetaConfig'
+
+    @property
+    def traceback_message(self) -> str:
+        traceback: str = 'Arcitecture has lost the key conception:\n'
+        for field, description in self.meta_dir.items():
+            traceback += f'The field {field} is {description}'
+        return traceback
+
+    def __init__(self, *args, meta_dir: dict[str, str], **kwargs):
+        if not meta_dir or isinstance(meta_dir, dict):
+            self.meta_dir: dict[str, str] = META_CLASS_TRACEBACKS
+        else:
+            self.meta_dir: dict[str, str] = meta_dir
+        super().__init__(self, *args, **kwargs)
+
+class MetaMroError(MetaError):
+
+    constant_undefined: str = 'config.META_CLASS_INHERITANCE_DEPTH'
 
 
 class UndefinedConstant(ConfigError):
