@@ -3,17 +3,17 @@
 import config
 import lib
 
+
 '''
 Have to manipulate dataclasses mechanism to make data structures easier to use.
-First of all metaclass would be key tool to make whole composition. And also
-should be based on abc classes
+First of all metaclass would be key tool to make whole composition.
 '''
 
 
 __all__ = ('MetaChain', 'MetaLoader', 'MetaTxtLoader', 'MetaCsvLoader',
     'MetaYamlLoader', 'MetaEisehowerLoader', 'MetaElement', 'MetaGraph',
     'MetaRepresentativeGraph', 'MetaRepresentativeElement', 'MetaAnalogGraph',
-    'MetaTree', 'MetaAnalogTree', 'MetaFrozenTree')
+    'MetaTree', 'MetaAnalogTree', 'MetaFrozenTree', 'MetaConfig')
 
 # TODO: Inheritance deep of any MetaClass has no bigger 3 times
 
@@ -26,8 +26,17 @@ class MetaConfig(type):
 
 
 class MetaChain(MetaConfig):
-    pass
 
+    existed: list[set] = []
+
+    @classmethod
+    def __prepare__(mcs, name, bases, **kwargs):
+        if (content := set(kwargs['iterable'])):
+            if content in mcs.existed:
+                raise config.MetaChain({
+                'existed': 'chain has already arised with this order o eleements',})
+            mcs.existed.append(content)
+        MetaConfig.__prepare__(mcs, name, bases, **kwargs)
 
 class MetaLoader(MetaConfig):
     pass

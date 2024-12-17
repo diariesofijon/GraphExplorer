@@ -47,6 +47,7 @@ META_CLASS_INHERITANCE_DEPTH = 5
 
 META_CLASS_TRACEBACKS = {
     '__mro__': 'is bigger then META_CLASS_INHERITANCE_DEPTH',
+    'existed': 'chain has already arised with this order o eleements',
 }
 
 
@@ -89,6 +90,10 @@ class MetaError(ConfigError):
             traceback += f'The field {field} is {description}'
         return traceback
 
+    @property
+    def meta_dir(self):
+        return self._error_cache_output
+
     def __init__(self, *args, meta_dir: dict[str, str], **kwargs):
         if not meta_dir or isinstance(meta_dir, dict):
             self.meta_dir: dict[str, str] = META_CLASS_TRACEBACKS
@@ -96,9 +101,15 @@ class MetaError(ConfigError):
             self.meta_dir: dict[str, str] = meta_dir
         super().__init__(self, *args, **kwargs)
 
+
 class MetaMroError(MetaError):
 
     constant_undefined: str = 'config.META_CLASS_INHERITANCE_DEPTH'
+
+
+class MetaExistedChainError(MetaError):
+
+    constant_undefined: str = 'bin.metaclasses.MetaChain.existed'
 
 
 class UndefinedConstant(ConfigError):

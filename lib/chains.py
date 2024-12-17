@@ -36,7 +36,7 @@ class BaseChain(abc.AbstractChain):
 
 class TxtChain(BaseChain):
 
-    _metaclass__    = metaclasses.MetaChain
+    __metaclass__ = metaclasses.MetaChain
 
     blank: bool = False
 
