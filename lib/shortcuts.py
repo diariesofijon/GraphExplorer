@@ -5,7 +5,7 @@ The module cotains widle used clear functions that's based on functional
 programming priciples.
 '''
 
-from typing import List, Tuple
+from typing import List, Tuple, Iterable
 
 
 def get_ids(name: str, separeter: str='-') -> List[int]:
@@ -38,3 +38,9 @@ def is_bipartite(edges: List):
     indicate the best varienty of the graph.
     '''
     return len(edges) == 2 and edges[0] == edges[1]
+
+def simplest_txt_element(body: str) -> Iterable:
+    splited_by_body = body.split(')')
+    converting = lambda txt: txt.lstrip(',').strip().split('(')
+    looped = map(converting, splited_by_body)
+    yield from map(lambda pair: (pair[0], pair[1].split(',')), looped)

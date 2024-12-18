@@ -77,9 +77,7 @@ class MetaGraph(MetaConfig):
 
     def __new__(mcs, cls, bases, attrs):
         graph = MetaConfig.__new__(mcs, cls, bases, attrs)
-
         mcs.story[graph] = {'attrs': attrs}
-
         return graph
 
 
