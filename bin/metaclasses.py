@@ -15,9 +15,8 @@ __all__ = ('MetaChain', 'MetaLoader', 'MetaTxtLoader', 'MetaCsvLoader',
     'MetaRepresentativeGraph', 'MetaRepresentativeElement', 'MetaAnalogGraph',
     'MetaTree', 'MetaAnalogTree', 'MetaFrozenTree', 'MetaConfig')
 
+
 # TODO: Inheritance deep of any MetaClass has no bigger 3 times
-
-
 class MetaConfig(type):
 
     def __init_subclass__(mcs):
@@ -36,7 +35,8 @@ class MetaChain(MetaConfig):
                 raise config.MetaChain({
                 'existed': 'chain has already arised with this order o eleements',})
             mcs.existed.append(content)
-        MetaConfig.__prepare__(mcs, name, bases, **kwargs)
+        return MetaConfig.__prepare__(mcs, name, bases, **kwargs)
+
 
 class MetaLoader(MetaConfig):
     pass
@@ -76,9 +76,6 @@ class MetaGraph(MetaConfig):
     story: dict[lib.typing.GM, dict] = {}
 
     def __new__(mcs, cls, bases, attrs):
-        if len(mcs.__mro__) > config.MetaClassIneritanceDepth:
-            raise config.MetaGraphException(cls, bases, attrs)
-
         graph = MetaConfig.__new__(mcs, cls, bases, attrs)
 
         mcs.story[graph] = {'attrs': attrs}
@@ -115,6 +112,7 @@ class MetaFrozenTree(MetaTree):
     '''
     Tree has immutable and sized less than mutable.
     '''
+
 
 # TODO: Let's check mro through assertion here!!!
 
