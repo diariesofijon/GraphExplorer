@@ -14,7 +14,7 @@ from typing import Optional, List, Union, Iterable, FrozenSet, Dict
 
 import config
 from bin import metaclasses
-from lib import drivers, base, abc, typing, shortcuts
+from lib import drivers, base, abc, typing, shortcuts, enums
 from elements import RepresentativeElement
 
 
@@ -23,30 +23,6 @@ __all__ = (
     'VertexInfo', 'EisenhoverMatrixConvertationMask',)
 
 # https://www.javatpoint.com/bfs-vs-dfs#:~:text=DFS%20stands%20for%20Depth%20First,Last%20In%20First%20Out)%20principle
-
-
-@dataclass
-class VertexInfo:
-
-    # TODO: LETS METACLASS IDICATE VERTEXTINFO DUPLICATES
-
-    # tree: typing.Tree = field(default=None)
-    start: typing.GE  = field(hash=True)
-    end: typing.GE    = field(hash=True)
-    depth: int        = field(default=0)
-    edges: int        = field(default=0)
-    story: Dict       = field(default_factory=lambda: defaultdict({}))
-
-    @property
-    def maximum_vertex(self):
-        return max(self.story.keys())
-
-    # def validation(self):
-    #     ''' Have to explain why the Tree could not exists '''
-    #     if not (self.tree and self.start and self.end):
-    #         raise config.ValidationError
-    #     if self.depth and self.start is self.end:
-    #         raise config.ValidationError
 
 
 @dataclass
@@ -63,7 +39,7 @@ class VertexSearcingTree(FrozenTree):
     ''' Frozen Tree '''
     # TODO: move to the bin/metaclasses.py through the enum.py
 
-    story: VertexInfo = field(default=None)
+    story: enums.VertexInfo = field(default=None)
 
 
 @dataclass

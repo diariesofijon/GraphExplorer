@@ -1,8 +1,18 @@
 #!/usr/bin/env python
 
+'''
+Enums helps us collect all valided data structures to use it as pairs or any
+bigger collection.
+'''
+
 from enum import Enum
+from collections import defaultdict
+from dataclasses import dataclass, field
 
+from lib import typing
 
+# TODO: convert to the protocol
+@dataclass
 class VertexInfo(Enum):
 
     # TODO: LETS METACLASS IDICATE VERTEXTINFO DUPLICATES
@@ -12,7 +22,7 @@ class VertexInfo(Enum):
     end: typing.GE    = field(hash=True)
     depth: int        = field(default=0)
     edges: int        = field(default=0)
-    story: Dict       = field(default_factory=lambda: defaultdict({}))
+    story: dict       = field(default_factory=lambda: defaultdict({}))
 
     @property
     def maximum_vertex(self):

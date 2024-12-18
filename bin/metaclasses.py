@@ -35,6 +35,7 @@ class MetaChain(MetaConfig):
                 raise config.MetaChain({
                 'existed': 'chain has already arised with this order o eleements',})
             mcs.existed.append(content)
+        kwargs['existed'] = mcs.existed
         return MetaConfig.__prepare__(mcs, name, bases, **kwargs)
 
 
