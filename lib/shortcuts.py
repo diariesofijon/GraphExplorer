@@ -39,6 +39,7 @@ def is_bipartite(edges: List):
     '''
     return len(edges) == 2 and edges[0] == edges[1]
 
+# TODO: convert to the protocol
 def simplest_txt_element(body: str) -> Iterable:
     splited_by_body = body.split(')')
     converting = lambda txt: txt.lstrip(',').strip().split('(')

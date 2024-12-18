@@ -17,6 +17,7 @@ __all__ = ('AbstractElement', 'AbstractChain',
 # TODO: Examine `pickle` module for using pythonic dundermethods
 
 
+# TODO: convert to the protocol
 class AbstractChain(list):
 
     '''

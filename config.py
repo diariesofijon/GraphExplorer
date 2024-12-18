@@ -50,7 +50,7 @@ META_CLASS_TRACEBACKS = {
     'existed': 'chain has already arised with this order o eleements',
 }
 
-
+# TODO: convert to the protocol
 class ConfigError(abc.ABC, Exception):
 
     ''' Abstract class of config exception '''
