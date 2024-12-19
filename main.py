@@ -54,7 +54,26 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
     graph: lib.typing.GM = field()
     repr_type: type      = int
     file_path: str       = config.FILE_DATA_CONTAINER_NAME
+    _vertex = None
     # TODO: make clear console interface
+
+
+    @property
+    def vertex_info(self):
+        if not self._vertex:
+            self._vertex: lib.enums.VertexInfo(
+                start=self.graph.tree_topic,
+                end=self.graph.dfs()[1][0::-1],
+                depth=len(self.graph),
+                edges=0,
+                story=dict({}))
+        return self._vertex
+
+    @vertex_info.setter
+    def vertex_info(self, vertex):
+        if vertex is not self._vertex:
+            vertex.story[self.graph] = self._vertex
+            self._vertex = vertex
 
 
     def choice(self, element: lib.typing.GE, index: int):

@@ -20,7 +20,7 @@ from elements import RepresentativeElement
 
 __all__ = (
     'StringByStringGraphMask', 'FrozenTree', 'VertexSearcingTree',
-    'VertexInfo', 'EisenhoverMatrixConvertationMask',)
+    'EisenhoverMatrixConvertationMask',)
 
 # https://www.javatpoint.com/bfs-vs-dfs#:~:text=DFS%20stands%20for%20Depth%20First,Last%20In%20First%20Out)%20principle
 
@@ -69,6 +69,13 @@ class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
     def __init__(self, *args, **kwargs):
         print(super(), type(super()), self, type(self))
         super().__init__(self, *args, **kwargs)
+        self._vertex: lib.enums.VertexInfo(
+                start=self.tree_topic,
+                end=self.dfs()[1][0::-1],
+                depth=len(self),
+                edges=0,
+                story=dict({}))
+        self.vertexes[self] = self._vertex
         print(self.vertexes)
 
     def exclude_tree(self, story: VertexInfo) -> typing.Tree:
@@ -89,7 +96,7 @@ class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
     def find_the_rigth_tree_by_vertex_size(self, count: int=5, recursion: bool=False):
         # But also the best count has two varients of the tree
         # the best tree has smallest count of edge
-        story, edges_lengths = {count: self.tree_topic}, len(self)
+        story, edges_lengths = self.vertexes, len(self)
         # TODO: THIRDLY: convert this for loop to recursion conception from another function interface!!!
         for element in self:
             # TODO: FOURTHLY: move it logic to the VertexInfo

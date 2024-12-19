@@ -5,10 +5,13 @@
 # TODO: explaine the main idea of elements
 
 from typing import Optional, List
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from bin import metaclasses
 from lib import base
+
+
+__all__ = ('RepresentativeElement', 'EisehowerElement')
 
 
 @dataclass(frozen=True, kw_only=True, slots=True, unsafe_hash=True)
@@ -39,3 +42,11 @@ class RepresentativeElement(base.BaseElement):
             yield from next_el.walk(left=left, chain=chain)
         else:
             yield self
+
+
+@dataclass(frozen=True, kw_only=True, slots=True, unsafe_hash=True)
+class EisehowerElement(RepresentativeElement):
+
+    part: str         = field(default='A')
+    edges_based: bool = field(default=False)
+    unconnected: bool = field(default=False)

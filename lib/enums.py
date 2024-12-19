@@ -34,3 +34,20 @@ class VertexInfo(Enum):
     #         raise config.ValidationError
     #     if self.depth and self.start is self.end:
     #         raise config.ValidationError
+
+    def choose_graph(self, depth=1):
+        '''
+        Find the best variant of the Tree or of the Graph that can be instanced
+        from the result and based on O(log[n]) algorithm.
+        '''
+        pair, length, last_graph = (self, self), len(self.edges), None
+        for graph, vertex in self.story.items():
+            if graph is last_graph:
+                continue
+            last_graph = graph
+            if length < len(vertex.edges):
+                length, pair = len(vertex.edges), (vertex, pair[0])
+            depth -= 1
+            if not depth:
+                break
+        return pair
