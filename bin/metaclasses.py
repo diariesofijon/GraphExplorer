@@ -28,15 +28,14 @@ class MetaChain(MetaConfig):
 
     existed: list[set] = []
 
-    @classmethod
-    def __prepare__(mcs, name, bases, **kwargs):
-        if (content := set(kwargs['iterable'])):
+    def __new__(mcs, cls, bases, attrs):
+        if (content := set(attrs['iterable'])):
             if content in mcs.existed:
                 raise config.MetaChain({
                 'existed': 'chain has already arised with this order o eleements',})
             mcs.existed.append(content)
-        kwargs['existed'] = mcs.existed
-        return MetaConfig.__prepare__(mcs, name, bases, **kwargs)
+        attrs['existed'] = mcs.existed
+        return MetaConfig.__new__(mcs, cls, bases, attrs)
 
 
 class MetaLoader(MetaConfig):
