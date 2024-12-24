@@ -97,15 +97,13 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
             print(vertex['right'])
             if vertex['size'] == 2:
                 print(depth, " is the best")
-                choice = input("Should we continue: 0 - no, 1 - yes ")
-                if int(choice):
+                if not int(input("Should we continue: 0 - no, 1 - yes ")):
                     break
+                print('CHOSE THE BEST TOPIC') # LET IT BE IN THE CODE
+                if int(input('left is 0 or right is 1')):
+                    print(vertex['right'])
                 else:
-                    print('CHOSE THE BEST TOPIC') # LET IT BE IN THE CODE
-                    if int(input('left is 0 or right is 1')):
-                        print(vertex['right'])
-                    else:
-                        print(vertex['left'])
+                    print(vertex['left'])
         else:
             if int(input("Should we continue: 0 - no, 1 - yes ")):
                 self.show_graph_image_slice()
