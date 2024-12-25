@@ -1,13 +1,51 @@
 #!/usr/bin/env python
 
-from protocol import Protocol
-from typing import runtime_checkable, Iterable
+from typing import Protocol, runtime_checkable, Iterable
 
 
 @runtime_checkable
-class ProtocolInfo(Protocol):
-	pass
+class RepresintationProtocol(Protocol):
+    pass
+
 
 @runtime_checkable
-class ProtocolRepresintation(Protocol):
-	pass
+class InfoProtocol(Protocol):
+
+    @property
+    def counted_protocol(self) -> Protocol:
+        ...
+
+
+@runtime_checkable
+class GraphInfoProtocol(InfoProtocol):
+
+    @property
+    def top(self) -> RepresintationProtocol:
+        ...
+
+    @property
+    def depth(self) -> int:
+        ...
+
+
+@runtime_checkable
+class VertexProtocol(GraphInfoProtocol):
+
+    @property
+    def last(self) -> RepresintationProtocol:
+        ...
+
+    @property
+    def edges(self) -> Iterable[RepresintationProtocol]:
+        ...
+
+    @property
+    def story(self) -> dict:
+        ...
+
+    @property
+    def maximum_vertex(self) -> int:
+        ...
+
+    def choose_graph(self, depth: int):
+        ...

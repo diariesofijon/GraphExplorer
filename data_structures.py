@@ -70,11 +70,9 @@ class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
         print(super(), type(super()), self, type(self))
         super().__init__(self, *args, **kwargs)
         self._vertex: lib.enums.VertexInfo(
-                start=self.tree_topic,
-                end=self.dfs()[1][0::-1],
-                depth=len(self),
-                edges=0,
-                story=dict({}))
+                top=self.tree_topic,
+                last=self.dfs()[1][0::-1],
+                depth=len(self))
         self.vertexes[self] = self._vertex
         print(self.vertexes)
 

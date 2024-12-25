@@ -62,11 +62,9 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
     def vertex_info(self):
         if not self._vertex:
             self._vertex: lib.enums.VertexInfo(
-                start=self.graph.tree_topic,
-                end=self.graph.dfs()[1][0::-1],
-                depth=len(self.graph),
-                edges=0,
-                story=dict({}))
+                top=self.graph.tree_topic,
+                last=self.graph.dfs()[1][0::-1],
+                depth=len(self.graph))
         return self._vertex
 
     @vertex_info.setter

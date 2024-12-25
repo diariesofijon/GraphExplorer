@@ -18,21 +18,21 @@ class VertexInfo(Enum):
     # TODO: LETS METACLASS IDICATE VERTEXTINFO DUPLICATES
 
     # tree: typing.Tree = field(default=None)
-    start: typing.GE  = field(hash=True)
-    end: typing.GE    = field(hash=True)
-    depth: int        = field(default=0)
-    edges: int        = field(default=0)
-    story: dict       = field(default_factory=lambda: defaultdict({}))
+    top: typing.GE  = field(hash=True)
+    last: typing.GE = field(hash=True)
+    depth: int      = field(default=0)
+    edges: int      = field(default_factory=lambda: list())
+    story: dict     = field(default_factory=lambda: defaultdict({}))
 
     @property
-    def maximum_vertex(self):
+    def maximum_vertex(self) -> int:
         return max(self.story.keys())
 
     # def validation(self):
     #     ''' Have to explain why the Tree could not exists '''
-    #     if not (self.tree and self.start and self.end):
+    #     if not (self.tree and self.top and self.last):
     #         raise config.ValidationError
-    #     if self.depth and self.start is self.end:
+    #     if self.depth and self.top is self.last:
     #         raise config.ValidationError
 
     def choose_graph(self, depth=1):
