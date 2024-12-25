@@ -2,10 +2,7 @@
 
 from typing import Protocol, runtime_checkable, Iterable
 
-
-@runtime_checkable
-class RepresintationProtocol(Protocol):
-    pass
+from lib import typing
 
 
 @runtime_checkable
@@ -20,7 +17,7 @@ class InfoProtocol(Protocol):
 class GraphInfoProtocol(InfoProtocol):
 
     @property
-    def top(self) -> RepresintationProtocol:
+    def top(self) -> typing.GE:
         ...
 
     @property
@@ -32,11 +29,11 @@ class GraphInfoProtocol(InfoProtocol):
 class VertexProtocol(GraphInfoProtocol):
 
     @property
-    def last(self) -> RepresintationProtocol:
+    def last(self) -> typing.GE:
         ...
 
     @property
-    def edges(self) -> Iterable[RepresintationProtocol]:
+    def edges(self) -> Iterable[typing.GE]:
         ...
 
     @property

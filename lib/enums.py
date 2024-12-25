@@ -5,23 +5,21 @@ Enums helps us collect all valided data structures to use it as pairs or any
 bigger collection.
 '''
 
-from enum import Enum
+from enum import Enum, unique
 from collections import defaultdict
 from dataclasses import dataclass, field
 
 from lib import typing
 
-# TODO: convert to the protocol
+
+@unique
 @dataclass
 class VertexInfo(Enum):
 
-    # TODO: LETS METACLASS IDICATE VERTEXTINFO DUPLICATES
-
-    # tree: typing.Tree = field(default=None)
     top: typing.GE  = field(hash=True)
     last: typing.GE = field(hash=True)
     depth: int      = field(default=0)
-    edges: int      = field(default_factory=lambda: list())
+    edges: list     = field(default_factory=lambda: list())
     story: dict     = field(default_factory=lambda: defaultdict({}))
 
     @property
