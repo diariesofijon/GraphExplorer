@@ -64,7 +64,7 @@ class StringByStringGraphMask(base.BaseGraphMask):
 class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
 
     loader_class: typing.Loader = drivers.EisenhoverMatrixLoader
-    vertexes: Dict              = field(default_factory=lambda: {})
+    story: enums.VertexInfo     = field(default=None)
 
     def __init__(self, *args, **kwargs):
         print(super(), type(super()), self, type(self))
@@ -107,3 +107,35 @@ class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
         if recursion and count:
             yield from self.find_the_rigth_tree_by_vertex_size(
                 count=(count-1), recursion=recursion)
+
+    _main = None
+
+    @property
+    def main_variant(self):
+        if self._main:
+            return self._main
+        return self
+
+    @main_variant.setter
+    def main_variant(self, graph):
+        self._main = graph
+
+    def setup_main_variant(self, vertex):
+        vertex.story += self.vertex.story
+        loader = drivers.MockLoader()
+        loader.whole_chain = self.loader.whole_chain
+        self.main_variant = EisenhoverMatrixConvertationMask(
+            loader=drivers.MockLoader(), story=vertex, tree_topic=vertex.top)
+        return self.main_variant
+
+    def get_A_part_matrix(self):
+        return self.dfs(vertex=self.story.story.values()[-1])[1]
+
+    def get_B_part_matrix(self):
+        return self.main_variant.story.story.edges
+
+    def get_C_part_matrix(self):
+        result = self.dfs(vertex=self.story.story.values()[-1])[0]
+        for edge in result:
+            if edge not in self.main_variant.story.story.edges:
+                yield edge

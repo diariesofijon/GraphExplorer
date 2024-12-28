@@ -12,7 +12,7 @@ from typing import FrozenSet, Tuple, List, Optional, Dict, Iterable, Callable
 
 import config
 from bin import metaclasses
-from lib import shortcuts, abc, drivers, typing
+from lib import shortcuts, abc, drivers, typing, chains
 
 
 __all__ = ('BaseTree', 'BaseElement', 'BaseGraphMask')
@@ -42,6 +42,7 @@ class BaseElement(abc.AbstractElement):
     body: str        = field(default='')
     graph: typing.GM = field(hash=True, default=None)
     separater: str   = config.SEPARATES.get('NODE')
+    chain_type       = chains.TxtChain
 
     def __str__(self):
         return f'{self.part} id: {self.id} = {self.grouped} - {self.body}'\
@@ -124,7 +125,6 @@ class BaseLoader(abc.AbstractLoader):
 
     @property
     def whole_chain(self) -> Iterable:
-        self.loads_from(self.file_path)
         separeted: Iterable = self.cached_context.split(self.separeter)
         yield from self.mapping_fuction(self.chain_mapping_fuction, separeted)
 

@@ -14,8 +14,17 @@ from typing import (
 
 import config
 from bin import metaclasses
-from lib import base, shortcuts, typing
+from lib import base, shortcuts, typing, chains
 from elements import RepresentativeElement
+
+
+class MockLoader(base.BaseLoader):
+
+    file_path: str           = ''
+    element_class: typing.GE = RepresentativeElement
+
+    def loads_from(self, path: str, mode: str='r', starts: int= 0):
+        return []
 
 
 class TxtLoader(base.BaseLoader):
@@ -31,6 +40,7 @@ class EisenhoverMatrixLoader(TxtLoader):
     __metaclass__          = metaclasses.MetaEisenhoverLoader
 
     ids_map: Dict[str,int] = {'A1.': 0, 'B2.': 0, 'C3.': 0, 'L4.': 0}
+    chain_type = chains.EisenhowerMatrixChain
 
     def mapping_fuction(self, func: Callable, sequence: Iterable):
         for line in sequence:

@@ -126,6 +126,11 @@ class AbstractLoader(abc.ABC):
 
     @property
     @abc.abstractmethod
+    def chain_type(self):
+        pass
+
+    @property
+    @abc.abstractmethod
     def ids(self) -> FrozenSet:
         pass
 

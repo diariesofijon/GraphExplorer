@@ -19,6 +19,7 @@ from typing import Optional
 from data_structures import EisenhoverMatrixConvertationMask
 import config
 import lib
+from bin import metaclasses, protocols
 
 
 # TODO: make cool architecture console interface
@@ -59,16 +60,16 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
 
 
     @property
-    def vertex_info(self):
+    def vertex_info(self) -> protocols.VertexProtocol:
         if not self._vertex:
-            self._vertex: lib.enums.VertexInfo(
+            self._vertex = lib.enums.VertexInfo(
                 top=self.graph.tree_topic,
                 last=self.graph.dfs()[1][0::-1],
                 depth=len(self.graph))
         return self._vertex
 
     @vertex_info.setter
-    def vertex_info(self, vertex):
+    def vertex_info(self, vertex: protocols.VertexProtocol):
         if vertex is not self._vertex:
             vertex.story[self.graph] = self._vertex
             self._vertex = vertex
@@ -106,6 +107,20 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
             if int(input("Should we continue: 0 - no, 1 - yes ")):
                 self.show_graph_image_slice()
         print('bye-bye')
+
+    def choose_graph(self):
+        depth = int(input('Inter the depth: '))
+        pair = self.graph.story.choose_graph(depth=depth)
+        print('Choose the main graph from two expected: ')
+        print('FIRST GRAPH:\n', pair[0])
+        print('SECOND GRAPH:\n', pair[1])
+        index = 0 if input('is first (yes/no)') == 'no' else 1
+        main = self.graph.setup_main_variant(pair[index])
+        print(main, '\n\n----------------------------------------')
+        with open(config.FILE_DATA_CONTAINER_NAME, 'w') as txt:
+            txt.write(str(main))
+        # TODO: make graph loaded from FILE_DATA_CONTAINER_NAME and show
+        # how it would be look as matrix eisenhower
 
 
     def walk(self):

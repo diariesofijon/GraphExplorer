@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from typing import Protocol, runtime_checkable, Iterable
+from typing import Protocol, runtime_checkable, Iterable, Tuple, List
 
 from lib import typing
 

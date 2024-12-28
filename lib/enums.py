@@ -9,7 +9,7 @@ from enum import Enum, unique
 from collections import defaultdict
 from dataclasses import dataclass, field
 
-from lib import typing
+from lib import typing, chains
 
 
 @unique
@@ -19,7 +19,8 @@ class VertexInfo(Enum):
     top: typing.GE  = field(hash=True)
     last: typing.GE = field(hash=True)
     depth: int      = field(default=0)
-    edges: list     = field(default_factory=lambda: list())
+    edges: list     = field(
+        default_factory=lambda: chains.EisenhowerMatrixChain())
     story: dict     = field(default_factory=lambda: defaultdict({}))
 
     @property
