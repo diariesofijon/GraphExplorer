@@ -76,7 +76,7 @@ class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
         self.vertexes[self] = self._vertex
         print(self.vertexes)
 
-    def exclude_tree(self, story: VertexInfo) -> typing.Tree:
+    def exclude_tree(self, story: enums.VertexInfo) -> typing.Tree:
         # TODO: tree's class have be located in the class fields versus
         # tree's instance have be initialized from this bound method?
         '''
