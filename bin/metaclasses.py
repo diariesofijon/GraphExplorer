@@ -54,7 +54,7 @@ class MetaYamlLoader(MetaLoader):
     pass
 
 
-class MetaEisehowerLoader(MetaLoader):
+class MetaEisenhowerLoader(MetaLoader):
     pass
 
 

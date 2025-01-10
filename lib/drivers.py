@@ -37,7 +37,7 @@ class TxtLoader(base.BaseLoader):
 
 class EisenhoverMatrixLoader(TxtLoader):
 
-    __metaclass__          = metaclasses.MetaEisenhoverLoader
+    __metaclass__          = metaclasses.MetaEisenhowerLoader
 
     ids_map: Dict[str,int] = {'A1.': 0, 'B2.': 0, 'C3.': 0, 'L4.': 0}
     chain_type = chains.EisenhowerMatrixChain

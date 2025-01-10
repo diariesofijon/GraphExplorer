@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from typing import Protocol, runtime_checkable, Iterable, Tuple, List
+from typing import Protocol, runtime_checkable TODO: LET IT WOULD BE WORK CORRECTLY WI INSPECT.SIGNATURE, Iterable, Tuple, List
 
 from lib import typing
 
@@ -9,7 +9,7 @@ __all__ = ('InfoProtocol', 'GraphInfoProtocol', 'VertexProtocol',
     'GraphsDunderMethodsMixinProtocol', 'GraphProtocol', 'TreeProtocol')
 
 
-@runtime_checkable
+# @runtime_checkable TODO: LET IT WOULD BE WORK CORRECTLY WI INSPECT.SIGNATURE
 class InfoProtocol(Protocol):
 
     @property
@@ -17,7 +17,7 @@ class InfoProtocol(Protocol):
         ...
 
 
-@runtime_checkable
+# @runtime_checkable TODO: LET IT WOULD BE WORK CORRECTLY WI INSPECT.SIGNATURE
 class GraphInfoProtocol(InfoProtocol):
 
     @property
@@ -29,7 +29,7 @@ class GraphInfoProtocol(InfoProtocol):
         ...
 
 
-@runtime_checkable
+# @runtime_checkable TODO: LET IT WOULD BE WORK CORRECTLY WI INSPECT.SIGNATURE
 class VertexProtocol(GraphInfoProtocol):
 
     @property
@@ -76,7 +76,7 @@ class GraphsDunderMethodsMixinProtocol(Protocol):
         ...
 
 
-@runtime_checkable
+# @runtime_checkable TODO: LET IT WOULD BE WORK CORRECTLY WI INSPECT.SIGNATURE
 def GraphProtocol(Protocol):
 
     def is_bipartite(self) -> bool:
@@ -92,7 +92,7 @@ def GraphProtocol(Protocol):
         ...
 
 
-@runtime_checkable
+# @runtime_checkable TODO: LET IT WOULD BE WORK CORRECTLY WI INSPECT.SIGNATURE
 class TreeProtocol(Protocol):
 
     def graph(self) -> GraphProtocol:
