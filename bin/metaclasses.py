@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import config
-import lib
+import lib.typing
 
 
 '''
@@ -11,7 +11,7 @@ First of all metaclass would be key tool to make whole composition.
 
 
 __all__ = ('MetaChain', 'MetaLoader', 'MetaTxtLoader', 'MetaCsvLoader',
-    'MetaYamlLoader', 'MetaEisehowerLoader', 'MetaElement', 'MetaGraph',
+    'MetaYamlLoader', 'MetaEisenhowerLoader', 'MetaElement', 'MetaGraph',
     'MetaRepresentativeGraph', 'MetaRepresentativeElement', 'MetaAnalogGraph',
     'MetaTree', 'MetaAnalogTree', 'MetaFrozenTree', 'MetaConfig')
 

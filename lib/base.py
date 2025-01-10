@@ -63,9 +63,10 @@ class BaseElement(abc.AbstractElement):
     @property
     def parents(self) -> typing.Chain:
         ''' Nodes that have pointed by the node '''
-        parents = self.graph.loader.chain_type()
+        parents = self.graph.loader.chain_type([])
         for _, ids in shortcuts.simplest_txt_element(self.body):
-            parents += [self.graph[int(i)] for i in shortcuts.get_ids(ids)]
+            ids = shortcuts.get_ids(ids) if isinstance(ids, str) else ids
+            parents += [self.graph[int(i)] for i in ids]
         return parents
 
 

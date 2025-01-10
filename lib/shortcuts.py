@@ -41,7 +41,11 @@ def is_bipartite(edges: List):
 
 # TODO: convert to the protocol
 def simplest_txt_element(body: str) -> Iterable:
+    def splited(pair: list) -> list:
+        if len(pair) < 2:
+            return pair[0], ''
+        return pair[0], pair[1].split(',')
     splited_by_body = body.split(')')
     converting = lambda txt: txt.lstrip(',').strip().split('(')
     looped = map(converting, splited_by_body)
-    yield from map(lambda pair: (pair[0], pair[1].split(',')), looped)
+    yield from map(splited, looped)
