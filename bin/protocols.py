@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-from typing import Protocol, runtime_checkable TODO: LET IT WOULD BE WORK CORRECTLY WI INSPECT.SIGNATURE, Iterable, Tuple, List
-
+from typing import Protocol, Iterable, Tuple, List
+# , runtime_checkable TODO: LET IT WOULD BE WORK CORRECTLY WI INSPECT.SIGNATURE
 from lib import typing
 
 
