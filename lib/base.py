@@ -63,11 +63,20 @@ class BaseElement(abc.AbstractElement):
     @property
     def parents(self) -> typing.Chain:
         ''' Nodes that have pointed by the node '''
-        parents = self.graph.loader.chain_type([])
-        for _, ids in shortcuts.simplest_txt_element(self.body):
-            ids = shortcuts.get_ids(ids) if isinstance(ids, str) else ids
-            parents += [self.graph[int(i)] for i in ids]
-        return parents
+        # parents = self.graph.loader.chain_type([])
+        # for _, ids in shortcuts.simplest_txt_element(self.body):
+        #     ids = shortcuts.get_ids(ids) if isinstance(ids, str) else ids
+        #     parents += [self.graph[int(i)] for i in ids]
+        # return parents
+        _parents = self.graph.loader.chain_type([])
+        splited_by_body = self.body.split(')')
+        for group in splited_by_body[0:len(splited_by_body)-1]:
+            part, ids = group.lstrip(',').strip().split('(')
+            part = list(self.graph.loader.ids_map.keys())[int(part)-1]
+            for index in shortcuts.get_ids(ids.split(',')):
+                index = int(index)
+                _parents.append(self.graph[index])
+        return _parents
 
 
 class BaseLoader(abc.AbstractLoader):

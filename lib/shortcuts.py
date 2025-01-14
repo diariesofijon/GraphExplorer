@@ -8,13 +8,20 @@ programming priciples.
 from typing import List, Tuple, Iterable
 
 
-def get_ids(name: str, separeter: str='-') -> List[int]:
+def get_ids(name: str | list[str], separeter: str='-', last = None) -> List[int]:
     ''' Clear function that implement name to ids '''
-    if len((tmp := name.split(separeter))) == 2:
-        return list(range(int(tmp[0]), int(tmp[1])+1))
-    elif not name:
-        return []
-    return [int(name)]
+    result = last if last else []
+    if isinstance(name, list):
+        for n in name:
+            result += get_ids(name=n, separeter=separeter)
+    else:
+        if len((tmp := name.split(separeter))) == 2:
+            result += list(range(int(tmp[0]), int(tmp[1])+1))
+        elif not name:
+            result += ['']
+        else:
+            result += [int(name)]
+    return result
 
 def eisenhower_part_spliter(tmp: str) -> Tuple[str]:
     ''' Split eisenhower part's name to a Tuple '''
