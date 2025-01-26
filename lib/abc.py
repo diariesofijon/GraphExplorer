@@ -148,6 +148,10 @@ class AbstractLoader(abc.ABC):
     	pass
 
     @abc.abstractmethod
+    def separeted(self, tmp: str):
+        pass
+
+    @abc.abstractmethod
     def chain_mapping_fuction(self, *args, **kwargs):
         pass
 

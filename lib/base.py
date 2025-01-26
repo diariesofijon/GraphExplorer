@@ -71,12 +71,9 @@ class BaseElement(abc.AbstractElement):
         #     parents += [self.graph[int(i)] for i in ids]
         # return parents
         _parents = self.graph.loader.chain_type([])
-        splited_by_body = self.body.split(')')
-        for group in splited_by_body[0:len(splited_by_body)-1]:
-            _, ids = group.lstrip(',').strip().split('(')
-            for index in shortcuts.get_ids(ids.split(',')):
-                index = int(index)
-                _parents.append(self.graph[index])
+        for index in shortcuts.get_ids([*self.graph.loader.pairs.values()]):
+            index = int(index)
+            _parents.append(self.graph[index])
         return _parents
 
 
@@ -139,9 +136,19 @@ class BaseLoader(abc.AbstractLoader):
         separeted: Iterable = self.cached_context.split(self.separeter)
         yield from self.mapping_fuction(self.chain_mapping_fuction, separeted)
 
+    def separeted(self, tmp: str) -> tuple:
+        def func(x):
+            x = x.lstrip(',').strip().split('(')
+            if len(x) < 2:
+                x = [None, *x]
+            return x
+        grouped, body = shortcuts.separete_from_text_element(tmp)
+        pairs = {p: [*ids.split(',')] for p, ids in map(func,body.split(')'))}
+        return grouped, body, pairs
+
     def convert_element(self, tmp: str) -> typing.GGE:
         ''' Engine convertor '''
-        grouped, body = shortcuts.separete_from_text_element(tmp)
+        grouped, body, self.pairs = self.separeted(tmp)
         self._last_index += 1
         return self.element_class(graph=self.instance_graph,
             id=self._last_index, grouped=grouped, body=body)

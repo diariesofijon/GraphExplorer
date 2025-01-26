@@ -14,6 +14,8 @@ def get_ids(name: str | list[str], separeter: str='-', last = None) -> List[int]
     if isinstance(name, list):
         for n in name:
             result += get_ids(name=n, separeter=separeter)
+    elif name == '-':
+        result = []
     else:
         if len((tmp := name.split(separeter))) == 2:
             result += list(range(int(tmp[0]), int(tmp[1])+1))
