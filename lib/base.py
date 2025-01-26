@@ -45,7 +45,9 @@ class BaseElement(abc.AbstractElement):
     chain_type       = chains.TxtChain
 
     def __str__(self):
-        return f'{self.part} id: {self.id} = {self.grouped} - {self.body}'\
+        # TODO: it would be located in the Eisenhowever logic
+        part = self.part if self.part else 'SIMPLE'
+        return f'{part} id: {self.id} = {self.grouped} - {self.body}'\
 
     def __del__(self):
         '''
@@ -71,8 +73,7 @@ class BaseElement(abc.AbstractElement):
         _parents = self.graph.loader.chain_type([])
         splited_by_body = self.body.split(')')
         for group in splited_by_body[0:len(splited_by_body)-1]:
-            part, ids = group.lstrip(',').strip().split('(')
-            part = list(self.graph.loader.ids_map.keys())[int(part)-1]
+            _, ids = group.lstrip(',').strip().split('(')
             for index in shortcuts.get_ids(ids.split(',')):
                 index = int(index)
                 _parents.append(self.graph[index])
