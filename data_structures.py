@@ -67,14 +67,12 @@ class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
     story: enums.VertexInfo     = field(default=None)
 
     def __init__(self, *args, **kwargs):
-        print(super(), type(super()), self, type(self))
-        super().__init__(self, *args, **kwargs)
-        self._vertex: lib.enums.VertexInfo(
+        self._vertex = enums.VertexInfo(
                 top=self.tree_topic,
                 last=self.dfs()[1][0::-1],
                 depth=len(self))
         self.vertexes[self] = self._vertex
-        print(self.vertexes)
+        super().__init__(*args, **kwargs)
 
     def exclude_tree(self, story: enums.VertexInfo) -> typing.Tree:
         # TODO: tree's class have be located in the class fields versus

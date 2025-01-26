@@ -22,6 +22,7 @@ class MockLoader(base.BaseLoader):
 
     file_path: str           = ''
     element_class: typing.GE = RepresentativeElement
+    chain_type               = chains.BaseChain
 
     def loads_from(self, path: str, mode: str='r', starts: int= 0):
         return []
@@ -33,6 +34,7 @@ class TxtLoader(base.BaseLoader):
 
     file_path: str           = config.FILE_DATA_LOADER_NAME_TXT
     element_class: typing.GE = RepresentativeElement
+    chain_type               = chains.TxtChain
 
 
 class EisenhoverMatrixLoader(TxtLoader):
@@ -40,7 +42,7 @@ class EisenhoverMatrixLoader(TxtLoader):
     __metaclass__          = metaclasses.MetaEisenhowerLoader
 
     ids_map: Dict[str,int] = {'A1.': 0, 'B2.': 0, 'C3.': 0, 'L4.': 0}
-    chain_type = chains.EisenhowerMatrixChain
+    chain_type             = chains.EisenhowerMatrixChain
 
     def mapping_fuction(self, func: Callable, sequence: Iterable):
         for line in sequence:
