@@ -63,7 +63,7 @@ class StringByStringGraphMask(base.BaseGraphMask):
 @dataclass
 class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
 
-    loader_class: typing.Loader = drivers.EisenhoverMatrixLoader
+    loader_class: typing.Loader = drivers.EisenhowerMatrixLoader
     story: enums.VertexInfo     = field(default=None)
 
     def __init__(self, *args, **kwargs):

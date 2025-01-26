@@ -8,13 +8,14 @@ programming priciples.
 from typing import List, Tuple, Iterable
 
 
+# TODO: concept this switch code to AST principles
 def get_ids(name: str | list[str], separeter: str='-', last = None) -> List[int]:
     ''' Clear function that implement name to ids '''
     result = last if last else []
     if isinstance(name, list):
         for n in name:
             result += get_ids(name=n, separeter=separeter)
-    elif name == '-':
+    elif name == separeter:
         result = []
     else:
         if len((tmp := name.split(separeter))) == 2:

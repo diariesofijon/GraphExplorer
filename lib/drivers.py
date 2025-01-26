@@ -37,7 +37,7 @@ class TxtLoader(base.BaseLoader):
     chain_type               = chains.TxtChain
 
 
-class EisenhoverMatrixLoader(TxtLoader):
+class EisenhowerMatrixLoader(TxtLoader):
 
     __metaclass__          = metaclasses.MetaEisenhowerLoader
 
