@@ -57,10 +57,21 @@ class BaseElement(abc.AbstractElement):
             del child
 
     @property
+    def children_index(self):
+        return f'children-{repr(self)}-{self.id}'
+
+    @property
+    def parents_index(self):
+        return f'parents-{repr(self)}-{self.id}'
+
+    @property
     def children(self) -> typing.Chain:
         ''' Nodes that linked on the node '''
         param: Callable = lambda el: self in el.parents
-        return self.graph.loader.chain_type([*self.graph]).filtered(param)
+        if not self.globals.get(self.children_index):
+            self.globals[self.children_index] = \
+            self.graph.loader.chain_type([*self.graph]).filtered(param)
+        return self.globals[self.children_index]
 
     @property
     def parents(self) -> typing.Chain:
@@ -70,10 +81,14 @@ class BaseElement(abc.AbstractElement):
         #     ids = shortcuts.get_ids(ids) if isinstance(ids, str) else ids
         #     parents += [self.graph[int(i)] for i in ids]
         # return parents
+        if (_parents := self.globals.get(self.parents_index)):
+            return _parents
         _parents = self.graph.loader.chain_type([])
         for index in shortcuts.get_ids([*self.graph.loader.pairs.values()]):
+            print(index)
             index = int(index)
             _parents.append(self.graph[index])
+        self.globals[self.parents_index] = _parents
         return _parents
 
 

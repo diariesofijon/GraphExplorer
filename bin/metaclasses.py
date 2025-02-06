@@ -59,7 +59,16 @@ class MetaEisenhowerLoader(MetaLoader):
 
 
 class MetaElement(MetaConfig):
-    pass
+
+    cache: dict[list] = dict()
+
+    def __call__(mcs):
+        element = super(MetaElement, mcs).__call__()
+        name = f'{repr(element)}-{len(mcs.cache.values())}'
+        mcs.cache[f'children-{name}'] = []
+        mcs.cache[f'parents-{name}']  = []
+        element.globals = mcs.cache
+        return element
 
 
 class MetaRepresentativeElement(MetaElement):
