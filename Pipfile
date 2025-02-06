@@ -27,6 +27,8 @@ setuptools = "75.3.0"
 tomlkit = "0.13.2"
 virtualenv = "20.27.1"
 objgraph = "3.6.2"
+ipython = "8.32.0"
+ipdb = "0.13.13"
 
 [requires]
 python_version = "3.12.6"
