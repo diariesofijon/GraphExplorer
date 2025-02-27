@@ -11,19 +11,17 @@ from typing import List, Tuple, Iterable
 # TODO: concept this switch code to AST principles
 def get_ids(name: str | list[str], separeter: str='-', last = None) -> List[int]:
     ''' Clear function that implement name to ids '''
+    # use += instead of = because it would be something in
     result = last if last else []
     if isinstance(name, list):
-        for n in name:
-            result += get_ids(name=n, separeter=separeter)
-    elif name == separeter:
-        result = []
+        # recursion needed for change type of name that has not any deep!
+        result += [get_ids(name=n, separeter=separeter) for n in name]
+    elif len((tmp := name.split(separeter))) == 2:
+        result += list(range(int(tmp[0]), int(tmp[1])+1))
+    elif not name:
+        result += ['']
     else:
-        if len((tmp := name.split(separeter))) == 2:
-            result += list(range(int(tmp[0]), int(tmp[1])+1))
-        elif not name:
-            result += ['']
-        else:
-            result += [int(name)]
+        result += [int(name)]
     return result
 
 def eisenhower_part_spliter(tmp: str) -> Tuple[str]:

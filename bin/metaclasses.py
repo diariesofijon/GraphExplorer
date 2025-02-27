@@ -32,7 +32,7 @@ class MetaChain(MetaConfig):
         if (content := set(attrs['iterable'])):
             if content in mcs.existed:
                 raise config.MetaChain({
-                'existed': 'chain has already arised with this order o eleements',})
+                'existed': 'chain has already arised with this order',})
             mcs.existed.append(content)
         attrs['existed'] = mcs.existed
         return MetaConfig.__new__(mcs, cls, bases, attrs)
