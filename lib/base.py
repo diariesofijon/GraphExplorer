@@ -18,7 +18,7 @@ from lib import shortcuts, abc, drivers, typing, chains
 __all__ = ('BaseTree', 'BaseElement', 'BaseGraphMask')
 
 
-def index_factory(return_type=str):
+def index_factory(return_type=int):
 
     _index = -1
 
@@ -37,6 +37,7 @@ class BaseElement(abc.AbstractElement):
     __metaclass__    = metaclasses.MetaElement
 
     id: str          = field(hash=True, default_factory=index_factory())
+    globals: dict    = field(default_factory=lambda:dict())
     part: str        = field(default='')
     grouped: str     = field(default='')
     body: str        = field(default='')
@@ -49,12 +50,12 @@ class BaseElement(abc.AbstractElement):
         part = self.part if self.part else 'SIMPLE'
         return f'{part} id: {self.id} = {self.grouped} - {self.body}'\
 
-    def __del__(self):
-        '''
-        Pythonic Element's Garbadge Collector
-        '''
-        for child in self.children:
-            del child
+    # def __del__(self):
+    #     '''
+    #     Pythonic Element's Garbadge Collector
+    #     '''
+    #     for child in self.children:
+    #         del child
 
     @property
     def children_index(self):
@@ -84,6 +85,7 @@ class BaseElement(abc.AbstractElement):
         if (_parents := self.globals.get(self.parents_index)):
             return _parents
         _parents = self.graph.loader.chain_type([])
+        print(self.id)
         for index in shortcuts.get_ids([*self.graph.loader.pairs.values()]):
             print(index)
             index = int(index)
@@ -115,18 +117,18 @@ class BaseLoader(abc.AbstractLoader):
     def __len__(self):
         return len(self.ids)
 
-    def __del__(self):
-        '''
-        Pythonic Loader's Garbadge Collector
-        Don't use when it is not pythonic dataclass
-        '''
-        # del self.file_path
-        # del self.separeter
-        # del self.element_class
-        # del self._ids
-        # del self._map
-        # del self.cached_context
-        pass
+    # def __del__(self):
+    #     '''
+    #     Pythonic Loader's Garbadge Collector
+    #     Don't use when it is not pythonic dataclass
+    #     '''
+    #     # del self.file_path
+    #     # del self.separeter
+    #     # del self.element_class
+    #     # del self._ids
+    #     # del self._map
+    #     # del self.cached_context
+    #     pass
 
     @property
     def map(self):
@@ -154,11 +156,14 @@ class BaseLoader(abc.AbstractLoader):
     def separeted(self, tmp: str) -> tuple:
         def func(x):
             x = x.lstrip(',').strip().split('(')
-            if len(x) < 2:
-                x = [None, *x]
+            # if len(x) < 2:
+            #     x = [None, *x]
             return x
         grouped, body = shortcuts.separete_from_text_element(tmp)
+        print(grouped)
+        print(body)
         pairs = {p: [*ids.split(',')] for p, ids in map(func,body.split(')'))}
+        print(pairs)
         return grouped, body, pairs
 
     def convert_element(self, tmp: str) -> typing.GGE:
@@ -222,18 +227,18 @@ class BaseGraphMask(abc.AbstractGraphMask):
         # return isinstance(element, self.element_class)
         return element in self.loader.map.items()
 
-    def __del__(self):
-        '''
-        Pythonic Graph's Garbadge Collector
-        '''
-        # del self.file
-        # del self.separeter
-        # del self.element_class
-        # del self.loader
-        # del self._visited
-        # del self._queue
-        # del self._topic
-        pass
+    # def __del__(self):
+    #     '''
+    #     Pythonic Graph's Garbadge Collector
+    #     '''
+    #     # del self.file
+    #     # del self.separeter
+    #     # del self.element_class
+    #     # del self.loader
+    #     # del self._visited
+    #     # del self._queue
+    #     # del self._topic
+    #     pass
 
     _loader = None
 

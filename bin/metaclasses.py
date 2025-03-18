@@ -62,12 +62,12 @@ class MetaElement(MetaConfig):
 
     cache: dict[list] = dict()
 
-    def __call__(mcs):
-        element = super(MetaElement, mcs).__call__()
+    def __new__(mcs, cls, bases, attrs):
+        element = MetaConfig.__new__(mcs, cls, bases, attrs)
         name = f'{repr(element)}-{len(mcs.cache.values())}'
-        mcs.cache[f'children-{name}'] = []
-        mcs.cache[f'parents-{name}']  = []
-        element.globals = mcs.cache
+        element.globals[f'children-{name}'] = []
+        element.globals[f'parents-{name}']  = []
+        mcs.cache = element.globals
         return element
 
 

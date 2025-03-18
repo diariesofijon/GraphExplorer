@@ -23,21 +23,16 @@ from bin import metaclasses, protocols
 
 
 # TODO: make cool architecture console interface
-class AbstractGraphWalkingInterface(abc.ABC):
+class BaseGraphWalkingInterface():
 
     vertexes = {}
     _tree = None
 
     @property
-    @abc.abstractmethod
-    def graph(self) -> lib.typing.GM:
-        ''' StringRegularExpressionMaskAbstract '''
-
-    @property
     def tree(self):
         if self._tree:
             return self._tree
-        return self.graph.exclude_tree()
+        return self.graph.exclude_tree(story=self.graph.vertexes)
 
     def defined_maximum_vertex_chain_index(self, maximum=5):
         self.graph.defined_maximum_vertex: int = maximum
@@ -49,30 +44,14 @@ class AbstractGraphWalkingInterface(abc.ABC):
             yield vertex_info[1], self.vertexes[vertex_info[1]]
 
 
-@dataclass
-class CliGraphWalking(AbstractGraphWalkingInterface):
+class CliGraphWalking(BaseGraphWalkingInterface):
 
-    graph: lib.typing.GM = field()
     repr_type: type      = int
     file_path: str       = config.FILE_DATA_CONTAINER_NAME
-    _vertex = None
-    # TODO: make clear console interface
 
 
-    @property
-    def vertex_info(self) -> protocols.VertexProtocol:
-        if not self._vertex:
-            self._vertex = lib.enums.VertexInfo(
-                top=self.graph.tree_topic,
-                last=self.graph.dfs()[1][0::-1],
-                depth=len(self.graph))
-        return self._vertex
-
-    @vertex_info.setter
-    def vertex_info(self, vertex: protocols.VertexProtocol):
-        if vertex is not self._vertex:
-            vertex.story[self.graph] = self._vertex
-            self._vertex = vertex
+    def __init__(self, graph: lib.typing.GM):
+        self.graph = graph
 
 
     def choice(self, element: lib.typing.GE, index: int):
@@ -166,11 +145,15 @@ class CliGraphWalking(AbstractGraphWalkingInterface):
 
 
 if __name__ == '__main__':
-    interface = CliGraphWalking(EisenhoverMatrixConvertationMask())
+    print('='*9, 'PROGRAM   CREATED', '='*9)
+    mask = EisenhoverMatrixConvertationMask()
+    print('='*9, 'MASK      CREATED', '='*9)
+    interface = CliGraphWalking(mask)
+    print('='*9, 'INTREFACE CREATED', '='*9)
     # TODO: cut it bellow when issuses will be closed
-    print(interface.graph)
-    print(interface)
+    # print(interface.graph)
+    # print(interface)
+    interface.show_graph_image_slice()
     with open(interface.file_path, 'w', encoding='utf8') as file:
         file.write(str(interface.graph))
     # interface.a_parth_matrix()
-    interface.show_graph_image_slice()

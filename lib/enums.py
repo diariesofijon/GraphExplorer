@@ -5,23 +5,26 @@ Enums helps us collect all valided data structures to use it as pairs or any
 bigger collection.
 '''
 
-from enum import Enum, unique
+# from enum import Enum, unique
 from collections import defaultdict
 from dataclasses import dataclass, field
 
 from lib import typing, chains
 
 
-@unique
+# @unique
 @dataclass
-class VertexInfo(Enum):
+class VertexInfo:
 
     top: typing.GE  = field(hash=True)
     last: typing.GE = field(hash=True)
     depth: int      = field(default=0)
     edges: list     = field(
-        default_factory=lambda: chains.EisenhowerMatrixChain())
-    story: dict     = field(default_factory=lambda: defaultdict({}))
+        default_factory=lambda: chains.EisenhowerMatrixChain([]))
+    story: dict     = field(default_factory=lambda: defaultdict())
+
+# @unique
+# class VertexInfo(Enum):
 
     @property
     def maximum_vertex(self) -> int:

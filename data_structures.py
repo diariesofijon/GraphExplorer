@@ -47,8 +47,8 @@ class StringByStringGraphMask(base.BaseGraphMask):
 
     __metaclasses__ = metaclasses.MetaRepresentativeGraph
 
-    element_class: typing.GE = RepresentativeElement
-    loader: typing.Loader    = field(default_factory=drivers.TxtLoader)
+    element_class: typing.GE    = RepresentativeElement
+    loader_class: typing.Loader = drivers.TxtLoader
 
     ''' Sensetive turn off '''
 
@@ -66,13 +66,13 @@ class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
     loader_class: typing.Loader = drivers.EisenhowerMatrixLoader
     story: enums.VertexInfo     = field(default=None)
 
+    vertexes = {}
+
     def __init__(self, *args, **kwargs):
-        self._vertex = enums.VertexInfo(
-                top=self.tree_topic,
-                last=self.dfs()[1][0::-1],
-                depth=len(self))
-        self.vertexes[self] = self._vertex
         super().__init__(*args, **kwargs)
+        self._vertex = enums.VertexInfo(
+                top=self.tree_topic, last=self.tree_topic, depth=len(self))
+        self.vertexes[self.tree_topic.id] = self._vertex
 
     def exclude_tree(self, story: enums.VertexInfo) -> typing.Tree:
         # TODO: tree's class have be located in the class fields versus
@@ -81,6 +81,8 @@ class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
         Find the sequence which can work like a tree. Raise
         Vaildation Error if it has no any tree variant
         '''
+        print(self[34])
+        print(self._ids)
         return VertexSearcingTree(self, story=story,
             element_ids=self._ids, top=self.tree_topic)
 

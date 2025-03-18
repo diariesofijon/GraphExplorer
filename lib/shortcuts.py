@@ -16,10 +16,10 @@ def get_ids(name: str | list[str], separeter: str='-', last = None) -> List[int]
     if isinstance(name, list):
         # recursion needed for change type of name that has not any deep!
         result += [get_ids(name=n, separeter=separeter) for n in name]
+    elif not name or name == separeter:
+        result += ['']
     elif len((tmp := name.split(separeter))) == 2:
         result += list(range(int(tmp[0]), int(tmp[1])+1))
-    elif not name:
-        result += ['']
     else:
         result += [int(name)]
     return result
@@ -38,7 +38,7 @@ def separete_from_text_element(tmp: str, separeter: str=':'):
         case 0:
             return 'splited', 'splited'
         case 1:
-            return splited, splited
+            return splited[0], splited[0]
         case _:
             return splited[0], splited[1]
 

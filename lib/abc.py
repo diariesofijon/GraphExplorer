@@ -159,11 +159,11 @@ class AbstractLoader(abc.ABC):
     def mapping_fuction(self, func: Callable, sequence: Iterable):
         pass
 
-    @abc.abstractmethod
-    def __del__(self):
-        '''
-        Pythonic Loader's Garbadge Collector
-        '''
+    # @abc.abstractmethod
+    # def __del__(self):
+    #     '''
+    #     Pythonic Loader's Garbadge Collector
+    #     '''
 
 
 class AbstractTree(collections.abc.Mapping):
@@ -209,10 +209,10 @@ class AbstractTree(collections.abc.Mapping):
     # def __sizeof__(self):
     #     ''' sys.getsizeof(self) '''
 
-    @property
-    @abc.abstractmethod
-    def element_ids(self) -> Iterable[int]:
-        ''' Frozen set of all trees ids'''
+    # @property
+    # @abc.abstractmethod
+    # def element_ids(self) -> Iterable[int]:
+    #     ''' Frozen set of all trees ids'''
 
     @property
     @abc.abstractmethod
@@ -244,11 +244,11 @@ class AbstractTree(collections.abc.Mapping):
     # def topological_sort(self):
     #     ''' Topological sequence '''
 
-    @abc.abstractmethod
-    def __del__(self):
-        '''
-        Pythonic Tree's Garbadge Collector
-        '''
+    # @abc.abstractmethod
+    # def __del__(self):
+    #     '''
+    #     Pythonic Tree's Garbadge Collector
+    #     '''
 
 
 class AbstractGraphMask(collections.abc.Collection):
@@ -329,11 +329,11 @@ class AbstractGraphMask(collections.abc.Collection):
         # TODO: in first time it doesn't matter
         return False
 
-    @abc.abstractmethod
-    def __del__(self):
-        '''
-        Pythonic Graph's Garbadge Collector
-        '''
+    # @abc.abstractmethod
+    # def __del__(self):
+    #     '''
+    #     Pythonic Graph's Garbadge Collector
+    #     '''
 
 
 class AbstractElement(collections.abc.Hashable):
@@ -419,8 +419,8 @@ class AbstractElement(collections.abc.Hashable):
     def parents(self):
         ''' Nodes that have pointed by the node '''
 
-    @abc.abstractmethod
-    def __del__(self):
-        '''
-        Pythonic Element's Garbadge Collector
-        '''
+    # @abc.abstractmethod
+    # def __del__(self):
+    #     '''
+    #     Pythonic Element's Garbadge Collector
+    #     '''
