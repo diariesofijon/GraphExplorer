@@ -85,10 +85,7 @@ class BaseElement(abc.AbstractElement):
         if (_parents := self.globals.get(self.parents_index)):
             return _parents
         _parents = self.graph.loader.chain_type([])
-        print(self.id)
-        for index in shortcuts.get_ids([*self.graph.loader.pairs.values()]):
-            print(index)
-            index = int(index)
+        for index in shortcuts.get_ids([*self.graph.loader.pairs.values()]):            index = int(index)
             _parents.append(self.graph[index])
         self.globals[self.parents_index] = _parents
         return _parents

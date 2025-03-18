@@ -15,12 +15,12 @@ from typing import Optional, List, Union, Iterable, FrozenSet, Dict
 import config
 from bin import metaclasses
 from lib import drivers, base, abc, typing, shortcuts, enums
-from elements import RepresentativeElement
+from elements import RepresentativeElement, EisenhowerElement
 
 
 __all__ = (
     'StringByStringGraphMask', 'FrozenTree', 'VertexSearcingTree',
-    'EisenhoverMatrixConvertationMask',)
+    'EisenhowerMatrixConvertationMask',)
 
 # https://www.javatpoint.com/bfs-vs-dfs#:~:text=DFS%20stands%20for%20Depth%20First,Last%20In%20First%20Out)%20principle
 
@@ -61,10 +61,11 @@ class StringByStringGraphMask(base.BaseGraphMask):
 
 
 @dataclass
-class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
+class EisenhowerMatrixConvertationMask(StringByStringGraphMask):
 
     loader_class: typing.Loader = drivers.EisenhowerMatrixLoader
     story: enums.VertexInfo     = field(default=None)
+    element_class: typing.GE    = EisenhowerElement
 
     vertexes = {}
 
@@ -86,7 +87,7 @@ class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
         return VertexSearcingTree(self, story=story,
             element_ids=self._ids, top=self.tree_topic)
 
-    def get_orthodox_eisenhover_info(self, index: int) -> Dict:
+    def get_orthodox_Eisenhower_info(self, index: int) -> Dict:
         part: str = self.loader.get_part_by_id(index)
         executive_id: int = index - self.loader.ids_map[part]
         return {'part': part, 'executive_id': executive_id}
@@ -124,7 +125,7 @@ class EisenhoverMatrixConvertationMask(StringByStringGraphMask):
         vertex.story += self.vertex.story
         loader = drivers.MockLoader()
         loader.whole_chain = self.loader.whole_chain
-        self.main_variant = EisenhoverMatrixConvertationMask(
+        self.main_variant = EisenhowerMatrixConvertationMask(
             loader=drivers.MockLoader(), story=vertex, tree_topic=vertex.top)
         return self.main_variant
 

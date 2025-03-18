@@ -16,7 +16,7 @@ import abc
 from dataclasses import dataclass, field
 from typing import Optional
 
-from data_structures import EisenhoverMatrixConvertationMask
+from data_structures import EisenhowerMatrixConvertationMask
 import config
 import lib
 from bin import metaclasses, protocols
@@ -46,8 +46,8 @@ class BaseGraphWalkingInterface():
 
 class CliGraphWalking(BaseGraphWalkingInterface):
 
-    repr_type: type      = int
-    file_path: str       = config.FILE_DATA_CONTAINER_NAME
+    repr_type: type = int
+    file_path: str  = config.FILE_DATA_CONTAINER_NAME
 
 
     def __init__(self, graph: lib.typing.GM):
@@ -146,7 +146,7 @@ class CliGraphWalking(BaseGraphWalkingInterface):
 
 if __name__ == '__main__':
     print('='*9, 'PROGRAM   CREATED', '='*9)
-    mask = EisenhoverMatrixConvertationMask()
+    mask = EisenhowerMatrixConvertationMask()
     print('='*9, 'MASK      CREATED', '='*9)
     interface = CliGraphWalking(mask)
     print('='*9, 'INTREFACE CREATED', '='*9)

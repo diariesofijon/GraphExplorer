@@ -11,7 +11,7 @@ from bin import metaclasses
 from lib import base
 
 
-__all__ = ('RepresentativeElement', 'EisehowerElement')
+__all__ = ('RepresentativeElement', 'EisenhowerElement')
 
 
 @dataclass(frozen=True, kw_only=True, slots=True, unsafe_hash=True)
@@ -36,6 +36,7 @@ class RepresentativeElement(base.BaseElement):
         Walking down through the graph to the deep to see how grap was changed
         '''
         if chain:
+            chain = chain.copy()
             index = chain.pop()
             next_el = self.children[index] if left else self.children.end(index)
             yield next_el
@@ -45,7 +46,7 @@ class RepresentativeElement(base.BaseElement):
 
 
 @dataclass(frozen=True, kw_only=True, slots=True, unsafe_hash=True)
-class EisehowerElement(RepresentativeElement):
+class EisenhowerElement(RepresentativeElement):
 
     part: str         = field(default='A')
     edges_based: bool = field(default=False)
