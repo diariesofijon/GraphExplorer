@@ -46,8 +46,8 @@ class BaseGraphWalkingInterface():
 
 class CliGraphWalking(BaseGraphWalkingInterface):
 
-    repr_type: type = int
-    file_path: str  = config.FILE_DATA_CONTAINER_NAME
+    repr_type = int
+    file_path = config.FILE_DATA_CONTAINER_NAME
 
 
     def __init__(self, graph: lib.typing.GM):
@@ -105,7 +105,7 @@ class CliGraphWalking(BaseGraphWalkingInterface):
     def walk(self):
         ''' Walking down through the graph'''
         print('\n\n\n')
-        if (index := self.repr_type(input())) not in {1,2,3,4}:
+        if (index := int(input())) not in {1,2,3,4}:
             raise TypeError(ValueError(f'{str(index)} have invalid type'))
         # print('CHAIN', graph.exclude_tree().longest_chain)
         def iterate(el=self.graph.tree_topic):

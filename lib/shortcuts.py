@@ -9,10 +9,11 @@ from typing import List, Tuple, Iterable
 
 
 # TODO: concept this switch code to AST principles
-def get_ids(name: str | list[str], separeter: str='-', last = None) -> List[int]:
+def get_ids(name: str, separeter: str='-', last=None) -> List[int]:
     ''' Clear function that implement name to ids '''
     # use += instead of = because it would be something in
     result = last if last else []
+    # TODO: resolve recursion firstly by name strictly be str and aint list
     if isinstance(name, list):
         # recursion needed for change type of name that has not any deep!
         result += [get_ids(name=n, separeter=separeter) for n in name]
