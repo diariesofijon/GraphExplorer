@@ -35,8 +35,7 @@ class RepresentativeElement(base.BaseElement):
         '''
         Walking down through the graph to the deep to see how grap was changed
         '''
-        if chain:
-            chain = chain.copy()
+        if (chain := chain.copy()):
             index = chain.pop()
             next_el = self.children[index] if left else self.children.end(index)
             yield next_el

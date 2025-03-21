@@ -90,9 +90,9 @@ class MetaError(ConfigError):
             traceback += f'The field {field} is {description}'
         return traceback
 
-    @property
-    def meta_dir(self):
-        return self._error_cache_output
+    # @property
+    # def meta_dir(self):
+    #     return self._error_cache_output
 
     def __init__(self, *args, meta_dir: dict[str, str], **kwargs):
         if not meta_dir or isinstance(meta_dir, dict):
@@ -110,6 +110,13 @@ class MetaMroError(MetaError):
 class MetaExistedChainError(MetaError):
 
     constant_undefined: str = 'bin.metaclasses.MetaChain.existed'
+
+
+class ThatIsNotGraph(MetaError):
+
+    to_do_message: str = 'Use another structures which are actually graph'
+    constant_undefined: str = 'lib.chains.GraphChain'
+    traceback_message: str = 'TypeError: wrong type of structure'
 
 
 class UndefinedConstant(ConfigError):
