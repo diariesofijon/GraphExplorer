@@ -85,7 +85,8 @@ class BaseElement(abc.AbstractElement):
         if (_parents := self.globals.get(self.parents_index)):
             return _parents
         _parents = self.graph.loader.chain_type([])
-        for index in shortcuts.get_ids([*self.graph.loader.pairs.values()]):            index = int(index)
+        for index in shortcuts.get_ids([*self.graph.loader.pairs.values()]):
+            index = int(index)
             _parents.append(self.graph[index])
         self.globals[self.parents_index] = _parents
         return _parents
@@ -151,10 +152,11 @@ class BaseLoader(abc.AbstractLoader):
         yield from self.mapping_fuction(self.chain_mapping_fuction, separeted)
 
     def separeted(self, tmp: str) -> tuple:
+        # WORKS PRETTY WELL DONT TOUCH IT
         def func(x):
             x = x.lstrip(',').strip().split('(')
-            # if len(x) < 2:
-            #     x = [None, *x]
+            if len(x) < 2:
+                x = [None, *x]
             return x
         grouped, body = shortcuts.separete_from_text_element(tmp)
         print(grouped)
