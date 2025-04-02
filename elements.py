@@ -31,7 +31,7 @@ class RepresentativeElement(base.BaseElement):
         ''' Texted view of parents of the elemenet '''
         return self.separater.join(str(parent) for parent in self.parents)
 
-    def walk(self, left: bool = True, chain: Optional[List] = None):
+    def walk(self, left: bool = True, chain: List = []):
         '''
         Walking down through the graph to the deep to see how grap was changed
         '''

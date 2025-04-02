@@ -68,8 +68,8 @@ class BaseElement(abc.AbstractElement):
     @property
     def children(self) -> typing.Chain:
         ''' Nodes that linked on the node '''
-        param: Callable = lambda el: self in el.parents
         if not self.globals.get(self.children_index):
+            param: Callable = lambda el: self in el.parents
             self.globals[self.children_index] = \
             self.graph.loader.chain_type([*self.graph]).filtered(param)
         return self.globals[self.children_index]
@@ -85,10 +85,9 @@ class BaseElement(abc.AbstractElement):
         if (_parents := self.globals.get(self.parents_index)):
             return _parents
         _parents = self.graph.loader.chain_type([])
-        for index in shortcuts.get_ids([*self.graph.loader.pairs.values()]):
+        for index in shortcuts.simplest_txt_element(self.body):
             index = int(index)
             _parents.append(self.graph[index])
-        self.globals[self.parents_index] = _parents
         return _parents
 
 
@@ -151,23 +150,9 @@ class BaseLoader(abc.AbstractLoader):
         separeted: Iterable = self.cached_context.split(self.separeter)
         yield from self.mapping_fuction(self.chain_mapping_fuction, separeted)
 
-    def separeted(self, tmp: str) -> tuple:
-        # WORKS PRETTY WELL DONT TOUCH IT
-        def func(x):
-            x = x.lstrip(',').strip().split('(')
-            if len(x) < 2:
-                x = [None, *x]
-            return x
-        grouped, body = shortcuts.separete_from_text_element(tmp)
-        print(grouped)
-        print(body)
-        pairs = {p: [*ids.split(',')] for p, ids in map(func,body.split(')'))}
-        print(pairs)
-        return grouped, body, pairs
-
     def convert_element(self, tmp: str) -> typing.GGE:
         ''' Engine convertor '''
-        grouped, body, self.pairs = self.separeted(tmp)
+        grouped, body = shortcuts.separete_from_text_element(tmp)
         self._last_index += 1
         return self.element_class(graph=self.instance_graph,
             id=self._last_index, grouped=grouped, body=body)
