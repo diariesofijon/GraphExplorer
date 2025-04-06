@@ -36,7 +36,7 @@ class BaseGraphWalkingInterface():
 
     def defined_maximum_vertex_chain_index(self, maximum=5):
         self.graph.defined_maximum_vertex: int = maximum
-        for vertex_info in self.tree.find_the_rigth_tree_by_vertex_size():
+        for vertex_info in self.graph.find_the_rigth_tree_by_vertex_size():
             self.vertexes[vertex_info[0]] = {
                 'size': vertex_info[0],
                 'left': vertex_info[2],
@@ -100,7 +100,6 @@ class CliGraphWalking(BaseGraphWalkingInterface):
             txt.write(str(main))
         # TODO: make graph loaded from FILE_DATA_CONTAINER_NAME and show
         # how it would be look as matrix eisenhower
-
 
     def walk(self):
         ''' Walking down through the graph'''

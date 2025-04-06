@@ -86,7 +86,7 @@ class EisenhowerMatrixChain(GraphChain):
     increase_on: int  = 1
 
     def skip_blank(self, element) -> bool:
-        return True # TODO: just for debugging
+        return not self.blank
 
     def store_blank(self, element) -> bool:
         part, indicator = shortcuts.eisenhower_part_spliter(element)

@@ -71,23 +71,17 @@ class BaseElement(abc.AbstractElement):
         if not self.globals.get(self.children_index):
             param: Callable = lambda el: self in el.parents
             self.globals[self.children_index] = \
-            self.graph.loader.chain_type([*self.graph]).filtered(param)
+            self.chain_type([*self.graph]).filtered(param)
         return self.globals[self.children_index]
 
     @property
     def parents(self) -> typing.Chain:
         ''' Nodes that have pointed by the node '''
-        # parents = self.graph.loader.chain_type([])
-        # for _, ids in shortcuts.simplest_txt_element(self.body):
-        #     ids = shortcuts.get_ids(ids) if isinstance(ids, str) else ids
-        #     parents += [self.graph[int(i)] for i in ids]
-        # return parents
         if (_parents := self.globals.get(self.parents_index)):
             return _parents
-        _parents = self.graph.loader.chain_type([])
+        _parents = self.chain_type([])
         for index in shortcuts.simplest_txt_element(self.body):
-            index = int(index)
-            _parents.append(self.graph[index])
+            _parents.append(self.graph[int(index)])
         return _parents
 
 

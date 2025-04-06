@@ -14,7 +14,7 @@ from typing import Optional, List, Union, Iterable, FrozenSet, Dict
 
 import config
 from bin import metaclasses
-from lib import drivers, base, abc, typing, shortcuts, enums
+from lib import drivers, base, typing, shortcuts, enums
 from elements import RepresentativeElement, EisenhowerElement
 
 
@@ -39,7 +39,8 @@ class VertexSearcingTree(FrozenTree):
     ''' Frozen Tree '''
     # TODO: move to the bin/metaclasses.py through the enum.py
 
-    story: enums.VertexInfo = field(default=None)
+    story: enums.VertexInfo  = field(default=None)
+    element_class: typing.GE = EisenhowerElement
 
 
 @dataclass
@@ -85,7 +86,7 @@ class EisenhowerMatrixConvertationMask(StringByStringGraphMask):
         Find the sequence which can work like a tree. Raise
         Vaildation Error if it has no any tree variant
         '''
-        return VertexSearcingTree(self, story=story,
+        return VertexSearcingTree(story=story,
             element_ids=self._ids, top=self.tree_topic)
 
     def get_orthodox_Eisenhower_info(self, index: int) -> Dict:
