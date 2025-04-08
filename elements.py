@@ -31,17 +31,34 @@ class RepresentativeElement(base.BaseElement):
         ''' Texted view of parents of the elemenet '''
         return self.separater.join(str(parent) for parent in self.parents)
 
-    def walk(self, left: bool = True, chain: List = []):
+    def walk(self, left: bool = True):
         '''
         Walking down through the graph to the deep to see how grap was changed
         '''
-        if (chain := chain.copy()):
-            index = chain.pop()
-            next_el = self.children[index] if left else self.children.end(index)
-            yield next_el
-            yield from next_el.walk(left=left, chain=chain)
+        if not self.children:
+            yield self
+        yield (next_el := self.children[0] if left else self.children[-1])
+        yield from next_el.walk(left=left)
+
+    def input_walk(self):
+        '''
+        Walking down through the graph to the deep to see how grap was changed
+        But here you can chose which element of children you want ot pick
+        Point that: works when interface is CLI!!!!
+        '''
+        # TODO: concept this cli to migrate it to the cli.py
+        for index, child in enumerate(self.children):
+            print('-'*20)
+            print(f'index: {index}\ndata:\n{child}')
+            print('\n\n')
         else:
             yield self
+        if (index := int(input('type index:'))) in range(0,len(self.children)-1):
+            yield (next_el := self.children[index])
+            yield from next_el.input_walk()
+        else:
+            print('You have typed wrogn index', index, 'please, try again!')
+            yield from self.input_walk()
 
 
 @dataclass(frozen=True, kw_only=True, slots=True, unsafe_hash=True)

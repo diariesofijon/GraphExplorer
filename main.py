@@ -113,7 +113,7 @@ class CliGraphWalking(BaseGraphWalkingInterface):
                 3 - to get next right, 4 - to get previous right,\
                 5 - to get out of walking')
             tree = self.graph.exclude_tree(self.graph.tree_topic)
-            for element in el.walk(chain=tree.longest_chain):
+            for element in el.walk():
                 print(element)
                 print(element.show_children())
                 # iterate(self.choice(element, index))
