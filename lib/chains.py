@@ -42,9 +42,16 @@ class TxtChain(BaseChain):
 
     blank: bool = False
 
-    # TODO: add any logger to store whole collision
+    # # TODO: add any logger to store whole collision
+    # def store_blank(self, element) -> bool:
+    #     raise ValueError('Unexpected data')
+
+    # temporary code
     def store_blank(self, element) -> bool:
-        raise ValueError('Unexpected data')
+        part, indicator = shortcuts.eisenhower_part_spliter(element)
+        self.whole_parts[str(part)] += self.increase_on
+        return bool(indicator)
+
 
 
 class GraphChain(TxtChain):
@@ -88,7 +95,7 @@ class EisenhowerMatrixChain(GraphChain):
     def skip_blank(self, element) -> bool:
         return not self.blank
 
-    def store_blank(self, element) -> bool:
-        part, indicator = shortcuts.eisenhower_part_spliter(element)
-        self.whole_parts[str(part)] += self.increase_on
-        return bool(indicator)
+    # def store_blank(self, element) -> bool:
+    #     part, indicator = shortcuts.eisenhower_part_spliter(element)
+    #     self.whole_parts[str(part)] += self.increase_on
+    #     return bool(indicator)
