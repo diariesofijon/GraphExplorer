@@ -36,7 +36,7 @@ class RepresentativeElement(base.BaseElement):
         Walking down through the graph to the deep to see how grap was changed
         '''
         if not self.children:
-            yield self
+            return
         yield (next_el := self.children[0] if left else self.children[-1])
         yield from next_el.walk(left=left)
 
@@ -52,7 +52,7 @@ class RepresentativeElement(base.BaseElement):
             print(f'index: {index}\ndata:\n{child}')
             print('\n\n')
         else:
-            yield self
+            return
         if (index := int(input('type index:'))) in range(0,len(self.children)-1):
             yield (next_el := self.children[index])
             yield from next_el.input_walk()

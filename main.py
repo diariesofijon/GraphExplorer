@@ -28,6 +28,9 @@ class BaseGraphWalkingInterface():
     vertexes = {}
     _tree = None
 
+    def __init__(self, graph: lib.typing.GM):
+        self.graph = graph
+
     @property
     def tree(self):
         if self._tree:
@@ -48,10 +51,6 @@ class CliGraphWalking(BaseGraphWalkingInterface):
 
     repr_type = int
     file_path = config.FILE_DATA_CONTAINER_NAME
-
-
-    def __init__(self, graph: lib.typing.GM):
-        self.graph = graph
 
 
     def choice(self, element: lib.typing.GE, index: int):
