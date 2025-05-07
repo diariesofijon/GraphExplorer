@@ -12,13 +12,17 @@ import config
 
 class BaseChain(abc.AbstractChain):
 
-    blank: bool = False
+    # TODO: reimagine conception to undo commented strings
+    # blank: bool = False
+    blank: bool = True
 
     def __init__(self, iterable: Iterable, *args, **kwargs):
-        if self.blank:
-            flambda: Callable[Iterable] = self.skip_blank
-        else:
-            flambda: Callable[Iterable] = self.store_blank
+        # TODO: reimagine conception to undo commented strings
+        # if self.blank:
+        #     flambda: Callable[Iterable] = self.skip_blank
+        # else:
+        #     flambda: Callable[Iterable] = self.store_blank
+        flambda = self.store_blank
         super().__init__(filter(flambda, iterable), *args, **kwargs)
 
     def filtered(self, func) -> typing.Chain:
@@ -40,12 +44,16 @@ class TxtChain(BaseChain):
 
     __metaclass__ = metaclasses.MetaChain
 
-    blank: bool = False
+    # TODO: reimagine conception to undo commented strings
+    # blank: bool = False
+    blank: bool = True
 
-    # # TODO: add any logger to store whole collision
+    # TODO: reimagine conception to undo commented strings
+    # TODO: add any logger to store whole collision
     # def store_blank(self, element) -> bool:
     #     raise ValueError('Unexpected data')
 
+    # TODO: reimagine conception to undo commented strings
     # temporary code
     def store_blank(self, element) -> bool:
         part, indicator = shortcuts.eisenhower_part_spliter(element)
@@ -95,6 +103,7 @@ class EisenhowerMatrixChain(GraphChain):
     def skip_blank(self, element) -> bool:
         return not self.blank
 
+    # TODO: reimagine conception to undo commented strings
     # def store_blank(self, element) -> bool:
     #     part, indicator = shortcuts.eisenhower_part_spliter(element)
     #     self.whole_parts[str(part)] += self.increase_on
