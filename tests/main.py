@@ -10,21 +10,34 @@ import config
 
 class CICDIntegrationCase(unittest.TestCase):
 
-	def setUp(self):
-		self.assertTrue(os.path.exists(config.FILE_DATA_CONTAINER_PATH))q
+    def setUp(self):
+        self.assertTrue(os.path.exists(config.FILE_DATA_CONTAINER_PATH))q
 
-	def test_is_python_3_12(self)
-		self.assertTrue(sys.version.startswith('3.12.6'))
+    def test_is_python_3_12(self)
+        self.assertTrue(sys.version.startswith('3.12.6'))
+
+    def checking_LTS(self):
+        # checking LTS
+        match sys.platform:
+            case 'win32':
+                self.assertTrue(sys.version.startswith('3.12.6')
+            case 'linux':
+                self.assertTrue(sys.version.startswith('3.12.6')
+            case 'darwin':
+                self.assertTrue(sys.version.startswith('3.12.6')
+            case _:
+                assert 'Platform is unavailable to use'
 
 
 def run_test_progression(self, python=sys.version, os=sys.platform):
-	print(f'GRAPH EXPLORER TESTING PROCESS OF PYTHON {python} RUNNED ON {os}.\n')
+    print(f'GRAPH EXPLORER TESTING PROCESS OF PYTHON {python} RUNNED ON {os}.\n')
 
-	suite = unittest.TestSuite()
+    suite = unittest.TestSuite()
 
-	suite.addTest(CICDIntegrationCase('test_is_python_3_12'))
+    suite.addTest(CICDIntegrationCase('test_is_python_3_12'))
+    suite.addTest(CICDIntegrationCase('checking_LTS'))
 
-	return suite
+    return suite
 
 
 if __name__ == '__main__':
