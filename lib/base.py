@@ -28,6 +28,20 @@ def index_factory(return_type=int):
 
     return mechanism
 
+class BasicTextFormatter(abc.AbstractTextFormatter):
+    def format(self, text: str) -> str:
+        lines = text.splitlines()
+        cleaned = []
+        for ln in lines:
+            ln2 = ln.strip()
+            if not ln2:
+                continue
+            if ln2.startswith("#"):  # treat as comment
+                continue
+            ln2 = ln2.replace(" -> ", "->")  # normalize arrow spacing
+            cleaned.append(ln2)
+        return "\n".join(cleaned)
+
 
 @dataclass(frozen=True, kw_only=True, slots=True, unsafe_hash=True)
 class BaseElement(abc.AbstractElement):
