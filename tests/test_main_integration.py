@@ -20,11 +20,11 @@ class CICDIntegrationCase(unittest.TestCase):
         # checking LTS for this platform
         match sys.platform:
             case 'win32':
-                self.assertTrue(sys.version.startswith('3.12.6')
+                self.assertTrue(sys.version.startswith('3.12.6'))
             case 'linux':
-                self.assertTrue(sys.version.startswith('3.12.6')
+                self.assertTrue(sys.version.startswith('3.12.6'))
             case 'darwin':
-                self.assertTrue(sys.version.startswith('3.12.6')
+                self.assertTrue(sys.version.startswith('3.12.6'))
             case _:
                 assert 'Platform is unavailable to use'
 
