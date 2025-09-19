@@ -1,0 +1,46 @@
+# .github/workflows/unittest.yml
+
+name: Python unnittes(built-in module) package
+
+on:
+  push:
+    branches: 
+      - "feature*"
+  pull_request:
+    branches: 
+      - "feature*"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [ '3.12', '3.13' ]  # extend with 3.14+ when available
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Run tests
+      run: |
+        python -m unittest discover -s tests -p "test_*.py"
+
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results-${{ matrix.python-version }}
+        path: |
+          tests/**.xml
+          tests/**.log
