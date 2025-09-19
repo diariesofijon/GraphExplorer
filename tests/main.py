@@ -54,6 +54,79 @@ def run_test_progression(self, python=sys.version, os=sys.platform):
 
     return suite
 
+class TestFormatters(unittest.TestCase):
+    def test_basic_formatter_removes_comments_and_spaces(self):
+        text = "A -> B , C\n# comment\n\nB->C"
+        fmt = drivers.BasicTextFormatter()
+        result = fmt.format(text)
+        self.assertEqual(result, "A->B , C\nB->C")
+
+class TestDrivers(unittest.TestCase):
+    def test_text_driver_loads_graph(self):
+        text = "A->B,C\nB->C"
+        graph = drivers.TextGraphDriver().load(text)
+        self.assertEqual(graph, {"A": ["B", "C"], "B": ["C"]})
+
+    def test_json_driver_loads_graph(self):
+        data = {"A": ["B"], "B": ["C"]}
+        graph = drivers.JsonDriver().load(data)
+        self.assertEqual(graph, {"A": ["B"], "B": ["C"]})
+
+class TestMasks(unittest.TestCase):
+    def test_node_whitelist_mask(self):
+        mask = base.NodeWhitelistMask({"A"})
+        self.assertTrue(mask.allow_node("A"))
+        self.assertFalse(mask.allow_node("B"))
+
+    def test_edge_weight_mask(self):
+        weights = {("A","B"): 2}
+        mask = base.EdgeWeightMask(1, weights)
+        self.assertTrue(mask.allow_edge("A","B"))
+        self.assertFalse(mask.allow_edge("A","C"))
+
+    def test_composite_mask(self):
+        mask1 = base.NodeWhitelistMask({"A"})
+        mask2 = base.NodeWhitelistMask({"B"})
+        comp = base.CompositeMask(mask1, mask2)
+        self.assertFalse(comp.allow_node("A"))
+        self.assertFalse(comp.allow_node("B"))
+
+class TestBaseGraphMask(unittest.TestCase):
+    def setUp(self):
+        self.graph = {"A": ["B"], "B": ["C"], "C": []}
+        self.bg = base.BaseGraphMask(self.graph)
+
+    def test_len_and_contains(self):
+        self.assertEqual(len(self.bg), 3)
+        self.assertIn("A", self.bg)
+        self.assertNotIn("X", self.bg)
+
+    def test_getitem_and_iteration(self):
+        self.assertEqual(self.bg["A"], ["B"])
+        nodes = list(iter(self.bg))
+        self.assertEqual(set(nodes), {"A", "B", "C"})
+
+    def test_dfs(self):
+        visited = self.bg.dfs("A")
+        self.assertEqual(visited, {"A", "B", "C"})
+
+class TestShortcuts(unittest.TestCase):
+    def test_from_text(self):
+        text = "A->B,B\nB->C"
+        g = shortcuts.from_text(text)
+        self.assertEqual(g.dfs("A"), {"A", "B", "C"})
+
+    def test_from_json(self):
+        data = {"A": ["B"], "B": ["C"]}
+        g = shortcuts.from_json(data)
+        self.assertEqual(g.dfs("A"), {"A", "B", "C"})
+
+    def test_with_masks(self):
+        m = shortcuts.with_masks(base.NoMask(), base.NoMask())
+        self.assertTrue(m.allow_node("A"))
+        self.assertTrue(m.allow_edge("A","B"))
+
+
 
 if __name__ == '__main__':
 
