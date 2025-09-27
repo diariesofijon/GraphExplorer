@@ -421,7 +421,7 @@ class AbstractElement(collections.abc.Hashable):
     #     Pythonic Element's Garbadge Collector
     #     '''
 
-class AbstractTextFormatter(ABC):
+class AbstractTextFormatter(abc.ABC):
 
     @abc.abstractmethod
     def format(self, text: str) -> str:
