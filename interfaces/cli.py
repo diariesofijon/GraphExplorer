@@ -4,41 +4,91 @@
 import sys
 
 import data_structures
-import base
+from interfaces import represintation
+import config
+import lib
 
-def walk(graph: base.GM):
+def legacy_walk(graph: lib.typing.GM, *args, **kwargs):
     ''' Walking down through the graph'''
     for element in graph.tree_topic.walk(graph.exclude_tree().longest_chain):
-        print(f'current element {next_element} with index {index}')
-        print('type 1 - to get next left, \
-                2 - to get previous left,\
-                3 - to get next right,    \
-                4 - to get previous right,\
-                5 - to get out of walking')
-        index_type = int(input())
-        if index_type == 5:
-            print('Have a nice day!')
-            sys.exit(0)
-        print(element.show_children())
-        next_element = take_choice(element, index_type)
+        with represintation.pretty_print_element(element, **kwargs) as nel:
+            print(element.show_children())
+            print(f'you had choose {nel.id}')
+    else:
+        print('chain is empty')
     print('chain is ended')
 
-def take_choice(element: base.GE, index: int):
-    ''' Returns next element '''
-    if index not in {1, 2, 3, 4}:
-        raise ValueError('Index ' + str(index) + ' is out of range')
-    next_element = None
-    if index in {1, 3}:
-        index = 0 if index == 1 else -1
-        next_element = element.children[index]
-    else:
-        index = 0 if index == 2 else -1
-        next_element = element.parents[index]
-    return next_element
-
-def show_pretty_graph(graph: base.GM, index: int =1):
+def show_pretty_graph(graph: lib.typing.GM, index: int =1):
     ''' Pretty printing of all graph '''
     print('\n\n\n')
     print(index)
     # starting walking from the first element
-    walk(graph)
+    legacy_walk(graph)
+
+
+class CliGraphWalking(represintation.BaseGraphWalkingInterface):
+
+    repr_type = int
+    file_path = config.FILE_DATA_CONTAINER_NAME
+
+    def show_graph_image_slice(self):
+        maximum = typed if (typed:=int(input('times:'))) else 5
+        for depth, vertex in self.defined_maximum_vertex_chain_index(maximum):
+            print('Depth is ', depth)
+            print('Size is ', vertex['size'])
+            print('vertex left is ')
+            print(vertex['left'])
+            print('vertex right is ')
+            print(vertex['right'])
+            if vertex['size'] == 2:
+                print(depth, " is the best")
+                if not int(input("Should we continue: 0 - no, 1 - yes ")):
+                    break
+                print('CHOSE THE BEST TOPIC') # LET IT BE IN THE CODE
+                if int(input('left is 0 or right is 1')):
+                    print(vertex['right'])
+                else:
+                    print(vertex['left'])
+        else:
+            if int(input("Should we continue: 0 - no, 1 - yes ")):
+                self.show_graph_image_slice()
+        print('bye-bye')
+
+    def choose_graph(self):
+        depth = int(input('Inter the depth: '))
+        pair = self.graph.story.choose_graph(depth=depth)
+        print('Choose the main graph from two expected: ')
+        print('FIRST GRAPH:\n', pair[0])
+        print('SECOND GRAPH:\n', pair[1])
+        index = 0 if input('is first (yes/no)') == 'no' else 1
+        main = self.graph.setup_main_variant(pair[index])
+        print(main, '\n\n----------------------------------------')
+        with open(config.FILE_DATA_CONTAINER_NAME, 'w') as txt:
+            txt.write(str(main))
+        # TODO: make graph loaded from FILE_DATA_CONTAINER_NAME and show
+        # how it would be look as matrix eisenhower
+
+    def walk(self):
+        ''' Walking down through the graph'''
+        print('\n\n\n')
+        legacy_walk(self.graph)
+
+    def a_parth_matrix(self):
+        print('\n\n\n')
+        top = self.graph[56]#self.graph.tree_topic
+        print(''' Walking down through the graph #{top.id}, {top} alongside ''')
+        for index, element in self.graph.exclude_tree(top).longest_chain:
+            kwargs = {'prefix': '-'*42, 'postfix': f'{element} is {index}',
+            'sufix': '------------------END------------------------'}
+            with represintation.pretty_print_element(element, **kwargs) as nel:
+                print(element.show_children())
+                print(f'you had choose {nel.id}')
+
+    def __del__(self):
+        print('Have a nice day!')
+        # TODO: resole the issuses to make it works
+        # https://github.com/python/cpython/issues/86369
+        # https://github.com/python/cpython/issues/70976
+        # with open(self.file_path, 'w', encoding='utf8') as file:
+        #     file.write(str(self.graph))
+        sys.exit(0)
