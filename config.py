@@ -86,7 +86,7 @@ class FormattingError(ConfigError):
 
     to_do_message: str    = \
         'Just see above through the execution stack of the methods'
-    traceback_message str ='That is not supposed to be a field!\n'
+    traceback_message: str ='That is not supposed to be a field!\n'
 
 class JsonError(FormattingError):
 
