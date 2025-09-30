@@ -7,6 +7,7 @@ import data_structures
 from interfaces import represintation
 import config
 import lib
+import templates
 
 def legacy_walk(graph: lib.typing.GM, *args, **kwargs):
     ''' Walking down through the graph'''
@@ -34,21 +35,9 @@ class CliGraphWalking(represintation.BaseGraphWalkingInterface):
     def show_graph_image_slice(self):
         maximum = typed if (typed:=int(input('times:'))) else 5
         for depth, vertex in self.defined_maximum_vertex_chain_index(maximum):
-            print('Depth is ', depth)
-            print('Size is ', vertex['size'])
-            print('vertex left is ')
-            print(vertex['left'])
-            print('vertex right is ')
-            print(vertex['right'])
-            if vertex['size'] == 2:
-                print(depth, " is the best")
-                if not int(input("Should we continue: 0 - no, 1 - yes ")):
-                    break
-                print('CHOSE THE BEST TOPIC') # LET IT BE IN THE CODE
-                if int(input('left is 0 or right is 1')):
-                    print(vertex['right'])
-                else:
-                    print(vertex['left'])
+            vertex_pprint = templates.VertexPrinter(depth, vertex)
+            vertex_pprint.print_status()
+            vertex_pprint.print_choice_prompt()
         else:
             if int(input("Should we continue: 0 - no, 1 - yes ")):
                 self.show_graph_image_slice()

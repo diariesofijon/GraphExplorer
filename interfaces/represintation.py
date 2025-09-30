@@ -12,22 +12,24 @@ from contextlib import ContextDecorator, AbstractContextManager
 
 from bin import protocols as p
 import lib
+import templates
 
 # TODO: declare protocol to exclude useful info from origin source data
 # TODO: RegExp Conception future planning
 
 class pretty_print_element(AbstractContextManager):
 
+    template_class = templates.PrettyPrintPrinter
+
     def __init__(self,
         element:p.AbstractElement, prefix:str='', sufix:str='', postfix=''):
-        self.element = element
+        self.element, self.template = element, self.template_class(element)
         self.prefix, self.postfix, self.sufix = prefix, postfix, sufix
 
     def take_choice(self, index: int):
         ''' Returns next element '''
-        if index not in {1, 2, 3, 4}:
-            raise ValueError('Index ' + str(index) + ' is out of range')
-        if index in {1, 3}:
+        if p:=self.template.print_choice_template(index):ValueError(p)
+        if index % 2:
             index = 0 if index == 1 else -1
             return self.element.children[index]
         index = 0 if index == 2 else -1
@@ -36,29 +38,20 @@ class pretty_print_element(AbstractContextManager):
     @property
     def next_element(self):
         if (index:= int(input('chose id: '))) == 5:
-            print('Have a nice day!')
+            self.template.print_exiting_message()
             sys.exit(0)
         return self.take_choice(index)
 
     def __enter__(self):
-        if self.prefix:
-            print(self.prefix)
-        print(f'current element {self.element} with index {self.element.id}')
-        print('type 1 - to get next left, \
-                2 - to get previous left,\
-                3 - to get next right,    \
-                4 - to get previous right,\
-                5 - to get out of walking')
-        if self.postfix:
-            print(self.postfix)
+        print(self.prefix)
+        self.template.print_menu()
+        print(self.postfix)
         return self.next_element
 
     def __exit__(self, exc_type, exc, exc_tb):
         # TODO: add logging system
-        if self.sufix:
-            print(self.sufix)
-        if isinstance(exc, ValueError):
-            print('You have to reimage data you typed into the input boxes!')
+        print(self.sufix)
+        self.template.print_error_message(exc_type, exc_tb)
         return False
 
 class BaseGraphWalkingInterface():

@@ -8,7 +8,8 @@ from typing import Optional, List
 from dataclasses import dataclass, field
 
 from bin import metaclasses
-from lib import base, chains
+from lib import base, chains, formatters
+import config
 
 
 __all__ = ('RepresentativeElement', 'EisenhowerElement')
@@ -62,9 +63,29 @@ class RepresentativeElement(base.BaseElement):
 
 
 @dataclass(frozen=True, kw_only=True, slots=True, unsafe_hash=True)
+class JSONElement(RepresentativeElement):
+
+    __metaclass__  = metaclasses.MetaJSONElement
+
+    part: str      = field(default='JSON')
+    children: list = field(default_factory=lambda:list())
+    chain_type     = chains.JSONChain
+    formatter_type = formatters.JSONFormatter
+
+    @property
+    def separter(self):
+        raise config.JsonError()
+
+    @property.setter
+    def separter(self, *args, **kwargs):
+        raise config.JsonError()
+
+
+@dataclass(frozen=True, kw_only=True, slots=True, unsafe_hash=True)
 class EisenhowerElement(RepresentativeElement):
 
     part: str         = field(default='A')
     edges_based: bool = field(default=False)
     unconnected: bool = field(default=False)
     chain_type        = chains.EisenhowerMatrixChain
+    formatter_type    = formatters.MatrixEisenhowerTXTFormatter

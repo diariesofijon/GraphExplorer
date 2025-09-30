@@ -58,6 +58,7 @@ class BaseElement(abc.AbstractElement):
     graph: typing.GM = field(hash=True, default=None)
     separater: str   = config.SEPARATES.get('NODE')
     chain_type       = chains.TxtChain
+    formatter_type   = BasicTextFormatter
 
     def __str__(self):
         # TODO: it would be located in the Eisenhowever logic
@@ -94,7 +95,7 @@ class BaseElement(abc.AbstractElement):
         if (_parents := self.globals.get(self.parents_index)):
             return _parents
         _parents = self.chain_type([])
-        for index in shortcuts.simplest_txt_element(self.body):
+        for index in formatter_type().format(self.body):
             _parents.append(self.graph[int(index)])
         return _parents
 

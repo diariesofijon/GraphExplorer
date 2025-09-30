@@ -82,6 +82,18 @@ class ConfigError(abc.ABC, Exception):
         super().__init__(self, last_traceback, *args, **kwargs)
 
 
+class FormattingError(ConfigError):
+
+    to_do_message: str    = \
+        'Just see above through the execution stack of the methods'
+    traceback_message str ='That is not supposed to be a field!\n'
+
+class JsonError(FormattingError):
+
+    constant_undefined: str = \
+        'any JSON fromat are not needed in pre-formatting process,' \
+        'because this framework use built-ins Pythonic library `json`.'
+
 class MetaError(ConfigError):
 
     to_do_message: str = 'See the config to find the missconception'

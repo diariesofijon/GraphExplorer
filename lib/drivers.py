@@ -6,6 +6,7 @@
 Drivers for loading graphs
 '''
 
+import json
 from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import (
@@ -71,9 +72,45 @@ class EisenhowerMatrixLoader(TxtLoader):
 
 class CsvLoader(base.BaseLoader):
 
-    __metaclass__ = metaclasses.MetaCsvLoader
+    __metaclass__ = metaclasses.MetaCSVLoader
 
 
 class YamlLoader(base.BaseLoader):
 
     __metaclass__ = metaclasses.MetaYamlLoader
+
+
+class JsonLoader(base.BaseLoader):
+
+    __metaclass__ = metaclasses.MetaJsonLoader
+
+    @property
+    def map(self):
+        return self._map
+
+    @property
+    def ids(self):
+        return self._ids
+
+    @property
+    def whole_chain(self) -> Iterable:
+        yield from self.mapping_fuction(
+            self.chain_mapping_fuction, json.dump(self.cached_context))
+
+    def convert_element(self, tmp: tuple) -> typing.GGE:
+        ''' Engine convertor '''
+        name, children = tmp
+        self._last_index += 1
+        return self.element_class(graph=self.instance_graph,
+            id=self._last_index, grouped=name, body=repr(tmp))
+
+    # TODO: explain the idea in docs
+    def mapping_fuction(self, func: Callable, sequence: Iterable):
+        if not isinstance(sequence, dict):
+            raise TypeError('sequence could be dicts')
+        yield from map(func, sequence.copy())
+
+    # TODO: explain the idea in docs
+    def chain_mapping_fuction(self, sequence: Dict[str, str]):
+        return self.convert_element(sequence.popitem())
+

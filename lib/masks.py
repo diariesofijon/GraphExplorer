@@ -10,30 +10,46 @@ from bin.protocols import MaskProtocol
 
 
 class NoMask(MaskProtocol):
-    def allow_node(self, node): return True
-    def allow_edge(self, u, v): return True
+
+    def allow_node(self, node):
+        return True
+
+    def allow_edge(self, u, v):
+        return True
 
 
 class NodeWhitelistMask(MaskProtocol):
+
     def __init__(self, allowed_nodes: set[str]):
         self.allowed = set(allowed_nodes)
-    def allow_node(self, node): return node in self.allowed
-    def allow_edge(self, u, v): return True
+
+    def allow_node(self, node):
+        return node in self.allowed
+
+    def allow_edge(self, u, v):
+        return True
 
 
 class EdgeWeightMask(MaskProtocol):
+
     def __init__(self, min_weight: float, weights: dict[tuple[str,str], float]):
         self.min_weight = min_weight
         self.weights = weights
-    def allow_node(self, node): return True
+
+    def allow_node(self, node):
+        return True
+
     def allow_edge(self, u, v):
         return self.weights.get((u, v), float('-inf')) >= self.min_weight
 
 
 class CompositeMask(MaskProtocol):
+
     def __init__(self, *masks: MaskProtocol):
         self.masks = masks
+
     def allow_node(self, node):
         return all(m.allow_node(node) for m in self.masks)
+
     def allow_edge(self, u, v):
         return all(m.allow_edge(u, v) for m in self.masks)

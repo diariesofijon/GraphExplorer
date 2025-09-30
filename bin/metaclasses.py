@@ -10,7 +10,7 @@ First of all metaclass would be key tool to make whole composition.
 '''
 
 
-__all__ = ('MetaChain', 'MetaLoader', 'MetaTxtLoader', 'MetaCsvLoader',
+__all__ = ('MetaChain', 'MetaLoader', 'MetaTxtLoader', 'MetaCSVLoader',
     'MetaYamlLoader', 'MetaEisenhowerLoader', 'MetaElement', 'MetaGraph',
     'MetaRepresentativeGraph', 'MetaRepresentativeElement', 'MetaAnalogGraph',
     'MetaTree', 'MetaAnalogTree', 'MetaFrozenTree', 'MetaConfig')
@@ -46,11 +46,15 @@ class MetaTxtLoader(MetaLoader):
     pass
 
 
-class MetaCsvLoader(MetaLoader):
+class MetaCSVLoader(MetaLoader):
     pass
 
 
 class MetaYamlLoader(MetaLoader):
+    pass
+
+
+class MetaJSONElement(MetaLoader):
     pass
 
 
