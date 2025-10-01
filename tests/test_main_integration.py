@@ -6,7 +6,7 @@ import os
 import os.path
 
 import config
-from . import fixtures
+import fixtures
 from libi import masks
 
 

@@ -59,4 +59,4 @@ def simplest_txt_element(body: str) -> Iterable:
     splited_by_body = body.split(')')
     converting = lambda txt: txt.lstrip(',').strip().split('(')
     looped = map(converting, splited_by_body)
-    yield from map(splited, looped
+    yield from map(splited, looped)
