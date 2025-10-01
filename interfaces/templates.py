@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # pylint: disable=C0103,C0114
 
-from string import Template, templatelib, Formatter
+from string import Template, Formatter
 from typing import Dict, FrozenSet
 
 
@@ -32,7 +32,7 @@ class VertexPrinter:
         vertex_pprint.print_best()
         # Literal text can remain as-is if no variable substitution is needed
         if not int(input("Should we continue: 0 - no, 1 - yes ")):
-            break
+            return
         print('CHOSE THE BEST TOPIC') # LET IT BE IN THE CODE
         if int(input('left is 0 or right is 1')):
             print(self.vertex['right'])

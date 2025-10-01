@@ -10,9 +10,8 @@ import os
 
 from contextlib import ContextDecorator, AbstractContextManager
 
-from bin import protocols as p
 import lib
-import templates
+from interfaces import templates
 
 # TODO: declare protocol to exclude useful info from origin source data
 # TODO: RegExp Conception future planning
@@ -22,7 +21,7 @@ class pretty_print_element(AbstractContextManager):
     template_class = templates.PrettyPrintPrinter
 
     def __init__(self,
-        element:p.AbstractElement, prefix:str='', sufix:str='', postfix=''):
+        element, prefix:str='', sufix:str='', postfix=''):
         self.element, self.template = element, self.template_class(element)
         self.prefix, self.postfix, self.sufix = prefix, postfix, sufix
 

@@ -70,7 +70,7 @@ class EisenhowerMatrixLoader(TxtLoader):
         return (self.convert_element(lines) for _ in ids)
 
 
-class CsvLoader(base.BaseLoader):
+class CSVLoader(base.BaseLoader):
 
     __metaclass__ = metaclasses.MetaCSVLoader
 
@@ -80,9 +80,9 @@ class YamlLoader(base.BaseLoader):
     __metaclass__ = metaclasses.MetaYamlLoader
 
 
-class JsonLoader(base.BaseLoader):
+class JSONLoader(base.BaseLoader):
 
-    __metaclass__ = metaclasses.MetaJsonLoader
+    __metaclass__ = metaclasses.MetaJSONLoader
 
     @property
     def map(self):

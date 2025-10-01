@@ -108,3 +108,7 @@ class EisenhowerMatrixChain(GraphChain):
     #     part, indicator = shortcuts.eisenhower_part_spliter(element)
     #     self.whole_parts[str(part)] += self.increase_on
     #     return bool(indicator)
+
+class JSONChain(GraphChain):
+    pass
+

@@ -5,8 +5,11 @@
 from typing import Dict
 
 import config
-import base
-import shortcuts
+from lib import base, shortcuts
+
+
+class JSONFormatter(base.BasicTextFormatter):
+    pass
 
 
 class MatrixEisenhowerTXTFormatter(base.BasicTextFormatter):

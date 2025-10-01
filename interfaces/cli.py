@@ -4,10 +4,10 @@
 import sys
 
 import data_structures
-from interfaces import represintation
+from interfaces import represintation, templates
 import config
 import lib
-import templates
+
 
 def legacy_walk(graph: lib.typing.GM, *args, **kwargs):
     ''' Walking down through the graph'''

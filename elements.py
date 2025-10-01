@@ -73,11 +73,11 @@ class JSONElement(RepresentativeElement):
     formatter_type = formatters.JSONFormatter
 
     @property
-    def separter(self):
+    def separeter(self):
         raise config.JsonError()
 
-    @property.setter
-    def separter(self, *args, **kwargs):
+    @separeter.setter
+    def separeter(self, value):
         raise config.JsonError()
 
 
