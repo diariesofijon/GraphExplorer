@@ -1,12 +1,52 @@
 #!/usr/bin/env python
 
-from typing import Protocol, Iterable, Tuple, List
+from typing import Protocol, Iterable, Tuple, List, Dict, FrozenSet, Callable, Union
 # , runtime_checkable TODO: LET IT WOULD BE WORK CORRECTLY WI INSPECT.SIGNATURE
 from lib import typing
 
 
 __all__ = ('InfoProtocol', 'GraphInfoProtocol', 'VertexProtocol',
-    'GraphsDunderMethodsMixinProtocol', 'GraphProtocol', 'TreeProtocol')
+    'GraphsDunderMethodsMixinProtocol', 'GraphProtocol', 'TreeProtocol',
+    'ProtocoLoader', 'LoaderDetector',)
+
+
+# --- Loader Protocols ---
+
+class ProtocolLoader(Protocol):
+    """
+    Contract for all loaders (TXT, JSON, YAML, XML, etc.).
+    Each loader should define supported extensions and implement the full
+    loading + mapping API.
+    """
+
+    extensions: List[str]
+
+    def loads_from(self, path: str, type: str, mode: str = "r", starts: int = 0) -> object: ...
+
+    @property
+    def whole_chain(self) -> Iterable: ...
+    @property
+    def element_class(self): ...
+    @property
+    def chain_type(self): ...
+    @property
+    def ids(self) -> FrozenSet: ...
+    @property
+    def map(self) -> Dict: ...
+
+    def convert_element(self, tmp: str): ...
+    def chain_mapping_fuction(self, *args, **kwargs): ...
+    def mapping_fuction(self, func: Callable, sequence: Iterable): ...
+
+
+class LoaderDetector(Protocol):
+    """
+    Protocol for factories (FactoryLoader, MetaFactoryLoader).
+    Responsible for picking the correct loader based on file extension.
+    """
+
+    def detect_loader(self, path: str) -> ProtocolLoader: ...
+    def load(self, path: str, type: str = "r", mode: str = "r", starts: int = 0) -> object: ...
 
 
 # @runtime_checkable TODO: LET IT WOULD BE WORK CORRECTLY WI INSPECT.SIGNATURE
@@ -130,3 +170,5 @@ class MaskProtocol(Protocol):
 
     def allow_edge(self, u: str, v: str) -> bool:
         raise NotImplementedError
+
+

@@ -18,6 +18,46 @@ from bin import metaclasses
 from lib import base, shortcuts, typing, chains
 from elements import RepresentativeElement
 
+# TODO: mugrate it to metaclasses
+from typing import Dict, Type
+from lib.protocols import ProtocolLoader, LoaderDetector
+
+
+class MetaLoader(type):
+    """
+    Metaclass that automatically registers loader classes
+    into the FactoryLoader registry.
+    """
+    def __new__(mcls, name, bases, namespace, **kwargs):
+        cls = super().__new__(mcls, name, bases, namespace)
+        if hasattr(cls, "extensions") and isinstance(getattr(cls, "extensions", None), (list, tuple)):
+            FactoryLoader.register_loader(cls)
+        return cls
+
+
+class FactoryLoader(LoaderDetector, metaclass=MetaLoader):
+    """
+    Central factory for all loaders, powered by MetaLoader.
+    Subclasses auto-register based on their `extensions`.
+    """
+
+    _registry: Dict[str, Type[ProtocolLoader]] = {}
+
+    @classmethod
+    def register_loader(cls, loader_cls: Type[ProtocolLoader]):
+        for ext in loader_cls.extensions:
+            cls._registry[ext.lower()] = loader_cls
+
+    def detect_loader(self, path: str) -> ProtocolLoader:
+        ext = path.split('.')[-1].lower()
+        if ext not in self._registry:
+            raise ValueError(f"No loader registered for extension: {ext}")
+        return self._registry[ext]()
+
+    def load(self, path: str, type: str = "r", mode: str = "r", starts: int = 0):
+        loader = self.detect_loader(path)
+        return loader.loads_from(path, type=type, mode=mode, starts=starts)
+
 
 class MockLoader(base.BaseLoader):
 
