@@ -40,7 +40,7 @@ class BaseChain(abc.AbstractChain):
     def __len__(self) -> int:
         return len(self._data)
 
-    def __iter__(self) -> Iterator[abc.E]:
+    def __iter__(self) -> Iterable[abc.E]:
         return iter(self._data)
 
     def __contains__(self, item: object) -> bool:
