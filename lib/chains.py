@@ -76,7 +76,7 @@ class BaseChain(abc.AbstractChain):
         """First element from index (default first element)."""
         return self._data[index]
 
-    def end(self, index: int = 1) -> adc.E:
+    def end(self, index: int = 1) -> E:
         """Last element from offset (default last element)."""
         return self._data[-index]
 
