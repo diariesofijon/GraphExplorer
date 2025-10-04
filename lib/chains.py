@@ -23,7 +23,7 @@ class BaseChain(abc.AbstractChain):
     blank: bool = True
 
     def __init__(self, 
-        data: Optional[Iterable[abc.E]]= None, unique:bool= True, flambda:Callback = None):
+        data: Optional[abc.GenericChain]= None, unique:bool= True, flambda:Callback = None):
         flambda: Callable = self.flambda if not flambda else flambda
         self._data: List[T] = list(data) if data else []
         if unique:
