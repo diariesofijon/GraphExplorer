@@ -84,7 +84,7 @@ class AbstractChain(list[E], abc.ABC, Generic[E]):
         '''
         return next(filter(lambda x: hash(x) == key, self), None)
 
-    def get_seed(self) -> Iterator[tuple[int, E]]:
+    def get_seed(self) -> Iterable[tuple[int, E]]:
         '''
             Yield index + element pairs (enumerated seed).
         '''
