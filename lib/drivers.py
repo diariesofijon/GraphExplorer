@@ -14,35 +14,19 @@ from typing import (
     Dict, Callable)
 
 import config
-from bin import metaclasses
+from bin import metaclasses, protocols
 from lib import base, shortcuts, typing, chains
 from elements import RepresentativeElement
 
-# TODO: mugrate it to metaclasses
-from typing import Dict, Type
-from lib.protocols import ProtocolLoader, LoaderDetector
 
-
-class MetaLoader(type):
-
-    '''
-        Metaclass that automatically registers loader classes
-    into the FactoryLoader registry.
-    '''
-
-    def __new__(mcls, name, bases, namespace, **kwargs):
-        cls = super().__new__(mcls, name, bases, namespace)
-        if hasattr(cls, "extensions") and isinstance(getattr(cls, "extensions", None), (list, tuple)):
-            FactoryLoader.register_loader(cls)
-        return cls
-
-
-class FactoryLoader(LoaderDetector, metaclass=MetaLoader):
+class FactoryLoader(protocols.LoaderDetector):
 
     '''
         Central factory for all loaders, powered by MetaLoader.
     Subclasses auto-register based on their `extensions`.
     '''
+
+    __metaclass__ = metaclasses.MetaLoader
 
     _registry: Dict[str, Type[ProtocolLoader]] = {}
 

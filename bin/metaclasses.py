@@ -39,10 +39,20 @@ class MetaChain(MetaConfig):
 
 
 class MetaLoader(MetaConfig):
-    pass
+
+    '''
+        Metaclass that automatically registers loader classes
+    into the FactoryLoader registry.
+    '''
+
+    def __new__(mcls, name, bases, namespace, **kwargs):
+        cls = super().__new__(mcls, name, bases, namespace)
+        if hasattr(cls, "extensions") and isinstance(getattr(cls, "extensions", None), (list, tuple)):
+            FactoryLoader.register_loader(cls)
+        return cls
 
 
-class MetaJSONLoader(MetaConfig):
+class MetaJSONLoader(MetaLoader):
     pass
 
 
