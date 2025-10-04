@@ -64,10 +64,10 @@ class BaseChain(abc.AbstractChain):
         # memory footprint of chain
         return super().__sizeof__() + sum(sys.getsizeof(x) for x in self._data)
 
-    def __copy__(self) -> typing.Chain[E]:
+    def __copy__(self) -> typing.Chain:
         return self.__class__(self._data)
 
-    def __deepcopy__(self, memo) -> typing.Chain[E]:
+    def __deepcopy__(self, memo) -> typing.Chain:
         import copy
         return self.__class__(copy.deepcopy(self._data, memo))
 
