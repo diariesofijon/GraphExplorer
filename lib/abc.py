@@ -78,13 +78,13 @@ class AbstractChain(list[E], abc.ABC, Generic[E]):
         '''
         return self[len(self) - index]
     
-    def by_hash(self, key: int) -> Optional[T]:
+    def by_hash(self, key: int) -> Optional[E]:
         '''
             Return element by hash key, if present.
         '''
         return next(filter(lambda x: hash(x) == key, self), None)
 
-    def get_seed(self) -> Iterator[tuple[int, T]]:
+    def get_seed(self) -> Iterator[tuple[int, E]]:
         '''
             Yield index + element pairs (enumerated seed).
         '''
