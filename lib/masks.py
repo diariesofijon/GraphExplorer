@@ -53,3 +53,7 @@ class CompositeMask(MaskProtocol):
 
     def allow_edge(self, u, v):
         return all(m.allow_edge(u, v) for m in self.masks)
+
+
+class RegExpMask(MaskProtocol):
+    pass

@@ -24,10 +24,12 @@ from lib.protocols import ProtocolLoader, LoaderDetector
 
 
 class MetaLoader(type):
-    """
-    Metaclass that automatically registers loader classes
+
+    '''
+        Metaclass that automatically registers loader classes
     into the FactoryLoader registry.
-    """
+    '''
+
     def __new__(mcls, name, bases, namespace, **kwargs):
         cls = super().__new__(mcls, name, bases, namespace)
         if hasattr(cls, "extensions") and isinstance(getattr(cls, "extensions", None), (list, tuple)):
@@ -36,10 +38,11 @@ class MetaLoader(type):
 
 
 class FactoryLoader(LoaderDetector, metaclass=MetaLoader):
-    """
-    Central factory for all loaders, powered by MetaLoader.
+
+    '''
+        Central factory for all loaders, powered by MetaLoader.
     Subclasses auto-register based on their `extensions`.
-    """
+    '''
 
     _registry: Dict[str, Type[ProtocolLoader]] = {}
 
@@ -104,7 +107,7 @@ class EisenhowerMatrixLoader(TxtLoader):
 
     def yielded_convert_element(self, ids: int, lines: str):
         '''
-        Due Eisenhowers logic in the source text file can be plurar lines.
+            Due Eisenhowers logic in the source text file can be plurar lines.
         And each element arised from each line have contains different increased id
         '''
         return (self.convert_element(lines) for _ in ids)

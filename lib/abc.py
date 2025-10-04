@@ -5,7 +5,8 @@
 import abc
 import collections.abc
 from typing import (
-    FrozenSet, Optional, Iterable, TypeVar, Set, Dict, Callable, List)
+    FrozenSet, Optional, Iterable, Protocol,
+    TypeVar, Set, Dict, Callable, List)
 
 
 __all__ = ('AbstractElement', 'AbstractChain',
@@ -16,73 +17,78 @@ __all__ = ('AbstractElement', 'AbstractChain',
 # TODO: Examine `__post_init__ ` for using dataclasses
 # TODO: Examine `pickle` module for using pythonic dundermethods
 
+# could element of graph!
+E = TypeVar('E')
 
-# TODO: convert to the protocol
-class AbstractChain(list):
+class AbstractChain(list[E], abc.ABC, Generic[E]):
 
     '''
         Listening of ids and other numerical order of indicators with widly
     usefull method for searching and slicing any indicator.
     '''
 
-    # TODO: MAKE CHAIN UNIQUE PYTHONIC DATA STRUCTURE
-    # ALSO KNOW AS GENRATOR AND ITERABLE, YAPE!!!!
-
-    # TODO: HOW ARCHITECTURE HAVE TO LOOK LIKE -- READ BELOW
-    # COMPOSITION IS BETTER THAN INHERITANCE!!!
-    # POINT THAT -- CONVERT ALL THIS STUFF TO COMPOSTION LIKE DESIGNED IN
-    # PYTHONIC lib.collections/lib.collections.abc libraries!!!!
-
-    # @property
-    # @abc.abstractmethod
-    # def __buffer__(self):
-    #     ''' memoryview(self) '''
-
-    # @property
-    # @abc.abstractmethod
-    # def __realease_buffer__(self):
-    #     ''' del memoryview(self) '''
-
-    # @property
-    # @abc.abstractmethod
-    # def __copy__(self):
-    #     ''' copy.copy(self) '''
-
-    # @property
-    # @abc.abstractmethod
-    # def __deepcopy__(self, memo):
-    #     ''' copy.deepcopy(self) '''
-
-    # @property
-    # @abc.abstractmethod
-    # def __sizeof__(self):
-    #     ''' sys.getsizeof(self) '''
-
-    def start(self, index: int = 0):
-        ''' First element of the chain from index '''
-        return self[index]
-
-    def end(self, index: int = -1):
-        ''' Last element of the chain from index'''
-        return self[len(self) - index]
-
+    @property
     @abc.abstractmethod
-    def filtered(self, func):
-        '''
-        returns duplicated collection of filtered by the function
-        due pythonic filter
-        '''
-
-    def by_hash(self, key):
-        return filter(lambda x: hash(x) == key, self)[0]
-
-    def get_seed(self):
-        yield from enumerate(self)
+    def __buffer__(self):
+        ''' Produce memoryview(self) '''
 
     @property
     @abc.abstractmethod
+    def __realease_buffer__(self):
+        ''' Produce del memoryview(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __copy__(self):
+        ''' Produce copy.copy(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __deepcopy__(self, memo):
+        ''' Produce copy.deepcopy(self) '''
+
+    @property
+    @abc.abstractmethod
+    def __sizeof__(self):
+        ''' Produce sys.getsizeof(self) '''
+    
+    @abc.abstractmethod
+    def filtered(self, func):
+        '''
+            Returns duplicated collection of filtered by the function
+        due pythonic filter
+        '''
+    
+    @property
+    @abc.abstractmethod
     def blank(self) -> bool:
-        ''' Eximine can chain hold blank lines for meta data or can! '''
+        '''
+            Eximine can chain hold blank lines for meta data or can!
+        '''
+
+    def start(self, index: int = 0):
+        '''
+            First element of the chain from index
+        '''
+        return self[index]
+
+    def end(self, index: int = -1):
+        '''
+            Last element of the chain from index
+        '''
+        return self[len(self) - index]
+    
+    def by_hash(self, key: int) -> Optional[T]:
+        '''
+            Return element by hash key, if present.
+        '''
+        return next(filter(lambda x: hash(x) == key, self), None)
+
+    def get_seed(self) -> Iterator[tuple[int, T]]:
+        '''
+            Yield index + element pairs (enumerated seed).
+        '''
+        yield from enumerate(self)
 
 
 class AbstractLoader(abc.ABC):
@@ -425,4 +431,8 @@ class AbstractTextFormatter(abc.ABC):
 
     @abc.abstractmethod
     def format(self, text: str) -> str:
+        pass
+
+    @abc.abstractmethod
+    def mask(self, kind: AbstractLoader) -> Protocol:
         pass

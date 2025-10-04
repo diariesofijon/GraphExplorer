@@ -4,9 +4,7 @@
 from typing import Iterable, Dict, Tuple, Callable
 
 from bin import metaclasses
-
 from lib import abc, shortcuts, typing
-
 import config
 
 
@@ -16,14 +14,67 @@ class BaseChain(abc.AbstractChain):
     # blank: bool = False
     blank: bool = True
 
-    def __init__(self, iterable: Iterable, *args, **kwargs):
+    def __init__(self, data: Optional[Iterable[T]] = None, unique: bool = True) -> None:
         # TODO: reimagine conception to undo commented strings
         # if self.blank:
         #     flambda: Callable[Iterable] = self.skip_blank
         # else:
         #     flambda: Callable[Iterable] = self.store_blank
         flambda = self.store_blank
+        self._data: List[T] = list(data) if data else []
+        if unique:
+            # ensure uniqueness while preserving order
+            seen = set()
+            self._data = [x for x in self._data if not (x in seen or seen.add(x))]
+        
         super().__init__(filter(flambda, iterable), *args, **kwargs)
+
+    # --- Sequence API ---
+    def __getitem__(self, index: int) -> T:
+        return self._data[index]
+
+    def __len__(self) -> int:
+        return len(self._data)
+
+    def __iter__(self) -> Iterator[T]:
+        return iter(self._data)
+
+    def __contains__(self, item: object) -> bool:
+        return item in self._data
+
+    # --- Pythonic Dunders ---
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self._data!r})"
+
+    def __str__(self) -> str:
+        return f"Chain(len={len(self)}, data={self._data})"
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, AbstractChain) and self._data == other._data
+
+    def __hash__(self) -> int:
+        # Immutable representation for hashing
+        return hash(tuple(self._data))
+
+    def __sizeof__(self) -> int:
+        # memory footprint of chain
+        return super().__sizeof__() + sum(sys.getsizeof(x) for x in self._data)
+
+    def __copy__(self) -> "AbstractChain[T]":
+        return self.__class__(self._data)
+
+    def __deepcopy__(self, memo) -> "AbstractChain[T]":
+        import copy
+        return self.__class__(copy.deepcopy(self._data, memo))
+
+    # --- High-level Utilities ---
+    def start(self, index: int = 0) -> T:
+        """First element from index (default first element)."""
+        return self._data[index]
+
+    def end(self, index: int = 1) -> T:
+        """Last element from offset (default last element)."""
+        return self._data[-index]
 
     def filtered(self, func) -> typing.Chain:
         '''
