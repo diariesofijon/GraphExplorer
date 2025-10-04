@@ -17,6 +17,7 @@ __all__ = ('AbstractElement', 'AbstractChain',
 # TODO: Examine `__post_init__ ` for using dataclasses
 # TODO: Examine `pickle` module for using pythonic dundermethods
 
+# TODO: convert it to protocol
 # could element of graph!
 E = TypeVar('E')
 
