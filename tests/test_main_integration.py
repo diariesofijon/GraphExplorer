@@ -20,7 +20,7 @@ class CICDIntegrationCase(unittest.TestCase):
 
     def test_is_support_this_LTS(self):
         # checking LTS for this platform
-        match sys.platform:
+        match (sys.platform):
             case 'win32':
                 self.assertTrue(sys.version.startswith('3.12.6'))
             case 'linux':

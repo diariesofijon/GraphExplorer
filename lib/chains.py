@@ -124,7 +124,7 @@ class GraphChain(TxtChain):
 
         last_chain: List[abc.E] = []
         visited: typing.Chain   = self.deepest_chain
-        for index, element in visited.get_seed()):
+        for index, element in visited.get_seed():
             try:
                 last_chain += element.children.idex(index+1)
             except ValueError:

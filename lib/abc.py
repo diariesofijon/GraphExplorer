@@ -5,7 +5,7 @@
 import abc
 import collections.abc
 from typing import (
-    FrozenSet, Optional, Iterable, Protocol,
+    FrozenSet, Optional, Iterable, Protocol, Generic
     TypeVar, Set, Dict, Callable, List)
 
 

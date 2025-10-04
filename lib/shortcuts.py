@@ -35,7 +35,7 @@ def eisenhower_part_spliter(tmp: str) -> Tuple[str]:
 # TODO: uneffectable deletion legace come true
 def separete_from_text_element(tmp: str, separeter: str=':'):
     ''' like that 12. A|B: 3(10), 4(13,46,118) '''
-    match len(splited:=tmp.split(separeter)):
+    match len((splited:=tmp.split(separeter))):
         case 0:
             return 'splited', 'splited'
         case 1:
