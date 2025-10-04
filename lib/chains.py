@@ -34,7 +34,7 @@ class BaseChain(abc.AbstractChain):
         super().__init__(filter(self.flambda, iterable), *args, **kwargs)
 
     # --- Sequence API ---
-    def __getitem__(self, index: int) -> T:
+    def __getitem__(self, index: int) -> abc.E:
         return self._data[index]
 
     def __len__(self) -> int:
