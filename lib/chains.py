@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # pylint: disable=E0401
 
-from typing import Iterable, Dict, Tuple, Callable, Optional, List
+from typing import Iterable, Dict, Tuple, Callable, Optional, List, TypeVar
 
 from bin import metaclasses
 from lib import abc, shortcuts, typing
@@ -9,7 +9,7 @@ import config
 
 
 Callback = Optional[Callable]
-
+E = TypeVar('E')
 
 class BaseChain(abc.AbstractChain):
 
@@ -23,7 +23,7 @@ class BaseChain(abc.AbstractChain):
     blank: bool = True
 
     def __init__(self, 
-        data: Optional[abc.GenericChain]= None, unique:bool= True, flambda:Callback = None):
+        data: Optional[Iterable[E]]= None, unique:bool= True, flambda:Callback = None):
         flambda: Callable = self.flambda if not flambda else flambda
         self._data: List[T] = list(data) if data else []
         if unique:
@@ -34,13 +34,13 @@ class BaseChain(abc.AbstractChain):
         super().__init__(filter(self.flambda, iterable), *args, **kwargs)
 
     # --- Sequence API ---
-    def __getitem__(self, index: int) -> abc.E:
+    def __getitem__(self, index: int) -> E:
         return self._data[index]
 
     def __len__(self) -> int:
         return len(self._data)
 
-    def __iter__(self) -> Iterable[abc.E]:
+    def __iter__(self) -> Iterable[E]:
         return iter(self._data)
 
     def __contains__(self, item: object) -> bool:
@@ -64,15 +64,15 @@ class BaseChain(abc.AbstractChain):
         # memory footprint of chain
         return super().__sizeof__() + sum(sys.getsizeof(x) for x in self._data)
 
-    def __copy__(self) -> typing.Chain[abc.E]:
+    def __copy__(self) -> typing.Chain[E]:
         return self.__class__(self._data)
 
-    def __deepcopy__(self, memo) -> typing.Chain[abc.E]:
+    def __deepcopy__(self, memo) -> typing.Chain[E]:
         import copy
         return self.__class__(copy.deepcopy(self._data, memo))
 
     # --- High-level Utilities ---
-    def start(self, index: int = 0) -> abc.E:
+    def start(self, index: int = 0) -> E:
         """First element from index (default first element)."""
         return self._data[index]
 
@@ -122,7 +122,7 @@ class GraphChain(TxtChain):
         if self.cache:
             return self.cache
 
-        last_chain: List[abc.E] = []
+        last_chain: List[E] = []
         visited: typing.Chain   = self.deepest_chain
         for index, element in visited.get_seed():
             try:

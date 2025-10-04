@@ -20,9 +20,8 @@ __all__ = ('AbstractElement', 'AbstractChain',
 # TODO: convert it to protocol
 # could element of graph!
 E = TypeVar('E')
-GenericChain = Generic[E]
 
-class AbstractChain(list[E], abc.ABC, GenericChain):
+class AbstractChain(list[E], abc.ABC, Generic[E]):
 
     '''
         Listening of ids and other numerical order of indicators with widly
