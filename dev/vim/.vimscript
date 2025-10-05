@@ -1,0 +1,100 @@
+" ================================================
+"   🧩  Plugin Manager (vim-plug)
+" ================================================
+" Install vim-plug if missing:
+"   curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+"       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+call plug#begin('~/.vim/plugged')
+
+" Linting (like SublimeLinter)
+Plug 'dense-analysis/ale'
+
+" Highlight & strip trailing spaces
+Plug 'ntpeters/vim-better-whitespace'
+
+" EditorConfig support (auto newlines, spacing)
+Plug 'editorconfig/editorconfig-vim'
+
+call plug#end()
+
+
+" ================================================
+"   ⚙️  General Editor Behavior
+" ================================================
+set nocompatible
+syntax on
+filetype plugin indent on
+
+set number
+set ruler
+set encoding=utf-8
+set fileformats=unix,dos,mac
+set expandtab
+set shiftwidth=4
+set softtabstop=4
+
+" Remove trailing spaces on save
+let g:better_whitespace_enabled=1
+let g:strip_whitespace_on_save=1
+
+" Enforce single trailing newline
+autocmd BufWritePre * call s:EnsureSingleTrailingNewline()
+
+function! s:EnsureSingleTrailingNewline()
+  " Remove extra blank lines at EOF
+  silent! %s/\($\n\s*\)\+\%$//e
+  " Add exactly one newline
+  silent! call append(line('$'), '')
+endfunction
+
+
+" ================================================
+"   🧪  Linting Configuration (ALE + pylint)
+" ================================================
+let g:ale_linters = {
+\   'python': ['pylint']
+\ }
+
+" Optional: auto-lint on save
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_fix_on_save = 0
+
+" Set Python paths for pylint (cross-platform)
+if has('win32') || has('win64')
+  let g:ale_python_pylint_executable = 'C:\\Program Files\\Python312\\Scripts\\pylint.exe'
+  if !filereadable(g:ale_python_pylint_executable)
+    let g:ale_python_pylint_executable = 'C:\\Users\\' . $USERNAME . '\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\pylint.exe'
+  endif
+elseif has('unix')
+  if filereadable('/usr/local/bin/pylint')
+    let g:ale_python_pylint_executable = '/usr/local/bin/pylint'
+  elseif filereadable('/usr/bin/pylint')
+    let g:ale_python_pylint_executable = '/usr/bin/pylint'
+  elseif filereadable(expand('~/.local/bin/pylint'))
+    let g:ale_python_pylint_executable = expand('~/.local/bin/pylint')
+  else
+    let g:ale_python_pylint_executable = 'pylint'
+  endif
+endif
+
+
+" ================================================
+"   🧹  Visual Indicators for Trailing Spaces
+" ================================================
+highlight ExtraWhitespace ctermbg=red guibg=red
+
+" Highlight trailing spaces
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd BufWinLeave * call clearmatches()
+
+" Strip trailing spaces before writing
+autocmd BufWritePre * %s/\s\+$//e
+
+" ================================================
+"   ✅  Finish
+" ================================================
+echo "Vim setup for Python linting and whitespace ready ✔"
