@@ -1,19 +1,65 @@
 // SublimeLinter Settings - User
 {
-    // "debug": true,
+    // ===============================
+    // 🔍  Debug & General Preferences
+    // ===============================
+    "debug": false,
+    "lint_mode": "save_only",
+    "mark_style": "solid underline",
+    "delay": 0.25,
 
+    // ==================================================
+    // 🧭  Pylint Executable Paths (cross-platform setup)
+    // ==================================================
     "paths": {
-        "osx": [],
-        "linux": [],
+        "osx": [
+            "/usr/local/bin/",
+            "/opt/homebrew/bin/",
+            "/Library/Frameworks/Python.framework/Versions/Current/bin/"
+        ],
+        "linux": [
+            "/usr/local/bin/",
+            "/usr/bin/",
+            "~/.local/bin/"
+        ],
         "windows": [
             "C:\\Program Files\\Python312\\Scripts\\",
-            "C:\\Users\\admin\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\"
+            "C:\\Users\\$USERNAME\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\"
         ]
     },
 
+    // ==================================================
+    // 🧩  Linters Configuration (Pylint + Pyright)
+    // ==================================================
     "linters": {
         "pylint": {
-            "executable": "pylint"
+            "selector": "source.python",
+            "executable": "pylint",
+            "args": [
+                "--output-format=text",
+                "--score=n"
+            ]
+        },
+        "pyright": {
+            "selector": "source.python",
+            "executable": "pyright",
+            "args": ["--outputjson"]
         }
-    }
+    },
+
+    // ==================================================
+    // 🎨  UI Customization
+    // ==================================================
+    "show_marks_in_minimap": true,
+    "show_panel_on_save": "view",
+    "underline_errors": true,
+    "gutter_theme": "Packages/SublimeLinter/gutter-themes/Default/Default.gutter-theme",
+    "gutter_theme_excludes": []
+
+    // ==================================================
+    // 🛠️ Global(but on local)
+    // ==================================================
+    "ensure_newline_at_eof_on_save": true,
+    "trim_trailing_white_space_on_save": true
+
 }
