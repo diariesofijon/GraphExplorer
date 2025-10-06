@@ -60,23 +60,6 @@ def run_test_progression(self, python=sys.version, os=sys.platform):
 
     return suite
 
-# class TestFormatters(unittest.TestCase):
-#     def test_basic_formatter_removes_comments_and_spaces(self):
-#         text = "A -> B , C\n# comment\n\nB->C"
-#         fmt = drivers.BasicTextFormatter()
-#         result = fmt.format(text)
-#         self.assertEqual(result, "A->B , C\nB->C")
-
-# class TestDrivers(unittest.TestCase):
-#     def test_text_driver_loads_graph(self):
-#         text = "A->B,C\nB->C"
-#         graph = drivers.TextGraphDriver().load(text)
-#         self.assertEqual(graph, {"A": ["B", "C"], "B": ["C"]})
-
-#     def test_json_driver_loads_graph(self):
-#         data = {"A": ["B"], "B": ["C"]}
-#         graph = drivers.JsonDriver().load(data)
-#         self.assertEqual(graph, {"A": ["B"], "B": ["C"]})
 
 class TestMasks(unittest.TestCase):
     def test_node_whitelist_mask(self):

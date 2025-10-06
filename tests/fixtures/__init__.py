@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-from lib.drivers import BasicTextFormatter, TxtLoader, Jsonloader
-from lib.base import BaseGraphMask, CompositeMask
+from lib.drivers import TxtLoader, Jsonloader
+from lib.base import BaseGraphMask, BasicTextFormatter
+from lib.masks import CompositeMask
 
 def from_text(text: str, formatter=None, loader=None, mask=None) -> BaseGraphMask:
     fmt = formatter if formatter is not None else BasicTextFormatter()
@@ -11,7 +12,7 @@ def from_text(text: str, formatter=None, loader=None, mask=None) -> BaseGraphMas
     return BaseGraphMask(graph_dict, mask=mask)
 
 def from_json(data: dict, loader=None, mask=None) -> BaseGraphMask:
-    ld = loader if loader is not None else Jsonloader()
+    ld = loader if loader is not None else JsonLoader()
     graph_dict = ld.load(data)
     return BaseGraphMask(graph_dict, mask=mask)
 
