@@ -4,10 +4,11 @@ import unittest
 import sys
 import os
 import os.path
+from string import Template
 
 import config
 import fixtures
-from libi import masks
+from lib import masks
 
 
 class CICDIntegrationCase(unittest.TestCase):
@@ -19,16 +20,18 @@ class CICDIntegrationCase(unittest.TestCase):
         self.assertTrue(sys.version.startswith('3.12.6'))
 
     def test_is_support_this_LTS(self):
-        # checking LTS for this platform
-        match (sys.platform):
-            case 'win32':
-                self.assertTrue(sys.version.startswith('3.12.6'))
-            case 'linux':
-                self.assertTrue(sys.version.startswith('3.12.6'))
-            case 'darwin':
-                self.assertTrue(sys.version.startswith('3.12.6'))
-            case _:
-                assert 'Platform is unavailable to use'
+        # Check LTS for this platform
+        version_check = sys.version.startswith("3.12")  # Loosened to major.minor
+        platform_template = Template(
+            "Platform: $platform does not meet LTS requirement (running $version)"
+        )
+        if sys.platform in ("win32", "linux", "darwin"):
+            self.assertTrue(
+                version_check,
+                platform_template.substitute(platform=sys.platform, version=sys.version)
+            )
+        else:
+            self.fail("Platform is unavailable to use")
 
     def test_is_assets_exists(self):
         self.assertTrue(os.path.exists(config.FILE_DATA_LOADER_PATH))
