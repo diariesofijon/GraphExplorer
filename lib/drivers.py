@@ -7,6 +7,7 @@ Drivers for loading graphs
 '''
 
 import json
+import xml.etree.ElementTree as ET
 from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import (
@@ -101,10 +102,34 @@ class CSVLoader(base.BaseLoader):
 
     __metaclass__ = metaclasses.MetaCSVLoader
 
+    extensions = ['csv', 'tsv']
+    element_class = RepresentativeElement
+    chain_type = chains.GraphChain
+
+    def loads_from(self, path: str, type: str, mode: str = "r", starts: int = 0):
+        with open(path, mode, encoding="utf-8") as f:
+            return list(csv.reader(f))
+
 
 class YamlLoader(base.BaseLoader):
 
     __metaclass__ = metaclasses.MetaYamlLoader
+
+    try:
+        import yaml
+        print(f'You have you PyYaml of {yaml.__version__} 
+            you can check it at https://pypi.org/project/PyYAML/')
+    except ImportError as fallen:
+        print(' you cannot yse this YamlLoader withou PyYaml.\n'
+            'try it in console`pip install pyyaml`')
+
+    extensions = ['yaml', 'yml']
+    element_class = RepresentativeElement
+    chain_type = chains.GraphChain
+    
+    def loads_from(self, path: str, type: str, mode: str = "r", starts: int = 0):
+        with open(path, mode) as f:
+            return yaml.safe_load(f)
 
 
 class JSONLoader(base.BaseLoader):
@@ -141,3 +166,15 @@ class JSONLoader(base.BaseLoader):
     def chain_mapping_fuction(self, sequence: Dict[str, str]):
         return self.convert_element(sequence.popitem())
 
+
+class XMLLoader(base.BaseLoader):
+
+    __metaclass__ = meta.MetaLoade
+
+    extensions = ['xml', 'xsd']
+    element_class = RepresentativeElement
+    chain_type = chains.GraphChain
+
+    def loads_from(self, path: str, type: str, mode: str = "r", starts: int = 0):
+        tree = ET.parse(path)
+        return tree.getroot()
