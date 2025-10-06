@@ -12,9 +12,11 @@ from IPython.display import display
 
 
 '''
-  There is a cool and stuffed examination that shows on a data set of pre-structured manually Python's code in a Pythonic way. 
-  You can use it as a mixture for TDD model or even manual testing. Also it could usefull find new info and can be inserted by
-  new updated info. It could be recensy or even new publishing house and edition!
+  There is a cool and stuffed examination that shows on a data set of
+  pre-structured manually Python's code in a Pythonic way. You can use
+  it as a mixture for TDD model or even manual testing. Also it could
+  usefull find new info and can be inserted by new updated info. It
+  could be recensy or even new publishing house and edition!
 
   To use it as library or executable pythonic script just od it:
     1. pip install pandas
@@ -88,7 +90,8 @@ plan_nodes = [
         "id": "Inside_CriminalMind", 
         "label": "Inside the Criminal Mind (Samenow)", 
         "type": "book", 
-        "url": "https://www.penguinrandomhouse.com/books/235734/inside-the-criminal-mind-newly-revised-edition-by-stanton-samenow/"},
+        "url": 
+            "https://www.penguinrandomhouse.com/books/235734/inside-the-criminal-mind-newly-revised-edition-by-stanton-samenow/"},
     {
         "id": "Healing_CPTSD", 
         "label": "Healing Complex PTSD (Brown)", 
@@ -98,17 +101,20 @@ plan_nodes = [
         "id": "Trauma_Handbook", 
         "label": "International Handbook of Human Response to Trauma (Shalev et al.)", 
         "type": "book", 
-        "url": "https://link.springer.com/book/10.1007/978-1-4615-4177-6"},
+        "url": 
+            "https://link.springer.com/book/10.1007/978-1-4615-4177-6"},
     {
         "id": "Motivational_Interviewing", 
         "label": "Motivational Interviewing (Miller & Rollnick)", 
         "type": "book", 
-        "url": "https://www.guilford.com/books/Motivational-Interviewing/Miller-Rollnick/9781462552795"},
+        "url": 
+            "https://www.guilford.com/books/Motivational-Interviewing/Miller-Rollnick/9781462552795"},
     {
         "id": "Criminalistics", 
         "label": "Criminalistics: Intro to Forensic Science (Saferstein)", 
         "type": "book", 
-        "url": "https://www.pearson.com/en-us/subject-catalog/p/criminalistics-an-introduction-to-forensic-science/P200000001769/9780137542512"},
+        "url": 
+            "https://www.pearson.com/en-us/subject-catalog/p/criminalistics-an-introduction-to-forensic-science/P200000001769/9780137542512"},
     {
         "id": "What_Works", 
         "label": "What Works in Crime Prevention & Rehab (Weisburd)", 
@@ -173,17 +179,20 @@ deep_nodes = [
       "id": "Oxford_Handbook", 
       "label": "Oxford Handbook of Criminology", 
       "type": "book", 
-      "url": "https://global.oup.com/academic/product/the-oxford-handbook-of-criminology-9780198860914"},
+      "url": 
+        "https://global.oup.com/academic/product/the-oxford-handbook-of-criminology-9780198860914"},
     {
       "id": "Punishment_Structure",
       "label": "Punishment and Social Structure (Rusche & Kirchheimer)", 
       "type": "book", 
-      "url": "https://www.routledge.com/Punishment-and-Social-Structure/Rusche-Kirchheimer/p/book/9781412809990"},
+      "url": 
+        "https://www.routledge.com/Punishment-and-Social-Structure/Rusche-Kirchheimer/p/book/9781412809990"},
     {
       "id": "Crime_Everyday_Life", 
       "label": "Crime and Everyday Life (Felson)",
       "type": "book", 
-      "url": "https://www.routledge.com/Crime-and-Everyday-Life/Felson/p/book/9781544375893"},
+      "url": 
+        "https://www.routledge.com/Crime-and-Everyday-Life/Felson/p/book/9781544375893"},
     {
       "id": "Theoretical_Criminology", 
       "label": "Theoretical Criminology (Young, Taylor, Walton)", 
@@ -220,7 +229,10 @@ for e in deep_edges:
 
 plan_df = pd.DataFrame(
     [{
-        "id": n["id"], "title": n["label"], "type": n["type"], "link": n["url"]} for n in plan_nodes]) 
+        "id": n["id"],
+        "title": n["label"],
+        "type": n["type"],
+        "link": n["url"]} for n in plan_nodes]) 
 
 deep_df = pd.DataFrame(
     [{
@@ -233,10 +245,13 @@ deep_df = pd.DataFrame(
 if __name__ == '__main__':
     plt.figure(figsize=(12,10))
     pos = nx.spring_layout(G_plan, seed=42, k=0.8)
-    labels = {node: G_plan.nodes[node]["label"].split("(")[0] for node in G_plan.nodes()}
+    labels = {
+        node: G_plan.nodes[node]["label"].split(
+            "(")[0] for node in G_plan.nodes()}
     nx.draw(G_plan, pos, with_labels=False, node_size=2000)
     nx.draw_networkx_labels(G_plan, pos, labels, font_size=8)
-    plt.title("Half-Year Education Plan: Criminology Books & Papers", fontsize=12)
+    plt.title(
+        "Half-Year Education Plan: Criminology Books & Papers", fontsize=12)
     plt.axis('off')
     plt.show()
     
@@ -245,10 +260,13 @@ if __name__ == '__main__':
     
     plt.figure(figsize=(12,10))
     pos = nx.spring_layout(G_deep, seed=42, k=0.8)
-    labels = {node: G_deep.nodes[node]["label"].split("(")[0] for node in G_deep.nodes()}
+    labels = {
+        node: G_deep.nodes[node]["label"].split(
+            "(")[0] for node in G_deep.nodes()}
     nx.draw(G_deep, pos, with_labels=False, node_size=2000)
     nx.draw_networkx_labels(G_deep, pos, labels, font_size=8)
-    plt.title("Post-Plan Deepening: Advanced Criminology Resources", fontsize=12)
+    plt.title(
+        "Post-Plan Deepening: Advanced Criminology Resources", fontsize=12)
     plt.axis('off')
     plt.show()
     
