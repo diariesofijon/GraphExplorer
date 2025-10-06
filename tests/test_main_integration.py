@@ -28,7 +28,8 @@ class CICDIntegrationCase(unittest.TestCase):
         if sys.platform in ("win32", "linux", "darwin"):
             self.assertTrue(
                 version_check,
-                platform_template.substitute(platform=sys.platform, version=sys.version)
+                platform_template.substitute(
+                    platform=sys.platform, version=sys.version)
             )
         else:
             self.fail("Platform is unavailable to use")
