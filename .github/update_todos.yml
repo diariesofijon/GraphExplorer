@@ -1,0 +1,44 @@
+name: Update TODOs
+
+on:
+  push:
+    branches:
+      - main
+      - "feature*"
+  pull_request:
+    branches: 
+      - "feature*"
+      - main
+  schedule:
+    - cron: '0 0 * * 0'  # weekly, optional
+
+jobs:
+  todos:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repo
+      - uses: actions/checkout@v3
+
+      # Setup Python
+      - uses: actions/setup-python@v4
+        with:
+          python-version: [ '3.12', '3.13' ]  # extend with 3.14+ when available
+
+      # Install dependencies
+      - run: pip install requests
+
+      # Run the enhanced TODO collector
+      - name: Generate TODOs.md
+        run: |
+          python docs/observer/enhanced_collect_todos.py --output docs/TODOs.md --issues
+
+      # Commit and push updated TODOs.md if changes exist
+      - name: Commit updated TODOs.md
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/TODOs.md
+          git diff --cached --quiet || git commit -m "Update TODOs.md [ci skip]"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
