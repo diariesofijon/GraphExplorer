@@ -11,6 +11,8 @@ import requests
 import argparse
 import os
 
+import github_keys
+
 # --- Configuration ---
 GITHUB_TOKEN = "YOUR_PERSONAL_ACCESS_TOKEN"  # Replace with your token
 GITHUB_REPO = "username/repo"                # Replace with "user/repo"
