@@ -5,10 +5,12 @@ on:
     branches:
       - main
       - "feature*"
+      - "develop"
   pull_request:
     branches: 
       - "feature*"
       - main
+      - "develop"
   schedule:
     - cron: '0 0 * * 0'  # weekly, optional
 

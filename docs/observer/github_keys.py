@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import os
 import requests
+import subprocess
+
 
 # Load from environment
 TOKEN = os.getenv("GITHUB_TOKEN")
@@ -11,20 +13,25 @@ if not TOKEN or not REPO:
 
 API_URL = f"https://api.github.com/repos/{REPO}"
 
-# Example: Get repository info
 def get_repo_info():
     headers = {"Authorization": f"TOKEN {TOKEN}"}
     response = requests.get(API_URL, headers=headers)
     response.raise_for_status()
     return response.json()
 
-# Example: Create a new issue
 def create_issue(title, body=None):
     headers = {"Authorization": f"TOKEN {TOKEN}"}
     data = {"title": title, "body": body or ""}
     response = requests.post(f"{API_URL}/issues", json=data, headers=headers)
     response.raise_for_status()
     return response.json()
+
+def get_feature_branches(remote=False):
+    pattern = "origin/feature/*" if remote else "feature/*"
+    cmd = ["git", "branch", "-r" if remote else "-l", pattern]
+    result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+    branches = [b.strip() for b in result.stdout.splitlines() if b.strip()]
+    return branches
 
 if __name__ == "__main__":
     # 1️⃣ Fetch repo info

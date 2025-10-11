@@ -14,10 +14,10 @@ import os
 import github_keys
 
 # --- Configuration ---
-GITHUB_TOKEN = "YOUR_PERSONAL_ACCESS_TOKEN"  # Replace with your token
-GITHUB_REPO = "username/repo"                # Replace with "user/repo"
-CREATE_ISSUES = False                        # Set True to create GitHub issues
-GITHUB_BASE_URL = f"https://github.com/{GITHUB_REPO}/blob"
+GITHUB_TOKEN = github_keys.TOKEN
+GITHUB_REPO = github_keys.REPO
+CREATE_ISSUES = False # Set True to create GitHub issues if you use manually
+GITHUB_BASE_URL = f"https://github.com/{GITHUB_REPO}/develop"
 
 # --- Regex ---
 TODO_PATTERN = re.compile(r"#\s*(TODO|FIXME):?\s*(.*)")
