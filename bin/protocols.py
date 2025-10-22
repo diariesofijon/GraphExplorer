@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from typing import Protocol, Iterable, Tuple, List, Dict, FrozenSet, Callable, Union
+from typing import Protocol, , Tuple, List, Dict, FrozenSet, Callable, Union
 # , runtime_checkable TODO: LET IT WOULD BE WORK CORRECTLY WI INSPECT.SIGNATURE
 from lib import typing
 
@@ -13,6 +13,7 @@ __all__ = ('InfoProtocol', 'GraphInfoProtocol', 'VertexProtocol',
 # --- Loader Protocols ---
 
 class ProtocolLoader(Protocol):
+
     """
     Contract for all loaders (TXT, JSON, YAML, XML, etc.).
     Each loader should define supported extensions and implement the full
@@ -21,25 +22,41 @@ class ProtocolLoader(Protocol):
 
     extensions: List[str]
 
-    def loads_from(self, path: str, type: str, mode: str = "r", starts: int = 0) -> object: ...
+    def loads_from(self, path: str, type: str, mode: str, starts: int) -> Iterable:
+        ...
 
     @property
-    def whole_chain(self) -> Iterable: ...
-    @property
-    def element_class(self): ...
-    @property
-    def chain_type(self): ...
-    @property
-    def ids(self) -> FrozenSet: ...
-    @property
-    def map(self) -> Dict: ...
+    def whole_chain(self) -> Iterable:
+        ...
 
-    def convert_element(self, tmp: str): ...
-    def chain_mapping_fuction(self, *args, **kwargs): ...
-    def mapping_fuction(self, func: Callable, sequence: Iterable): ...
+    @property
+    def element_class(self):
+        ...
+
+    @property
+    def chain_type(self):
+        ...
+
+    @property
+    def ids(self) -> FrozenSet:
+        ...
+
+    @property
+    def map(self) -> Dict:
+        ...
+
+    def convert_element(self, tmp: str):
+        ...
+
+    def chain_mapping_fuction(self, *args, **kwargs):
+        ...
+
+    def mapping_fuction(self, func: Callable, sequence: Iterable):
+        ...
 
 
 class LoaderDetector(Protocol):
+
     """
     Protocol for factories (FactoryLoader, MetaFactoryLoader).
     Responsible for picking the correct loader based on file extension.
@@ -170,5 +187,3 @@ class MaskProtocol(Protocol):
 
     def allow_edge(self, u: str, v: str) -> bool:
         raise NotImplementedError
-
-
