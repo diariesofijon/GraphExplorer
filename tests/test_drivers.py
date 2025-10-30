@@ -79,6 +79,7 @@ class TestFactoryLoader(unittest.TestCase):
 
 
 class TestMetaLoader(unittest.TestCase):
+
     def test_registry_contains_builtin_loaders(self):
         """Check that metaclass auto-registered loaders into the registry."""
         self.assertIn("txt", MetaLoader._registry)
@@ -90,23 +91,40 @@ class TestMetaLoader(unittest.TestCase):
         """Defining a new loader dynamically should register it via MetaLoader."""
 
         class DummyLoader(metaclass=MetaLoader):
+
             extension = "dummy"
 
-            def loads_from(self, path, type, mode="r", starts=0): return "ok"
-            def convert_element(self, tmp): return tmp
-            def chain_mapping_fuction(self, *args, **kwargs): return args
-            def mapping_fuction(self, func, sequence): return list(map(func, sequence))
+            def loads_from(self, path, type, mode="r", starts=0): 
+                return "ok"
+
+            def convert_element(self, tmp):
+                return tmp
+
+            def chain_mapping_fuction(self, *args, **kwargs):
+                return args
+
+            def mapping_fuction(self, func, sequence):
+                return list(map(func, sequence))
 
             @property
-            def whole_chain(self): return []
+            def whole_chain(self):
+                return []
+
             @property
-            def element_class(self): return str
+            def element_class(self):
+                return str
+
             @property
-            def chain_type(self): return list
+            def chain_type(self):
+                return list
+
             @property
-            def ids(self): return set()
+            def ids(self):
+                return set()
+
             @property
-            def map(self): return {}
+            def map(self):
+                return {}
 
         # Registry check
         self.assertIn("dummy", MetaLoader._registry)
@@ -124,6 +142,7 @@ class TestMetaLoader(unittest.TestCase):
 
 
 class TestMetaFactoryLoaderRegistry(unittest.TestCase):
+
     def test_registered_extensions(self):
         """Check that all loaders registered their extensions."""
         exts = MetaFactoryLoader.list_registered()
@@ -151,6 +170,7 @@ class TestMetaFactoryLoaderRegistry(unittest.TestCase):
 
 
 class TestFactoryLoaderIntegration(unittest.TestCase):
+
     def test_create_txt_loader(self):
         loader = FactoryLoader.create("txt")
         self.assertIsInstance(loader, TextLoader)
@@ -179,6 +199,7 @@ class TestFactoryLoaderIntegration(unittest.TestCase):
 
 
 class TestYAMLAndXMLLoaders(unittest.TestCase):
+
     def test_yaml_loader(self):
         loader = FactoryLoader.create("yaml")
         self.assertIsInstance(loader, YAMLLoader)
