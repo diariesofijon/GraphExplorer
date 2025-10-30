@@ -79,6 +79,7 @@ class TestTxtChain(unittest.TestCase):
         # mock eisenhower_part_spliter
         from lib import shortcuts
 
+        # TODO: there is the mock, but the function has undetectable behavior
         shortcuts.eisenhower_part_spliter = lambda x: ("A1.", True)
         txt.whole_parts = {"A1.": 0}
         txt.increase_on = 1
