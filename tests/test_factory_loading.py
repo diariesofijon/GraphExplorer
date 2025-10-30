@@ -7,7 +7,7 @@ import tempfile
 import unittest
 import xml.etree.ElementTree as ET
 
-from lib.loaders.factory_loader import FactoryLoader
+from lib.drivers import FactoryLoader
 
 
 class TestFactoryLoader(unittest.TestCase):

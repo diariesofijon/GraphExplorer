@@ -4,8 +4,9 @@
 import unittest
 from typing import Type, Dict
 
-from lib.protocols import AbstractLoader
-from lib.factory_loader import FactoryLoader, ProtocolLoader
+from lib.abc import AbstractLoader
+from lib.protocols import ProtocolLoader
+from lib.drivers import FactoryLoader
 
 
 # -------------------------------
