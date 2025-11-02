@@ -19,15 +19,15 @@ from lib import base, shortcuts, typing, chains, formatters
 from elements import RepresentativeElement
 
 
-# --- Base Factory ---
-
 class FactoryLoader(protocols.LoaderDetector):
+
     """
     Central factory for all loaders, powered by MetaLoader.
     Subclasses auto-register based on their `extensions`.
     """
 
     __metaclass__ = metaclasses.MetaLoader
+
     _registry: Dict[str, Type["BaseLoader"]] = {}
 
     @classmethod
@@ -46,10 +46,9 @@ class FactoryLoader(protocols.LoaderDetector):
         return loader.loads_from(path, type=type, mode=mode, starts=starts)
 
 
-# --- BaseLoader and Implementations ---
-
 @dataclass
 class MockLoader(base.BaseLoader):
+
     file_path: str = ''
     element_class: typing.GE = RepresentativeElement
     chain_type = chains.BaseChain
@@ -60,6 +59,7 @@ class MockLoader(base.BaseLoader):
 
 @dataclass
 class TxtLoader(base.BaseLoader):
+
     __metaclass__ = metaclasses.MetaTxtLoader
 
     file_path: str = config.FILE_DATA_LOADER_NAME_TXT
@@ -70,6 +70,7 @@ class TxtLoader(base.BaseLoader):
 
 @dataclass
 class EisenhowerMatrixLoader(TxtLoader):
+
     __metaclass__ = metaclasses.MetaEisenhowerLoader
 
     ids_map: Dict[str, int] = field(default_factory=lambda: {'A1.': 0, 'B2.': 0, 'C3.': 0, 'L4.': 0})
@@ -100,6 +101,7 @@ class EisenhowerMatrixLoader(TxtLoader):
 
 @dataclass
 class CSVLoader(base.BaseLoader):
+
     __metaclass__ = metaclasses.MetaCSVLoader
 
     extensions = ['csv', 'tsv']
@@ -114,6 +116,7 @@ class CSVLoader(base.BaseLoader):
 
 @dataclass
 class YamlLoader(base.BaseLoader):
+
     __metaclass__ = metaclasses.MetaYamlLoader
 
     try:
@@ -134,6 +137,7 @@ class YamlLoader(base.BaseLoader):
 
 @dataclass
 class JSONLoader(base.BaseLoader):
+
     __metaclass__ = metaclasses.MetaJSONLoader
 
     element_class = RepresentativeElement
@@ -175,6 +179,7 @@ class JSONLoader(base.BaseLoader):
 
 @dataclass
 class XMLLoader(base.BaseLoader):
+
     __metaclass__ = metaclasses.MetaLoader
 
     extensions = ['xml', 'xsd']

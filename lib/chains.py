@@ -20,14 +20,16 @@ class BaseChain(abc.AbstractChain):
     pythonic list or just a collection if it could be needed!
     '''
 
-    blank: bool = True
+    blank:  bool = True
+    unique: bool = False
 
     def __init__(self, 
         data: Optional[Iterable[E]]= None, unique:bool= True, flambda:Callback = None):
         flambda: Callable = self.flambda if not flambda else flambda
         self._data: List[T] = list(data) if data else []
-        if unique:
+        if unique or self.unique:
             # ensure uniqueness while preserving order
+            self.unique: bool = unique
             seen = set()
             self._data = (
                 x for x in self._data if not (x in seen or seen.add(x)))

@@ -28,30 +28,33 @@ class AbstractChain(list[E], abc.ABC, Generic[E]):
     usefull method for searching and slicing any indicator.
     '''
 
-    @property
     @abc.abstractmethod
     def __buffer__(self):
         ''' Produce memoryview(self) '''
 
-    @property
     @abc.abstractmethod
     def __realease_buffer__(self):
         ''' Produce del memoryview(self) '''
 
-    @property
     @abc.abstractmethod
     def __copy__(self):
         ''' Produce copy.copy(self) '''
 
-    @property
     @abc.abstractmethod
     def __deepcopy__(self, memo):
         ''' Produce copy.deepcopy(self) '''
 
-    @property
     @abc.abstractmethod
     def __sizeof__(self):
         ''' Produce sys.getsizeof(self) '''
+        
+    @abc.abstractmethod
+    def __iter__(self):
+        ''' Produce iter(self) '''
+    
+    @abc.abstractmethod
+    def __next__(self):
+        ''' Produce next(self) '''
     
     @abc.abstractmethod
     def filtered(self, func):
