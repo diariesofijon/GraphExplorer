@@ -24,16 +24,22 @@ class BaseChain(abc.AbstractChain):
     unique: bool = False
 
     def __init__(self, 
-        data: Optional[Iterable[E]]= None, unique:bool= True, flambda:Callback = None):
+        data:    Optional[Iterable[E]]= None, 
+        unique:  bool= True, 
+        flambda: Callback = None):
+    
         flambda: Callable = self.flambda if not flambda else flambda
-        self._data: List[T] = list(data) if data else []
+    
+        self._data: List[E] = list(data) if data else []
+    
         if unique or self.unique:
             # ensure uniqueness while preserving order
             self.unique: bool = unique
             seen = set()
             self._data = (
                 x for x in self._data if not (x in seen or seen.add(x)))
-        super().__init__(filter(self.flambda, iterable), *args, **kwargs)
+    
+        self._data: List[E] = filter(flambda, self._data)
 
     # --- Sequence API ---
     def __getitem__(self, index: int) -> E:
