@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import unittest
 from lib.base.masks import NodeWhitelistMask, EdgeWeightMask, CompositeMask

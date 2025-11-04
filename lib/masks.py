@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # TODO: move it to an another class like composition
 # element_mask: Optional[str] = r'.+(?P<id>\D+)\..?(?P<grouped>.+): (?P<body>.*)\n'
 # node_mask: Optional[str] = r'(?P<id>\D+)\((?P<children_list>.*)\)'

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # pylint: disable=E0401,W0622,C0103,R0903
 
 from typing import (

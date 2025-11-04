@@ -1,3 +1,5 @@
+
+# -*- coding: utf-8 -*-
 #Python program for Depth First Traversal
 MAX = 5
 class Vertex:

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-# tests/test_factory_loading.py
-import unittest
 from typing import Type, Dict
 
 from lib.abc import AbstractLoader

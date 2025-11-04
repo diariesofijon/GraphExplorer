@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 """
 enhanced_collect_todos.py
 Collect TODO/FIXME comments from all Python files in git history,

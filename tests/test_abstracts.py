@@ -1,6 +1,6 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-# tests/test_abstracts.py
 import unittest
 from typing import List, Dict
 

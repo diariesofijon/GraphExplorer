@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 # We'll generate TWO separate graphs:
 # 1. Half-year education plan graph (foundational roadmap)

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # pylint: disable=E0401
 
 from typing import Iterable, Dict, Tuple, Callable, Optional, List, TypeVar
