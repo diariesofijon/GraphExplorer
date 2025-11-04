@@ -167,6 +167,79 @@ class EisenhowerMatrixChain(GraphChain):
     def skip_blank(self, element) -> bool:
         return not self.blank
 
+
 class JSONChain(GraphChain):
-    pass
+
+    """
+    JSONChain — stable, minimal chain implementation for JSON-like data.
+
+    Works safely with any nested Python structure (dict, list, or scalar)
+    parsed from JSON. It behaves like an iterator over flattened key-value
+    pairs or values (depending on type).
+    """
+
+    def __init__(self, data: Iterable = None):
+        """
+        Initialize with JSON-like data (list, dict, or scalar).
+        Automatically normalizes to a flat internal representation.
+        """
+        if isinstance(data, dict):
+            normalized = list(data.items())
+        elif isinstance(data, list):
+            normalized = data
+        elif data is None:
+            normalized = []
+        else:
+            normalized = [data]
+
+        super().__init__(normalized)
+
+    # --- Stable JSON traversal helpers ---
+    def flatten(self, obj=None, prefix='') -> List[tuple]:
+        """
+        Recursively flatten nested dicts/lists into (path, value) tuples.
+        Example:
+            {"a": {"b": 1}} -> [("a.b", 1)]
+        """
+        if obj is None:
+            obj = self._data
+
+        result = []
+        if isinstance(obj, dict):
+            for k, v in obj.items():
+                path = f"{prefix}.{k}" if prefix else k
+                result.extend(self.flatten(v, path))
+        elif isinstance(obj, list):
+            for i, v in enumerate(obj):
+                path = f"{prefix}[{i}]" if prefix else str(i)
+                result.extend(self.flatten(v, path))
+        else:
+            result.append((prefix, obj))
+        return result
+
+    # --- Override map/filter to work with key/value tuples ---
+    def __map__(self, func: Callable[[Any], Any]) -> "JSONChain":
+        """Map over key/value pairs, preserving structure."""
+        return JSONChain([func(x) for x in self])
+
+    def __filter__(self, func: Callable[[Any], bool]) -> "JSONChain":
+        """Filter key/value pairs."""
+        return JSONChain([x for x in self if func(x)])
+
+    def __repr__(self) -> str:
+        return f"JSONChain({list(self._data)!r})"
+
+    # --- Stable JSON-like interface ---
+    def to_dict(self) -> dict:
+        """
+        Convert chain back to dict if it represents key/value tuples.
+        Safely handles conflicts by overriding duplicate keys.
+        """
+        d = {}
+        for item in self._data:
+            if isinstance(item, tuple) and len(item) == 2:
+                k, v = item
+                d[k] = v
+        return d
+
 
