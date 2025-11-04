@@ -3,7 +3,7 @@
 # pylint: disable=C0103,C0114
 
 '''
-pytest
+built-in unittests
 '''
 
 import sys
