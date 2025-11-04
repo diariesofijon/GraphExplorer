@@ -121,6 +121,37 @@ class TestJSONChain(unittest.TestCase):
         jchain = JSONChain()
         self.assertIsInstance(jchain, GraphChain)
 
+    def test_init_with_dict(self):
+        data = {"a": 1, "b": 2}
+        chain = JSONChain(data)
+        self.assertEqual(list(chain), [("a", 1), ("b", 2)])
+
+    def test_init_with_list(self):
+        data = [1, 2, 3]
+        chain = JSONChain(data)
+        self.assertEqual(list(chain), [1, 2, 3])
+
+    def test_flatten_nested(self):
+        data = {"a": {"b": {"c": 42}}, "x": [1, 2]}
+        chain = JSONChain(data)
+        flattened = chain.flatten(data)
+        expected = [("a.b.c", 42), ("x[0]", 1), ("x[1]", 2)]
+        self.assertEqual(flattened, expected)
+
+    def test_map_and_filter_on_json_chain(self):
+        data = {"a": 1, "b": 2, "c": 3}
+        chain = JSONChain(data)
+        mapped = chain.__map__(lambda kv: (kv[0], kv[1] * 10))
+        filtered = mapped.__filter__(lambda kv: kv[1] > 10)
+        self.assertEqual(list(filtered), [("b", 20), ("c", 30)])
+
+    def test_to_dict_roundtrip(self):
+        data = {"k1": 1, "k2": 2}
+        chain = JSONChain(data)
+        rebuilt = chain.to_dict()
+        self.assertEqual(rebuilt, data)
+
+
 
 if __name__ == "__main__":
     unittest.main()
