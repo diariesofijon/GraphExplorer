@@ -49,6 +49,7 @@ function! s:EnsureSingleTrailingNewline()
 endfunction
 
 
+" TODO: #28 make comment section rule based on those examples
 " ================================================
 "   🧪  Linting Configuration (ALE + pylint)
 " ================================================

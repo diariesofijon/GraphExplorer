@@ -10,7 +10,7 @@ from typing import (
     TypeVar, Set, Dict, Callable, List)
 
 
-__all__ = ('AbstractElement', 'AbstractChain',
+__all__ = ('AbstractElement', 'AbstractChain', 'AbstractTextFormatter',
     'AbstractGraphMask','AbstractTree', 'AbstractLoader')
 
 # TODO: Should I add typing or not
@@ -22,6 +22,7 @@ __all__ = ('AbstractElement', 'AbstractChain',
 # could element of graph!
 E = TypeVar('E')
 
+# FIXME: TODO: PRIORITZE wich better inherited from list or use it as composition
 class AbstractChain(list[E], abc.ABC, Generic[E]):
 
     '''
@@ -98,32 +99,32 @@ class AbstractChain(list[E], abc.ABC, Generic[E]):
 
 class AbstractLoader(abc.ABC):
 
-    # @property
-    # @abc.abstractmethod
-    # def __buffer__(self):
-    #     ''' memoryview(self) '''
+    @abc.abstractmethod
+    def __buffer__(self):
+        ''' memoryview(self) '''
 
-    # @property
-    # @abc.abstractmethod
-    # def __realease_buffer__(self):
-    #     ''' del memoryview(self) '''
+    @abc.abstractmethod
+    def __realease_buffer__(self):
+        ''' del memoryview(self) '''
 
-    # @property
-    # @abc.abstractmethod
-    # def __copy__(self):
-    #     ''' copy.copy(self) '''
+    @abc.abstractmethod
+    def __copy__(self):
+        ''' copy.copy(self) '''
 
-    # @property
-    # @abc.abstractmethod
-    # def __deepcopy__(self, memo):
-    #     ''' copy.deepcopy(self) '''
+    @abc.abstractmethod
+    def __deepcopy__(self, memo):
+        ''' copy.deepcopy(self) '''
 
-    # @property
-    # @abc.abstractmethod
-    # def __sizeof__(self):
-    #     ''' sys.getsizeof(self) '''
+    @abc.abstractmethod
+    def __sizeof__(self):
+        ''' sys.getsizeof(self) '''
 
     cached_context: str = ''
+
+    @property
+    @abc.abstractmethod
+    def formatter(self) -> Iterable:
+        pass
 
     @property
     @abc.abstractmethod
@@ -166,11 +167,11 @@ class AbstractLoader(abc.ABC):
     def mapping_fuction(self, func: Callable, sequence: Iterable):
         pass
 
-    # @abc.abstractmethod
-    # def __del__(self):
-    #     '''
-    #     Pythonic Loader's Garbadge Collector
-    #     '''
+    @abc.abstractmethod
+    def __del__(self):
+        '''
+        Pythonic Loader's Garbadge Collector
+        '''
 
 
 class AbstractTree(collections.abc.Mapping):
@@ -186,40 +187,30 @@ class AbstractTree(collections.abc.Mapping):
 
     # have to explaning augmenting path through the first to the end
 
-    # @property
-    # @abc.abstractmethod
-    # def _sliced_graph(self):
-    #     ''' Private link on a graph  '''
+    @abc.abstractmethod
+    def __buffer__(self):
+        ''' memoryview(self) '''
 
-    # @property
-    # @abc.abstractmethod
-    # def __buffer__(self):
-    #     ''' memoryview(self) '''
+    @abc.abstractmethod
+    def __realease_buffer__(self):
+        ''' del memoryview(self) '''
 
-    # @property
-    # @abc.abstractmethod
-    # def __realease_buffer__(self):
-    #     ''' del memoryview(self) '''
+    @abc.abstractmethod
+    def __copy__(self):
+        ''' copy.copy(self) '''
 
-    # @property
-    # @abc.abstractmethod
-    # def __copy__(self):
-    #     ''' copy.copy(self) '''
+    @abc.abstractmethod
+    def __deepcopy__(self, memo):
+        ''' copy.deepcopy(self) '''
 
-    # @property
-    # @abc.abstractmethod
-    # def __deepcopy__(self, memo):
-    #     ''' copy.deepcopy(self) '''
+    @abc.abstractmethod
+    def __sizeof__(self):
+        ''' sys.getsizeof(self) '''
 
-    # @property
-    # @abc.abstractmethod
-    # def __sizeof__(self):
-    #     ''' sys.getsizeof(self) '''
-
-    # @property
-    # @abc.abstractmethod
-    # def element_ids(self) -> Iterable[int]:
-    #     ''' Frozen set of all trees ids'''
+    @property
+    @abc.abstractmethod
+    def element_ids(self) -> Iterable[int]:
+        ''' Frozen set of all trees ids'''
 
     @property
     @abc.abstractmethod
@@ -243,19 +234,20 @@ class AbstractTree(collections.abc.Mapping):
     def bfs(self):
         ''' BFS as generator '''
 
-    # @abc.abstractmethod
-    # def chain(self):
-    #     ''' clear generator by all of the available tree components '''
+    @property
+    @abc.abstractmethod
+    def chain(self):
+        ''' clear generator by all of the available tree components '''
 
-    # @abc.abstractmethod
-    # def topological_sort(self):
-    #     ''' Topological sequence '''
+    @abc.abstractmethod
+    def topological_sort(self):
+        ''' Topological sequence '''
 
-    # @abc.abstractmethod
-    # def __del__(self):
-    #     '''
-    #     Pythonic Tree's Garbadge Collector
-    #     '''
+    @abc.abstractmethod
+    def __del__(self):
+        '''
+        Pythonic Tree's Garbadge Collector
+        '''
 
 
 class AbstractGraphMask(collections.abc.Collection):
@@ -270,30 +262,25 @@ class AbstractGraphMask(collections.abc.Collection):
     def __str__(self):
         ''' Unique string representation '''
 
-    # @property
-    # @abc.abstractmethod
-    # def __buffer__(self):
-    #     ''' memoryview(self) '''
+    @abc.abstractmethod
+    def __buffer__(self):
+        ''' memoryview(self) '''
 
-    # @property
-    # @abc.abstractmethod
-    # def __realease_buffer__(self):
-    #     ''' del memoryview(self) '''
+    @abc.abstractmethod
+    def __realease_buffer__(self):
+        ''' del memoryview(self) '''
 
-    # @property
-    # @abc.abstractmethod
-    # def __copy__(self):
-    #     ''' copy.copy(self) '''
+    @abc.abstractmethod
+    def __copy__(self):
+        ''' copy.copy(self) '''
 
-    # @property
-    # @abc.abstractmethod
-    # def __deepcopy__(self, memo):
-    #     ''' copy.deepcopy(self) '''
+    @abc.abstractmethod
+    def __deepcopy__(self, memo):
+        ''' copy.deepcopy(self) '''
 
-    # @property
-    # @abc.abstractmethod
-    # def __sizeof__(self):
-    #     ''' sys.getsizeof(self) '''
+    @abc.abstractmethod
+    def __sizeof__(self):
+        ''' sys.getsizeof(self) '''
 
     @property
     @abc.abstractmethod
@@ -308,10 +295,10 @@ class AbstractGraphMask(collections.abc.Collection):
     def file(self) -> str:
         ''' Which file from engine have to load text of the graph '''
 
-    # @property
-    # @abc.abstractmethod
-    # def loader(self):
-    #     ''' The way which defined who would load data '''
+    @property
+    @abc.abstractmethod
+    def loader(self):
+        ''' The way which defined who would load data '''
 
     @property
     @abc.abstractmethod
@@ -336,11 +323,11 @@ class AbstractGraphMask(collections.abc.Collection):
         # TODO: in first time it doesn't matter
         return False
 
-    # @abc.abstractmethod
-    # def __del__(self):
-    #     '''
-    #     Pythonic Graph's Garbadge Collector
-    #     '''
+    @abc.abstractmethod
+    def __del__(self):
+        '''
+        Pythonic Graph's Garbadge Collector
+        '''
 
 
 class AbstractElement(collections.abc.Hashable):
@@ -352,7 +339,7 @@ class AbstractElement(collections.abc.Hashable):
     # _children: Optional[List[int]] = None
     # _parents: Optional[List[int]] = None
     # TODO: IMPLEMENT PYTHONIC COLLECTION ABSTRACTION
-    # TODO: MAKE IT SINGLETONE
+    # TODO: #23 MAKE IT SINGLETONE
 
     @abc.abstractmethod
     def __hash__(self):
@@ -366,30 +353,25 @@ class AbstractElement(collections.abc.Hashable):
     def __str__(self) -> str:
         ''' Unique string representation '''
 
-    # @property
-    # @abc.abstractmethod
-    # def __buffer__(self):
-    #     ''' memoryview(self) '''
+    @abc.abstractmethod
+    def __buffer__(self):
+        ''' memoryview(self) '''
 
-    # @property
-    # @abc.abstractmethod
-    # def __realease_buffer__(self):
-    #     ''' del memoryview(self) '''
+    @abc.abstractmethod
+    def __realease_buffer__(self):
+        ''' del memoryview(self) '''
 
-    # @property
-    # @abc.abstractmethod
-    # def __copy__(self):
-    #     ''' copy.copy(self) '''
+    @abc.abstractmethod
+    def __copy__(self):
+        ''' copy.copy(self) '''
 
-    # @property
-    # @abc.abstractmethod
-    # def __deepcopy__(self, memo):
-    #     ''' copy.deepcopy(self) '''
+    @abc.abstractmethod
+    def __deepcopy__(self, memo):
+        ''' copy.deepcopy(self) '''
 
-    # @property
-    # @abc.abstractmethod
-    # def __sizeof__(self):
-    #     ''' sys.getsizeof(self) '''
+    @abc.abstractmethod
+    def __sizeof__(self):
+        ''' sys.getsizeof(self) '''
 
     @property
     @abc.abstractmethod
@@ -426,11 +408,11 @@ class AbstractElement(collections.abc.Hashable):
     def parents(self):
         ''' Nodes that have pointed by the node '''
 
-    # @abc.abstractmethod
-    # def __del__(self):
-    #     '''
-    #     Pythonic Element's Garbadge Collector
-    #     '''
+    @abc.abstractmethod
+    def __del__(self):
+        '''
+        Pythonic Element's Garbadge Collector
+        '''
 
 class AbstractTextFormatter(abc.ABC):
 
@@ -439,5 +421,5 @@ class AbstractTextFormatter(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def mask(self, kind: AbstractLoader) -> Protocol:
+    def mask(self, kind: bool) -> protocols.MaskProtocol:
         pass

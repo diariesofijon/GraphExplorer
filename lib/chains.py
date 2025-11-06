@@ -24,10 +24,11 @@ class BaseChain(abc.AbstractChain):
     blank:  bool = True
     unique: bool = False
 
-    def __init__(self, 
+    def __post_init__(self, 
         data:    Optional[Iterable[E]]= None, 
         unique:  bool= True, 
         flambda: Callback = None):
+        # TODO: moves fields above as field factory
     
         flambda: Callable = self.flambda if not flambda else flambda
     

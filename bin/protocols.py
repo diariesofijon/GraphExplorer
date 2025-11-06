@@ -12,7 +12,7 @@ __all__ = ('InfoProtocol', 'GraphInfoProtocol', 'VertexProtocol',
 
 
 # --- Loader Protocols ---
-
+# TODO: CHANGE THE NAME IN THE RIGHT WAY
 class ProtocolLoader(Protocol):
 
     """
@@ -63,8 +63,12 @@ class LoaderDetector(Protocol):
     Responsible for picking the correct loader based on file extension.
     """
 
-    def detect_loader(self, path: str) -> ProtocolLoader: ...
-    def load(self, path: str, type: str = "r", mode: str = "r", starts: int = 0) -> object: ...
+    def detect_loader(self, path: str) -> ProtocolLoader: 
+        ...
+
+    # FIXME: DON'T USE object literal use the same protocol
+    def load(self, path: str, type: str = "r", mode: str = "r", starts: int = 0) -> object: 
+        ...
 
 
 # @runtime_checkable TODO: LET IT WOULD BE WORK CORRECTLY WI INSPECT.SIGNATURE
@@ -150,7 +154,7 @@ def GraphProtocol(Protocol):
         ...
 
 
-# @runtime_checkable TODO: LET IT WOULD BE WORK CORRECTLY WI INSPECT.SIGNATURE
+# @runtime_checkable TODO: #24 LET IT WOULD BE WORK CORRECTLY WI INSPECT.SIGNATURE
 class TreeProtocol(Protocol):
 
     def graph(self) -> GraphProtocol:
@@ -184,7 +188,7 @@ class MaskProtocol(Protocol):
 
 
     def allow_node(self, node: str) -> bool:
-        raise NotImplementedError
+        ...
 
     def allow_edge(self, u: str, v: str) -> bool:
-        raise NotImplementedError
+        ...

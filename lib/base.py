@@ -12,11 +12,12 @@ from dataclasses import dataclass, field
 from typing import FrozenSet, Tuple, List, Optional, Dict, Iterable, Callable
 
 import config
-from bin import metaclasses
+from bin import metaclasses, protocols
 from lib import shortcuts, abc, drivers, typing, chains
 
 
-__all__ = ('BaseTree', 'BaseElement', 'BaseGraphMask')
+__all__ = ('BaseLoader',
+    'BaseTree', 'BaseElement', 'BaseGraphMask', 'BasicTextFormatter')
 
 
 def index_factory(return_type=int):
@@ -30,6 +31,21 @@ def index_factory(return_type=int):
     return mechanism
 
 class BasicTextFormatter(abc.AbstractTextFormatter):
+
+    def get_kwargs_element(self, text: str) -> Dict:
+		return {
+			'id':		  None,
+			'globals':	  None,
+			'body':		  None,
+			'graph':	  None,
+			'separeter':  None,
+			'chain_type': None,}
+
+    def mask(self, kind: bool) -> protocols.MaskProtocol:
+        if kind:
+            return masks.NodeWhitelistMask()
+        return maks.NoMaks()
+
     def format(self, text: str) -> str:
         lines = text.splitlines()
         cleaned = []
@@ -101,19 +117,21 @@ class BaseElement(abc.AbstractElement):
         return _parents
 
 
+@dataclass
 class BaseLoader(abc.AbstractLoader):
 
     __metaclass__    = metaclasses.MetaLoader
 
-    file_path: str           = 'example'
-    separeter: str           = config.SEPARATES.get('NODE')
-    element_class: typing.GE = BaseElement
+    file_path: str              = 'example'
+    separeter: str              = config.SEPARATES.get('NODE')
+    element_class: typing.GE    = BaseElement # TODO: which better Basic or Base
+    formatter: typing.Formatter = field(default_factory=BasicTextFormatter)
 
     _ids: FrozenSet  = {}
     _map: Dict       = {}
     _last_index: int = 0
 
-    def __init__(self, graph: typing.GM, etype: Optional[typing.GE] = None):
+    def __post_init__(self, graph: typing.GM, etype: Optional[typing.GE] = None):
         self.instance_graph: typing.GM = graph
         if etype:
             self.element_class: typing.GE = etype
@@ -124,18 +142,13 @@ class BaseLoader(abc.AbstractLoader):
     def __len__(self):
         return len(self.ids)
 
-    # def __del__(self):
-    #     '''
-    #     Pythonic Loader's Garbadge Collector
-    #     Don't use when it is not pythonic dataclass
-    #     '''
-    #     # del self.file_path
-    #     # del self.separeter
-    #     # del self.element_class
-    #     # del self._ids
-    #     # del self._map
-    #     # del self.cached_context
-    #     pass
+    def __del__(self):
+        '''
+        Pythonic Loader's Garbadge Collector
+        Don't use when it is not pythonic dataclass
+        '''
+        del self.self.instance_graph
+        del self.cached_context
 
     @property
     def map(self):
@@ -162,7 +175,8 @@ class BaseLoader(abc.AbstractLoader):
 
     def convert_element(self, tmp: str) -> typing.GGE:
         ''' Engine convertor '''
-        grouped, body = shortcuts.separete_from_text_element(tmp)
+        # TODO: #29 makes it works strictly when it turn any composed api
+        grouped, body = self.format(tmp)
         self._last_index += 1
         return self.element_class(graph=self.instance_graph,
             id=self._last_index, grouped=grouped, body=body)
@@ -256,9 +270,6 @@ class BaseGraphMask(abc.AbstractGraphMask):
     @tree_topic.setter
     def tree_topic(self, element: typing.GE) -> typing.GE:
         ''' Highest element in the biggest tree of the graph '''
-        # if isinstance(element, RepresentativeGraphElementMask):
-        #     self._topic = element
-        # raise config.ValidationError
         self._topic: typing.GE = element
 
     @property
