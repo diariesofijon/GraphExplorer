@@ -1,7 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from typing import Protocol, , Tuple, List, Dict, FrozenSet, Callable, Union
+'''
+    *** TO AVOIDE CIRCULAR IMPORT FROM lib.typing USE LITERALS ' ONLY! ***
+    All needed interfaces, generics witch could be use as runtime_checkable
+'''
+
+from typing import (Protocol, Tuple, List, Dict, 
+    Iterable, FrozenSet, Callable, Union)
 # , runtime_checkable TODO: LET IT WOULD BE WORK CORRECTLY WI INSPECT.SIGNATURE
 from lib import typing
 
@@ -12,7 +18,7 @@ __all__ = ('InfoProtocol', 'GraphInfoProtocol', 'VertexProtocol',
 
 
 # --- Loader Protocols ---
-
+# TODO: CHANGE THE NAME IN THE RIGHT WAY
 class ProtocolLoader(Protocol):
 
     """
@@ -63,8 +69,12 @@ class LoaderDetector(Protocol):
     Responsible for picking the correct loader based on file extension.
     """
 
-    def detect_loader(self, path: str) -> ProtocolLoader: ...
-    def load(self, path: str, type: str = "r", mode: str = "r", starts: int = 0) -> object: ...
+    def detect_loader(self, path: str) -> ProtocolLoader: 
+        ...
+
+    # FIXME: DON'T USE object literal use the same protocol
+    def load(self, path: str, type: str = "r", mode: str = "r", starts: int = 0) -> object: 
+        ...
 
 
 # @runtime_checkable TODO: LET IT WOULD BE WORK CORRECTLY WI INSPECT.SIGNATURE
@@ -79,7 +89,7 @@ class InfoProtocol(Protocol):
 class GraphInfoProtocol(InfoProtocol):
 
     @property
-    def top(self) -> typing.GE:
+    def top(self) -> 'typing.GE':
         ...
 
     @property
@@ -91,11 +101,11 @@ class GraphInfoProtocol(InfoProtocol):
 class VertexProtocol(GraphInfoProtocol):
 
     @property
-    def last(self) -> typing.GE:
+    def last(self) -> 'typing.GE':
         ...
 
     @property
-    def edges(self) -> Iterable[typing.GE]:
+    def edges(self) -> Iterable['typing.GE']:
         ...
 
     @property
@@ -112,7 +122,7 @@ class VertexProtocol(GraphInfoProtocol):
 
 class GraphsDunderMethodsMixinProtocol(Protocol):
 
-    def __iter__(self) -> typing.GGE:
+    def __iter__(self) -> 'typing.GGE':
         ...
 
     def __len__(self) -> int:
@@ -124,10 +134,10 @@ class GraphsDunderMethodsMixinProtocol(Protocol):
     def __repr__(self) -> str:
         ...
 
-    def __getitem__(self, key: int) -> typing.GE:
+    def __getitem__(self, key: int) -> 'typing.GE':
         ...
 
-    def __contains__(self, element: typing.GE) -> bool:
+    def __contains__(self, element: 'typing.GE') -> bool:
         ...
 
     def __del__(self):
@@ -146,11 +156,11 @@ def GraphProtocol(Protocol):
     def dfs(self, vertex: int) -> Tuple[List]:
         ...
 
-    def bfs(self, node: typing.GE, visited: List) -> Tuple[List]:
+    def bfs(self, node: 'typing.GE', visited: List) -> Tuple[List]:
         ...
 
 
-# @runtime_checkable TODO: LET IT WOULD BE WORK CORRECTLY WI INSPECT.SIGNATURE
+# @runtime_checkable TODO: #24 LET IT WOULD BE WORK CORRECTLY WI INSPECT.SIGNATURE
 class TreeProtocol(Protocol):
 
     def graph(self) -> GraphProtocol:
@@ -159,7 +169,7 @@ class TreeProtocol(Protocol):
     def element_ids(self) -> List[int]:
         ...
 
-    def top(self) -> typing.GE:
+    def top(self) -> 'typing.GE':
         ...
 
     def longest_chain(self) -> Iterable:
@@ -177,14 +187,14 @@ class TreeProtocol(Protocol):
         '''
         ...
 
-    def bfs(self, node: typing.GE, visited: List) -> Tuple[List]:
+    def bfs(self, node: 'typing.GE', visited: List) -> Tuple[List]:
         ...
 
 class MaskProtocol(Protocol):
 
 
     def allow_node(self, node: str) -> bool:
-        raise NotImplementedError
+        ...
 
     def allow_edge(self, u: str, v: str) -> bool:
-        raise NotImplementedError
+        ...

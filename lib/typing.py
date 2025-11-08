@@ -14,5 +14,6 @@ GGE = Iterable[GE]
 Chain = TypeVar('Chain', bound=abc.AbstractChain)
 Tree = TypeVar('Tree', bound=abc.AbstractTree)
 Loader = TypeVar('Loader', bound=abc.AbstractLoader)
+Formatter = TypeVar('Formatter', bound=abc.AbstractTextFormatter)
 NumericalSequence = Set[int]
 ChainNumericals = Set[NumericalSequence]

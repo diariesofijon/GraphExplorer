@@ -5,6 +5,11 @@
 # node_mask: Optional[str] = r'(?P<id>\D+)\((?P<children_list>.*)\)'
 # part_mask: Optional[str] = r'.*(?P<id>\S+\D+\).\n'
 
+'''
+Docs Section
+# TODO: #25 explain the idea of masks
+'''
+
 from typing import Optional
 
 from bin.protocols import MaskProtocol
@@ -41,6 +46,7 @@ class EdgeWeightMask(MaskProtocol):
         return True
 
     def allow_edge(self, u, v):
+        # TODO: make access by the hash of them
         return self.weights.get((u, v), float('-inf')) >= self.min_weight
 
 

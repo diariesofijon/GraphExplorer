@@ -16,7 +16,7 @@ import os.path
 import abc
 
 
-# TODO: make logger settings and add pythonic logger into the project!!!!
+# TODO: #26 make logger settings and add pythonic logger into the project!!!!
 
 ENCODING = 'utf8'
 
@@ -48,7 +48,7 @@ FILE_DATA_OUTLOADER_PATH_CSV = f'{ABSOLUTE_PATH}/assets/asset_graph.csv'
 FILE_DATA_OUTLOADER_PATH_JSON = f'{ABSOLUTE_PATH}/assets/asset_graph.json'
 
 META_CLASS_INHERITANCE_DEPTH = 5
-# TODO: concept rising errors to inspect too huge MRO.
+# TODO: #27 concept rising errors to inspect too huge MRO.
 
 META_CLASS_TRACEBACKS = {
     '__mro__': 'is bigger then META_CLASS_INHERITANCE_DEPTH',
@@ -89,7 +89,7 @@ class FormattingError(ConfigError):
         'Just see above through the execution stack of the methods'
     traceback_message: str ='That is not supposed to be a field!\n'
 
-class JsonError(FormattingError):
+class JSONError(FormattingError):
 
     constant_undefined: str = \
         'any JSON fromat are not needed in pre-formatting process,' \

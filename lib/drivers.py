@@ -186,7 +186,7 @@ class XMLLoader(base.BaseLoader):
     extensions = ['xml', 'xsd']
     element_class = RepresentativeElement
     chain_type = chains.GraphChain
-    formatter: base.BasicTextFormatter = field(default_factory=formatters.JSONFormatter)
+    # formatter: base.BasicTextFormatter = field(default_factory=formatters.JSONFormatter)
 
     def loads_from(self, path: str, type: str, mode: str = "r", starts: int = 0):
         tree = ET.parse(path)
