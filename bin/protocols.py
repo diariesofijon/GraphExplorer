@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from typing import Protocol, Tuple, List, Dict, FrozenSet, Callable, Union
+from typing import (Protocol, Tuple, List, Dict, 
+    Iterable, FrozenSet, Callable, Union)
 # , runtime_checkable TODO: LET IT WOULD BE WORK CORRECTLY WI INSPECT.SIGNATURE
 from lib import typing
 
