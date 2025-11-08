@@ -10,7 +10,7 @@ from typing import (
     TypeVar, Set, Dict, Callable, List)
 
 
-from bin import protocols
+# from bin import protocols
 
 
 __all__ = ('AbstractElement', 'AbstractChain', 'AbstractTextFormatter',
@@ -424,5 +424,5 @@ class AbstractTextFormatter(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def mask(self, kind: bool) -> protocols.MaskProtocol:
+    def mask(self, kind: bool) -> 'AbstractTextFormatter':
         pass
