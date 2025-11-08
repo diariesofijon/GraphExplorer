@@ -33,13 +33,13 @@ def index_factory(return_type=int):
 class BasicTextFormatter(abc.AbstractTextFormatter):
 
     def get_kwargs_element(self, text: str) -> Dict:
-		return {
-			'id':		  None,
-			'globals':	  None,
-			'body':		  None,
-			'graph':	  None,
-			'separeter':  None,
-			'chain_type': None,}
+        return {
+            'id':		  None,
+            'globals':	  None,
+            'body':		  None,
+            'graph':	  None,
+            'separeter':  None,
+            'chain_type': None,}
 
     def mask(self, kind: bool) -> protocols.MaskProtocol:
         if kind:
