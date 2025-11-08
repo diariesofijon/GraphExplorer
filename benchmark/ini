@@ -1,0 +1,14 @@
+[Unit]
+Description=Functional Benchmark Service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/bench_service/main.py
+WorkingDirectory=/opt/bench_service
+Restart=always
+User=benchmark
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
+

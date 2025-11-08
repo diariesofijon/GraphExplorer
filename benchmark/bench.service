@@ -1,0 +1,17 @@
+[Unit]
+Description=Graph Bench Service
+After=network.target
+
+[Service]
+User=benchuser
+Group=benchuser
+WorkingDirectory=/opt/graphexplorer
+Environment=PYTHONUNBUFFERED=1
+Environment=BENCH_SERVICE_TOKEN=your-secret-token-here
+ExecStart=/usr/bin/gunicorn --bind 0.0.0.0:8000 --workers 2 --chdir /opt/graphexplorer bench_service.app:app
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
+
