@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from lib.drivers import TxtLoader, Jsonloader
+from lib.drivers import TxtLoader, JSONLoader
 from lib.base import BaseGraphMask, BasicTextFormatter
 from lib.masks import CompositeMask
 
