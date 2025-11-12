@@ -36,22 +36,23 @@ class JSONFormatter(base.BasicTextFormatter):
         except json.JSONDecodeError as decode_error:
             raise config.JSONError from decode_error
 	
-	def mask(self, kind: bool) -> protocols.MaskProtocol:
-		return masks.NoMask()
+    def mask(self, kind: bool) -> protocols.MaskProtocol:
+        return masks.NoMask()
 
 
 class MatrixEisenhowerTXTFormatter(base.BasicTextFormatter):
 
-	def format(self, text: str):
-		return shortcuts.simplest_txt_element(text)
+    def format(self, text: str):
+        return shortcuts.simplest_txt_element(text)
 
-	def get_kwargs_element(self, text: str) -> Dict:
-		return {
-			'id':		  None,
-			'globals':	  None,
-			'part':		  None,
-			'grouped':	  None,
-			'body':		  None,
-			'graph':	  None,
-			'separeter':  None,
-			'chain_type': None,}
+    def get_kwargs_element(self, text: str) -> Dict:
+        return {
+            'id':		  None,
+            'globals':	  None,
+            'part':		  None,
+            'grouped':	  None,
+            'body':		  None,
+            'graph':	  None,
+            'separeter':  None,
+            'chain_type': None,}
+

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=E0401
 
-from typing import Iterable, Dict, Tuple, Callable, Optional, List, TypeVar
+from typing import Iterable, Dict, Tuple, Callable, Optional, List, TypeVar, Any
 
 from bin import metaclasses
 from lib import abc, shortcuts, typing

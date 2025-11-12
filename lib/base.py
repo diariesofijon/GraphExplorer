@@ -124,11 +124,11 @@ class BaseLoader(abc.AbstractLoader):
 
     file_path: str              = 'example'
     separeter: str              = config.SEPARATES.get('NODE')
-    element_class: typing.GE    = BaseElement # TODO: which better Basic or Base
+    element_class: typing.GE    = field(default_factory=BaseElement) # TODO: which better Basic or Base
     formatter: typing.Formatter = field(default_factory=BasicTextFormatter)
 
-    _ids: FrozenSet  = {}
-    _map: Dict       = {}
+    _ids: FrozenSet  = field(default_factory=dict)
+    _map: Dict       = field(default_factory=dict)
     _last_index: int = 0
 
     def __post_init__(self, graph: typing.GM, etype: Optional[typing.GE] = None):
