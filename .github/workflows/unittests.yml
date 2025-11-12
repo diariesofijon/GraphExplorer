@@ -29,10 +29,10 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
+        python -m pip install --upgrade pip;
+        pip install pipenv;
+        pipenv install --dev;
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        if [ -f Pipfile ]; pip install pipenv; fi
-        if [ -f Pipfile ]; pipenv install --dev; fi
 
     - name: Run tests
       run: |
