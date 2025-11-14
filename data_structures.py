@@ -98,7 +98,7 @@ class EisenhowerMatrixConvertationMask(StringByStringGraphMask):
     def find_the_rigth_tree_by_vertex_size(self, count: int=5, recursion: bool=False):
         # But also the best count has two varients of the tree
         # the best tree has smallest count of edge
-        story, edges_lengths = self.vertexes, len(self)
+        story, edges_lengths = deepcopy(self.vertexes), len(self)
         # TODO: THIRDLY: convert this for loop to recursion conception from another function interface!!!
         for element in self:
             # TODO: FOURTHLY: move it logic to the VertexInfo
@@ -107,6 +107,8 @@ class EisenhowerMatrixConvertationMask(StringByStringGraphMask):
             if len(edges) < edges_lengths:
                 edges_lengths, story[count] = len(edges), element
             tree = self.exclude_tree(story=story)
+            # TODO: #30 makes Enum for that as it was it
+            # https://docs.python.org/3/library/dataclasses.html#descriptor-typed-fields
             yield len(tree), tree, story, shortcuts.is_bipartite(edges)
         if recursion and count:
             yield from self.find_the_rigth_tree_by_vertex_size(
