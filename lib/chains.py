@@ -26,7 +26,6 @@ class BaseChain(abc.AbstractChain):
 
     def __post_init__(self, 
         data:    Optional[Iterable[E]]= None, 
-        unique:  bool= True, 
         flambda: Callback = None):
         # TODO: moves fields above as field factory
     
@@ -34,9 +33,7 @@ class BaseChain(abc.AbstractChain):
     
         self._data: List[E] = list(data) if data else []
     
-        if unique or self.unique:
-            # ensure uniqueness while preserving order
-            self.unique: bool = unique
+        if self.unique:
             seen = set()
             self._data = (
                 x for x in self._data if not (x in seen or seen.add(x)))
