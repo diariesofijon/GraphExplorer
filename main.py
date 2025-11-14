@@ -4,7 +4,7 @@
 # pylint: disable=E0401
 
 '''
-    TODO: make DFS step by step
+    TODO: #31 make DFS step by step
         1. function bounded method for the graph which fitler by tree belonging
             1. Make test for the trees and graph of minimum of the 80% coverage
             2. Proof the conception of the Enums of VertexInfo
