@@ -107,7 +107,7 @@ class AbstractLoader(abc.ABC):
         ''' memoryview(self) '''
 
     @abc.abstractmethod
-    def __realease_buffer__(self):
+    def __release_buffer__(self):
         ''' del memoryview(self) '''
 
     @abc.abstractmethod
@@ -195,7 +195,7 @@ class AbstractTree(collections.abc.Mapping):
         ''' memoryview(self) '''
 
     @abc.abstractmethod
-    def __realease_buffer__(self):
+    def __release_buffer__(self):
         ''' del memoryview(self) '''
 
     @abc.abstractmethod
@@ -270,7 +270,7 @@ class AbstractGraphMask(collections.abc.Collection):
         ''' memoryview(self) '''
 
     @abc.abstractmethod
-    def __realease_buffer__(self):
+    def __release_buffer__(self):
         ''' del memoryview(self) '''
 
     @abc.abstractmethod
@@ -361,7 +361,7 @@ class AbstractElement(collections.abc.Hashable):
         ''' memoryview(self) '''
 
     @abc.abstractmethod
-    def __realease_buffer__(self):
+    def __release_buffer__(self):
         ''' del memoryview(self) '''
 
     @abc.abstractmethod
@@ -418,7 +418,7 @@ class AbstractElement(collections.abc.Hashable):
         '''
 
 class AbstractTextFormatter(abc.ABC):
-
+    
     @abc.abstractmethod
     def format(self, text: str) -> str:
         pass

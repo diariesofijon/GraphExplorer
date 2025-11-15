@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 
-from enum import Enume
+from enum import Enum
+from dataclasses import field, dataclass
+from collections import defaultdict
+from typing import Dict
+
+from lib import typing
 
 
+@dataclass
 class VertexInfo(Enum):
 
     # TODO: LETS METACLASS IDICATE VERTEXTINFO DUPLICATES

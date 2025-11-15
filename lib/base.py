@@ -10,6 +10,7 @@
 import abc
 from dataclasses import dataclass, field
 from typing import FrozenSet, Tuple, List, Optional, Dict, Iterable, Callable
+from copy import copy, deepcopy
 
 import config
 from bin import metaclasses, protocols
@@ -217,6 +218,9 @@ class BaseGraphMask(abc.AbstractGraphMask):
     def __repr__(self) -> str:
         return self.__str__()
 
+    def __sizeof__(self) -> int:
+        raise NotImplemented
+
     def __getitem__(self, key: int) -> typing.GE:
         # TODO: place awqay the validation
         # don't forget that it question about error arised in the same place that
@@ -235,18 +239,52 @@ class BaseGraphMask(abc.AbstractGraphMask):
         # return isinstance(element, self.element_class)
         return element in self.loader.map.items()
 
-    # def __del__(self):
-    #     '''
-    #     Pythonic Graph's Garbadge Collector
-    #     '''
-    #     # del self.file
-    #     # del self.separeter
-    #     # del self.element_class
-    #     # del self.loader
-    #     # del self._visited
-    #     # del self._queue
-    #     # del self._topic
-    #     pass
+    def __del__(self):
+         '''
+         Pythonic Graph's Garbadge Collector
+         '''
+         del self.file
+         del self.separeter
+         del self.element_class
+         if self._loader:
+             del self._loader
+             del self._visited
+             del self._queue
+             del self._topic
+
+    def __copy__(self):
+        '''
+            Copy only pointer on the graphs mask.
+        '''
+        return type(self)(*self)
+
+    def __deepcopy__(self):
+        '''
+            Clearly copy all masked needed data pointed as a graph sructure. Has no side effects.
+        '''
+        graph = copy(self)
+        graph.file     = deepcopy(graph.file)
+        graph.separeter = deepcopy(graph.separeter)
+        # TODO: make works as field without private fileds
+        graph._loader = None
+        graph.dfs()
+        return graph
+
+    def __buffer__(self, flags: int, /):
+        chain = bytearray(*self)
+        name  = bytearray(self.__name__)
+        sep   = bytearray(self.separeter)
+        by    = bytearray(self.loader.__name__)
+        return name + sep + by + sep + chain
+
+    def __release_buffer__(self, buffer: bytearray, /):
+        converted = release(buffer)
+        for cls in mro(self):
+            if converted.startswith(cls.__name__):
+                _, by, chain = converted.split(cls.separeter)
+                if not cls.loader.__name__ == by:
+                    raise ValueError(by + ' is not loader')
+                return cls(*release(chain))
 
     _loader = None
 
