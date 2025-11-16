@@ -155,7 +155,7 @@ class BaseLoader(abc.AbstractLoader):
                    sys.getsizeof(self._ids,
                    sys.getsizeof(self._map),
                    sys.getsizeof(self._last_index),
-                   sys.getsizeof(dir(self.formatter))
+                   sys.getsizeof(dir(self.formatter)))
     
     # TODO: #33 makes test and docs, benchmarks for
     # each __copy__, __deepcopy__, __buffer__, __release_buffer__
