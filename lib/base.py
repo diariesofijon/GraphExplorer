@@ -21,13 +21,11 @@ __all__ = ('BaseLoader',
     'BaseTree', 'BaseElement', 'BaseGraphMask', 'BasicTextFormatter')
 
 
-def index_factory(return_type=int):
-
-    _index = -1
+def index_factory(return_type=int, index = -1):
 
     def mechanism():
-        _index += 1
-        return return_type(_index)
+        index += 1
+        return return_type(index)
 
     return mechanism
 
@@ -83,12 +81,13 @@ class BaseElement(abc.AbstractElement):
         part = self.part if self.part else 'SIMPLE'
         return f'{part} id: {self.id} = {self.grouped} - {self.body}'\
 
-    # def __del__(self):
-    #     '''
-    #     Pythonic Element's Garbadge Collector
-    #     '''
-    #     for child in self.children:
-    #         del child
+    def __del__(self):
+        '''
+        Pythonic Element's Garbadge Collector
+        '''
+        del self.globals
+        for child in self.children:
+            del child
 
     @property
     def children_index(self):
@@ -150,6 +149,30 @@ class BaseLoader(abc.AbstractLoader):
         '''
         del self.self.instance_graph
         del self.cached_context
+    
+    # TODO: #33 makes test and docs, benchmarks for
+    # each __copy__, __deepcopy__, __buffer__, __release_buffer__
+    def __copy__(self):
+        loader = type(self)(self.graph)
+        return loader
+    
+    def __deepcopy__(self):
+        return copy(self)
+
+    def __buffer__(self, flag: int, /):
+        sep     = bytearray(self.separeter, config.ENCODING)
+        name    = bytearray(self.__name__)
+        content = bytearray(self.cached_context)
+        return name + sep + content
+    
+    def __release_buffer__(self, buffer: bytearray, /):
+        info: str = release(buffer)
+        if not info.startswith(self.__name__):
+            raise BufferError
+        content: str = info.split(self.separeter)[0::-1]
+        loader = type(self)(type(self.graph)())
+        loader.cached_context = content
+        return loader
 
     @property
     def map(self):
@@ -237,6 +260,7 @@ class BaseGraphMask(abc.AbstractGraphMask):
         # except IndexError:
         #     return False
         # return isinstance(element, self.element_class)
+        # TODO: #32 make docs for all dunders please
         return element in self.loader.map.items()
 
     def __del__(self):
@@ -271,11 +295,18 @@ class BaseGraphMask(abc.AbstractGraphMask):
         return graph
 
     def __buffer__(self, flags: int, /):
-        chain = bytearray(*self)
-        name  = bytearray(self.__name__)
-        sep   = bytearray(self.separeter)
-        by    = bytearray(self.loader.__name__)
+        '''
+            Can replicated from each self and works faster the copy(...) or deepcopy(...)
+        '''
+        chain = bytearray(*self, config.ENCODING)
+        name  = bytearray(self.__name__, config.ENCODING)
+        sep   = bytearray(self.separeter, config.ENCODING)
+        by    = bytearray(self.loader.__name__, config.ENCODING)
         return name + sep + by + sep + chain
+        # may be could be better
+        # return bytearray((key for key in(
+        #     str(*self),self.__name__, 
+        #     self.loader.__name__)).join(self.separeter), config.ENCODING)
 
     def __release_buffer__(self, buffer: bytearray, /):
         converted = release(buffer)
