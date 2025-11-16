@@ -128,10 +128,10 @@ class AbstractLoader(abc.ABC):
 
     cached_context: str = ''
 
-    @property
-    @abc.abstractmethod
-    def formatter(self) -> 'AbstractTextFormatter':
-        pass
+    # @property
+    # @abc.abstractmethod
+    # def formatter(self) -> 'AbstractTextFormatter':
+    #     pass
 
     @property
     @abc.abstractmethod
