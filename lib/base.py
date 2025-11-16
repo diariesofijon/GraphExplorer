@@ -152,7 +152,7 @@ class BaseLoader(abc.AbstractLoader):
     
     def __sizeof__(self):
         return sum(sys.getsizeof(self.cached_context),
-                   sys.getsizeof(self._ids,
+                   sys.getsizeof(self._ids),
                    sys.getsizeof(self._map),
                    sys.getsizeof(self._last_index),
                    sys.getsizeof(dir(self.formatter)))
