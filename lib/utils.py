@@ -5,15 +5,19 @@
 import json
 from typing import Any, Dict, List, Callable, Type
 
-# Assume these are already defined in your codebase:
-from elements import Element
-from graph import Graph
+# TODO: makes it as a Factory like FactoryLoader
+# at .lib.drivers.FactoryLoader
+# from elements import Element
+# from graph import Graph
 from lib.chains import JSONChain
+from lib.base import BaseElement, BaseGraphMask
+from lib import typing
+import config
 
 
 # --- Pure Functional Serializers ---
 
-def serialize_element(el: Element) -> Dict[str, Any]:
+def serialize_element(el: typing.GE) -> Dict[str, Any]:
     """Functional: element -> dict."""
     return {
         "type": "Element",
@@ -22,7 +26,7 @@ def serialize_element(el: Element) -> Dict[str, Any]:
     }
 
 
-def serialize_graph(graph: Graph) -> Dict[str, Any]:
+def serialize_graph(graph: typing.GM) -> Dict[str, Any]:
     """Functional: graph -> dict (no side effects)."""
     return {
         "type": "Graph",
@@ -40,26 +44,27 @@ def serialize_graph(graph: Graph) -> Dict[str, Any]:
     }
 
 
-def serialize_chain(chain: JSONChain) -> Dict[str, Any]:
+def serialize_chain(chain: typing.Chain) -> Dict[str, Any]:
     """Functional: chain -> dict."""
     return {
-        "type": "JSONChain",
+        "type": type(chain).__name__,
         "graph": serialize_graph(chain.graph),
     }
 
 
 # --- Pure Functional Deserializers ---
 
-def deserialize_element(data: Dict[str, Any]) -> Element:
-    return Element(data["name"], **data.get("meta", {}))
+def deserialize_element(data: Dict[str, Any]) -> typing.GE:
+    return BaseElement(data["name"], **data.get("meta", {}))
 
 
-def deserialize_graph(data: Dict[str, Any]) -> Graph:
-    g = Graph(directed=data.get("directed", True))
+def deserialize_graph(data: Dict[str, Any]) -> typing.GM:
+    g = BaseGraphMask(directed=data.get("directed", True))
     for e in data["edges"]:
         parent = deserialize_element(e["parent"])
         child = deserialize_element(e["child"])
         if e.get("weight") is not None:
+            # FIXME: #34 make add_edge work
             g.add_edge(parent, child, weight=e["weight"])
         else:
             g.add_edge(parent, child)
@@ -101,12 +106,12 @@ def from_json_data(data: Dict[str, Any]) -> Any:
 def store_json(obj: Any, path: str) -> None:
     """Save to file — side effect isolated."""
     data = to_json_data(obj)
-    with open(path, "w", encoding="utf-8") as f:
+    with open(path, "w", encoding=config.ENCODING) as f:
         json.dump(data, f, indent=2)
 
 
 def load_json(path: str) -> Any:
     """Load from file — side effect isolated."""
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, "r", encoding=config.ENCODING) as f:
         data = json.load(f)
     return from_json_data(data)

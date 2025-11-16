@@ -4,10 +4,10 @@
 # pylint: disable=E0401
 
 '''
-    Abstract classes for graph exploring
+    Key conceptions of classes for graph exploring
 '''
 
-import abc
+import sys
 from dataclasses import dataclass, field
 from typing import FrozenSet, Tuple, List, Optional, Dict, Iterable, Callable
 from copy import copy, deepcopy
@@ -124,7 +124,7 @@ class BaseLoader(abc.AbstractLoader):
 
     file_path: str              = 'example'
     separeter: str              = config.SEPARATES.get('NODE')
-    element_class: typing.GE    = field(default_factory=BaseElement) # TODO: which better Basic or Base
+    element_class: typing.GE    = BaseElement
     formatter: typing.Formatter = field(default_factory=BasicTextFormatter)
 
     _ids: FrozenSet  = field(default_factory=dict)
@@ -149,6 +149,13 @@ class BaseLoader(abc.AbstractLoader):
         '''
         del self.self.instance_graph
         del self.cached_context
+    
+    def __sizeof__(self):
+        return sum(sys.getsizeof(self.cached_context),
+                   sys.getsizeof(self._ids,
+                   sys.getsizeof(self._map),
+                   sys.getsizeof(self._last_index),
+                   sys.getsizeof(dir(self.formatter))
     
     # TODO: #33 makes test and docs, benchmarks for
     # each __copy__, __deepcopy__, __buffer__, __release_buffer__
@@ -242,7 +249,10 @@ class BaseGraphMask(abc.AbstractGraphMask):
         return self.__str__()
 
     def __sizeof__(self) -> int:
-        raise NotImplemented
+        return sum(sys.getsizeof(self._visited),
+                   sys.getsizeof(self._queue),
+                   sys.getsizeof(self.file),
+                   sys.getsizeof(self.separeter))
 
     def __getitem__(self, key: int) -> typing.GE:
         # TODO: place awqay the validation
@@ -394,6 +404,9 @@ class BaseGraphMask(abc.AbstractGraphMask):
                     self._queue += neighbour
 
         return self._visited, self._queue
+
+    def add_edge(self, parents, children, data=None):
+        print('Realize add_edge, please')
 
 
 @dataclass

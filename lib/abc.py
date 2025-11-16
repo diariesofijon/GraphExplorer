@@ -3,6 +3,10 @@
 # pylint: disable=C0103,W0622,E0001
 # pylint: disable=E0401
 
+'''
+    Abstract classes for graph exploring
+'''
+
 import abc
 import collections.abc
 from typing import (
@@ -126,7 +130,7 @@ class AbstractLoader(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def formatter(self) -> Iterable:
+    def formatter(self) -> 'AbstractTextFormatter':
         pass
 
     @property
